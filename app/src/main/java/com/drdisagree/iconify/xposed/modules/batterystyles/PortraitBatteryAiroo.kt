@@ -428,6 +428,7 @@ open class PortraitBatteryAiroo(private val context: Context, frameColor: Int) :
         scheduleSelf(invalidateRunnable, 0)
     }
 
+    @Suppress("DEPRECATION")
     private fun updateSize() {
         val b = bounds
         if (b.isEmpty) {
@@ -452,6 +453,7 @@ open class PortraitBatteryAiroo(private val context: Context, frameColor: Int) :
         fillColorStrokeProtection.strokeWidth = scaledStrokeWidth
     }
 
+    @Suppress("DEPRECATION")
     @SuppressLint("RestrictedApi")
     private fun loadPaths() {
         val pathString =

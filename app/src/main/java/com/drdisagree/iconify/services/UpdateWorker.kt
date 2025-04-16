@@ -13,10 +13,10 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.drdisagree.iconify.BuildConfig
 import com.drdisagree.iconify.R
-import com.drdisagree.iconify.common.Const.LATEST_VERSION_URL
-import com.drdisagree.iconify.common.Preferences.UPDATE_OVER_WIFI
-import com.drdisagree.iconify.common.Preferences.VER_CODE
-import com.drdisagree.iconify.config.RPrefs
+import com.drdisagree.iconify.data.common.Const.LATEST_VERSION_URL
+import com.drdisagree.iconify.data.common.Preferences.UPDATE_OVER_WIFI
+import com.drdisagree.iconify.data.common.Preferences.VER_CODE
+import com.drdisagree.iconify.data.config.RPrefs
 import com.drdisagree.iconify.ui.activities.MainActivity
 import com.drdisagree.iconify.ui.fragments.settings.AppUpdates
 import com.topjohnwu.superuser.Shell

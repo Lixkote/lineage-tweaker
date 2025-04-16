@@ -2,13 +2,13 @@ package com.drdisagree.iconify.utils.overlay.compiler
 
 import android.util.Log
 import com.drdisagree.iconify.Iconify.Companion.appContext
-import com.drdisagree.iconify.common.Dynamic.AAPT
-import com.drdisagree.iconify.common.Dynamic.AAPT2
-import com.drdisagree.iconify.common.Dynamic.ZIPALIGN
-import com.drdisagree.iconify.common.Dynamic.isAtleastA14
-import com.drdisagree.iconify.common.Resources
-import com.drdisagree.iconify.common.Resources.FRAMEWORK_DIR
-import com.drdisagree.iconify.common.Resources.UNSIGNED_UNALIGNED_DIR
+import com.drdisagree.iconify.data.common.Dynamic.AAPT
+import com.drdisagree.iconify.data.common.Dynamic.AAPT2
+import com.drdisagree.iconify.data.common.Dynamic.ZIPALIGN
+import com.drdisagree.iconify.data.common.Dynamic.isAtleastA14
+import com.drdisagree.iconify.data.common.Resources
+import com.drdisagree.iconify.data.common.Resources.FRAMEWORK_DIR
+import com.drdisagree.iconify.data.common.Resources.UNSIGNED_UNALIGNED_DIR
 import com.drdisagree.iconify.utils.apksigner.CryptoUtils
 import com.drdisagree.iconify.utils.apksigner.SignAPK
 import com.drdisagree.iconify.utils.helper.Logger.writeLog

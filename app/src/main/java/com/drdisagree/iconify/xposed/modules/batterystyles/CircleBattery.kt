@@ -20,9 +20,10 @@ import androidx.annotation.ColorInt
 import androidx.core.graphics.ColorUtils
 import androidx.core.graphics.PathParser
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
-import com.drdisagree.iconify.common.Preferences
-import com.drdisagree.iconify.config.RPrefs.getBoolean
-import com.drdisagree.iconify.xposed.modules.utils.AlphaRefreshedPaint
+import com.drdisagree.iconify.data.common.Preferences
+import com.drdisagree.iconify.data.common.Preferences.BATTERY_STYLE_DOTTED_CIRCLE
+import com.drdisagree.iconify.data.config.RPrefs.getBoolean
+import com.drdisagree.iconify.xposed.modules.extras.utils.AlphaRefreshedPaint
 import com.drdisagree.iconify.xposed.utils.XPrefs.Xprefs
 
 @Suppress("UNUSED_PARAMETER")
@@ -66,8 +67,8 @@ open class CircleBattery(private val mContext: Context, frameColor: Int) : Batte
     }
 
     fun setMeterStyle(batteryStyle: Int) {
-        mFramePaint.setPathEffect(if (batteryStyle == Preferences.BATTERY_STYLE_DOTTED_CIRCLE) DASH_PATH_EFFECT else null)
-        mBatteryPaint.setPathEffect(if (batteryStyle == Preferences.BATTERY_STYLE_DOTTED_CIRCLE) DASH_PATH_EFFECT else null)
+        mFramePaint.setPathEffect(if (batteryStyle == BATTERY_STYLE_DOTTED_CIRCLE) DASH_PATH_EFFECT else null)
+        mBatteryPaint.setPathEffect(if (batteryStyle == BATTERY_STYLE_DOTTED_CIRCLE) DASH_PATH_EFFECT else null)
     }
 
     override fun setBounds(left: Int, top: Int, right: Int, bottom: Int) {
@@ -91,7 +92,7 @@ open class CircleBattery(private val mContext: Context, frameColor: Int) : Batte
 
     private fun initColors() {
         customBlendColor = try {
-            Xprefs.getBoolean(Preferences.CUSTOM_BATTERY_BLEND_COLOR, false) ?: false
+            Xprefs.getBoolean(Preferences.CUSTOM_BATTERY_BLEND_COLOR, false)
         } catch (ignored: Throwable) {
             getBoolean(Preferences.CUSTOM_BATTERY_BLEND_COLOR, false)
         }
@@ -205,6 +206,10 @@ open class CircleBattery(private val mContext: Context, frameColor: Int) : Batte
         }
 
         if (mShadeColors == null) {
+            if (batteryLevels == null) {
+                initColors()
+            }
+
             for (i in batteryLevels!!.indices) {
                 if (batteryLevel <= batteryLevels!![i]) {
                     if (i > 0) {
@@ -242,6 +247,7 @@ open class CircleBattery(private val mContext: Context, frameColor: Int) : Batte
     }
 
     @SuppressLint("DiscouragedApi", "RestrictedApi")
+    @Suppress("DEPRECATION")
     private fun updateSize() {
         val res = mContext.resources
         mDiameter = getBounds().bottom - getBounds().top
@@ -317,13 +323,6 @@ open class CircleBattery(private val mContext: Context, frameColor: Int) : Batte
         mWarningTextPaint.textAlign = Align.CENTER
         mBatteryPaint.isDither = true
         mBatteryPaint.style = Paint.Style.STROKE
-
-        try {
-            setMeterStyle(Xprefs.getInt(Preferences.CUSTOM_BATTERY_STYLE, 0))
-        } catch (ignored: Throwable) {
-            setMeterStyle(Preferences.BATTERY_STYLE_CIRCLE)
-        }
-
         mBoltAlphaAnimator = ValueAnimator.ofInt(255, 255, 255, 45)
         mBoltAlphaAnimator.setDuration(2000)
         mBoltAlphaAnimator.interpolator = FastOutSlowInInterpolator()
@@ -340,8 +339,10 @@ open class CircleBattery(private val mContext: Context, frameColor: Int) : Batte
     companion object {
         private const val WARNING_STRING = "!"
         private const val CRITICAL_LEVEL = 5
-        private const val CIRCLE_DIAMETER =
-            45 //relative to dash effect size. Size doesn't matter as finally it gets scaled by parent
+
+        // relative to dash effect size.
+        // Size doesn't matter as finally it gets scaled by parent
+        private const val CIRCLE_DIAMETER = 45
         private val DASH_PATH_EFFECT: PathEffect = DashPathEffect(floatArrayOf(3f, 2f), 0f)
     }
 }

@@ -94,6 +94,7 @@
     <string name="activity_desc_xposed_menu">Ehhez az opcióhoz LSPosed szükséges</string>
     <string name="activity_title_extras">Különlegességek</string>
     <string name="activity_desc_extras">További finomítási lehetőségek</string>
+    <string name="activity_title_dual_statusbar">Dupla Állapotsor</string>
     <!-- Settings -->
     <string name="settings_section_title_general">Általános</string>
     <string name="settings_app_language">Nyelvezet</string>
@@ -127,6 +128,8 @@
     <string name="settings_show_home_page_card_desc">Megjelenít egy gyönyörű kártyát a kezdőlapon.</string>
     <string name="settings_vibrate_ui_card_title">Rezgő visszajelzés</string>
     <string name="settings_vibrate_ui_page_card_desc">Fejlesztett visszajelzés a képernyő érintésekor.</string>
+    <string name="settings_slider_controller_title">Csúszkavezérlők</string>
+    <string name="settings_slider_controller_desc">A Csúszka mellett bekapcsol egy plusz és egy minusz gombot is.</string>
     <string name="settings_clear_app_cache_title">Az alkalmazás-gyorsítótár törlése</string>
     <string name="settings_clear_app_cache_desc">Törölje az egyedi betűtípusok, képek vagy GIF-ek használatakor generált gyorsítótárakat.</string>
     <string name="activity_title_experimental">Kisérleti szakasz</string>
@@ -296,12 +299,17 @@
     <string name="section_title_qs_text_color">A Gyorsbeállítások szövegszíne</string>
     <string name="qs_text_color_normal">Szokásos</string>
     <string name="qs_text_color_pixel">Pixel</string>
+    <string name="custom_qs_tile_text_color_title">Egyéni betűszín</string>
+    <string name="custom_qs_tile_text_color_desc">Egyéni betűszínek engedélyezése a Gyorsbeállítások csempéin</string>
+    <string name="custom_qs_tile_text_color_list_title">Betűszín-opciók</string>
     <string name="label_always_white_title">Mindig fehér</string>
     <string name="label_always_white_desc">Fehér főcím, fehér alcím</string>
     <string name="label_always_white_v2_title">Mindig fehér v2</string>
     <string name="label_always_white_v2_desc">Fehér főcím, kiemelőszín alcím</string>
     <string name="label_follow_system_title">Rendszerkövetés</string>
     <string name="label_follow_system_desc">Rendszerszínű főcim, rendszerszínű alcím</string>
+    <string name="label_follow_system_inverse_title">Fordított rendszerkövetés</string>
+    <!--<string name="label_follow_system_inverse_desc">Title system, subtitle system</string>-->
     <string name="label_follow_system_v2_title">Rendszerkövetés v2</string>
     <string name="label_follow_system_v2_desc">Rendszerkövető főcím, kiemelőszín alcím</string>
     <string name="label_fix_text_color_title">Rögzített szövegszín</string>
@@ -316,6 +324,7 @@
     <!-- QS Panel Margin -->
     <string name="qqs_panel_top_margin_title">A panel felső margója</string>
     <string name="qs_panel_top_margin_title">A Gyorsbeállítások-panel felső margója</string>
+    <string name="qs_panel_top_margin_info">Forgassa meg a készülékét a változások megtekintéséhez. Ha ez nem működik, akkor rendszerfelület-újraindítás szükséges.</string>
     <!-- Statusbar -->
     <string name="section_title_spacing">Térköz</string>
     <string name="sb_left_padding">Bal oldali kitöltés</string>
@@ -369,19 +378,16 @@
     <string name="vp_thick_background_desc">Vastagítja a hangerő-csúszkát</string>
     <string name="vp_no_background_title">Nincs háttér</string>
     <string name="vp_no_background_desc">Távolítsa el a hangerő-csúszka pályáját</string>
-    <string name="section_title_custom_magisk_module">Egyéni Magisk-modulok</string>
+    <string name="read_carefully">Olvassa figyelmesen!</string>
+    <!-- Volume Panel Style -->
     <string name="volume_style">Hangerő-stílus</string>
-    <string name="volume_module_desc">Egy flesselhető Magisk-modult hoz létre ehhez a stílushoz</string>
+    <string name="volume_style_default">Alapértelmezett</string>
     <string name="volume_style_gradient">Átmenetes</string>
     <string name="volume_style_doublelayer">Duplarétegű</string>
     <string name="volume_style_shadedlayer">Árnyékolt</string>
     <string name="volume_style_neumorph">Neumorf</string>
     <string name="volume_style_outline">Körvonalas</string>
     <string name="volume_style_neumorphoutline">Neumorf körvonalas</string>
-    <string name="btn_create_module">Modul-építés</string>
-    <string name="toast_module_created">Sikeresen elkészült a modul</string>
-    <string name="read_carefully">Olvassa figyelmesen!</string>
-    <string name="volume_module_installation_guide">Ez az opció létrehoz egy Magisk-modult a belső tárhely Letöltés mappájában. Flesselje az IconifyCompanion.zip nevű csomagot a Magisk-ban. Mindig távolítsa el a korábbi IconifyCompanion modult (ha telepítve van), és indítsa újra, mielőtt az újat flesselné.\n\n<b>Figyelem:</b>\n• ROM-frissítés előtt uninstallálja a modult.\n• ROM-frissítés után készítse el újra a modult és flesselje.\n• Ne felesseljen olyan modult, ami nem az Ön rendszeréhez készült!</string>
     <!-- Media Player -->
     <string name="cont_desc_media_player">Médialejátszó előnézet</string>
     <string name="media_player_preview_music_title">Zeneszám-cím</string>
@@ -405,20 +411,24 @@
     <string name="section_title_privacy_chip">Adatvédelmi háttérlap</string>
     <string name="accent_privacy_chip_title">Kiemelt adatvédelmi háttérlap</string>
     <string name="accent_privacy_chip_desc">Kiemelőszinnel színezi ki a háttérlapot</string>
-    <string name="section_title_media_player">Médialejátszó</string>
     <string name="disable_progress_wave_title">Eltünteti a haladási hullámot</string>
     <string name="disable_progress_wave_desc">Letiltja a haladási hullám animációját</string>
     <!-- Xposed Menu -->
     <string name="lsposed_warn">Mielőtt engedélyezné az Iconify-t az LSPosed modulban, nyomjon hosszan az Iconify-ra és klikkeljen az Újra-Optimalizálás-ra. Ezután engedélyezze az Iconify-t, majd indítsa újra a rendszerfelületet. Ez elengedhetetlen a gördülékeny működéshez.</string>
+    <string name="lsposed_bootloop_warn">Az egyik engedélyezett szolgáltatás nem kompatibilis a ROM-mal. Kérjük, tiltsa le, és indítsa újra a rendszerfelületet.</string>
     <string name="xposed_only_desc">Ön jelenleg \'Csak Xposed\' módban van. Ehhez az Iconify engedélyezése szükséges az LSPosed alkalmazásban. Győződjön meg arról is, hogy az Iconify modul megjelenik a Magisk managerben. Az összes funkcióhoz való hozzáféréshez törölje az Iconify alkalmazás adatait, és haladjon végig a telepítési folyamaton!</string>
     <string name="xposed_module_disabled_title">A modul nincs aktiválva.</string>
     <string name="xposed_module_disabled_desc">A rendszer-szolgáltatás nem fut</string>
+    <string name="xposed_module_bootlooped_title">Ez Bootloop-nak tűnik</string>
+    <string name="xposed_module_bootlooped_desc">A modul le van tiltva</string>
     <string name="activity_title_transparency_blur">Átlátszóság és elmosás</string>
     <string name="activity_desc_transparency_blur">Itt kapcsolhatja be az átlátszóságot és az elmosást</string>
     <string name="activity_title_themes">Témák</string>
     <string name="activity_desc_themes">Témákkal is személyre szabhatja</string>
     <string name="activity_title_quick_settings">Gyorsbeállítások</string>
     <string name="activity_desc_quick_settings">A Gyorsbeállítások-panelhez kapcsolódó trükkök</string>
+    <string name="activity_title_lockscreen">Záróképernyő</string>
+    <string name="activity_desc_lockscreen">Testre szabhatja a záróképernyő megjelenését</string>
     <string name="activity_title_battery_style">Akkustílus</string>
     <string name="activity_desc_battery_style">Szabja személyre az Akku-ikon megjelenését</string>
     <string name="activity_title_op_qs_header">One+ Gyorsbeállítások</string>
@@ -441,6 +451,9 @@
     <string name="activity_title_xposed_others">Egyebek</string>
     <string name="activity_desc_xposed_others">További Xposed trükkök</string>
     <string name="activity_title_xposed_weather_settings">Időjárás-beállítások</string>
+    <string name="activity_title_xposed_launcher">Launcher</string>
+    <string name="activity_desc_xposed_launcher">Az alkalmazásindítóval kapcsolatos módosítások</string>
+    <string name="activity_title_lockscreen_album_art">Lemezborító</string>
     <!-- Oneplus QS Header -->
     <string name="oneplus_qs_header_title">One+ Gyorsbeállítások</string>
     <string name="oneplus_qs_header_desc">Bekapcsolhatja az Oxygen-stílusú médialejátszót és csempéket</string>
@@ -448,10 +461,13 @@
     <string name="oneplus_qs_header_vibrate_desc">A csempék rezgésének hozzáadása</string>
     <string name="oneplus_qs_header_hide_stock_media_player_title">Rejtett Médialejátszó</string>
     <string name="oneplus_qs_header_hide_stock_media_player_desc">Eltávolítja a gyári médialejátszót a gyorsbeállítások paneljéről</string>
+    <string name="oneplus_qs_header_show_artwork_title">Lemezborító-megjelenítés</string>
+    <string name="oneplus_qs_header_show_artwork_desc">A lejátszott média lemezborítójának megjelenítése</string>
     <string name="oneplus_qs_header_blur_level">Az elmosás erőssége</string>
     <string name="oneplus_qs_header_fade_level">A halványítás erőssége</string>
     <string name="oneplus_qs_header_top_margin">Felső margó</string>
     <string name="oneplus_qs_header_expansion_y">A bővítés mértéke</string>
+    <string name="oneplus_qs_header_gap">Kiteresztett GAP</string>
     <!-- Lockscreen Widgets -->
     <string name="lockscreen_widgets_title">A záróképernyő kisalkalmazásai</string>
     <string name="lockscreen_widgets_enabled_title">Engedélyezi a kisalkalmazásokat a záróképernyőn</string>
@@ -482,7 +498,11 @@
     <string name="mini_widget_icon_active">A mini ikon színe, mikor aktív</string>
     <string name="mini_widget_icon_inactive">A mini ikon színe, mikor inaktív</string>
     <string name="weather_settings">Időjárás-beállítások</string>
+    <string name="lockscreen_widgets_roundness">A kisalkalmazás (widget) kereksége</string>
     <string name="lockscreen_widgets_scale">Kisalkalmazások méretskálázása</string>
+    <string name="lockscreen_device_widget_style_title">Kisalkalmazás (widget) stílus</string>
+    <string name="lockscreen_device_widget_style_classic">Kétívű sáv</string>
+    <string name="lockscreen_device_widget_style_arcs">Négyívű</string>
     <!-- LS Widgets Actions -->
     <string name="camera">Kamera</string>
     <string name="clock_timer">Óra/Időzítő</string>
@@ -547,10 +567,26 @@
     <string name="hide_qs_tile_label_title">Csempefelirat elrejtése</string>
     <string name="hide_qs_tile_label_desc">Csak függőleges csempék esetében</string>
     <string name="qs_tile_label_scaling_title">Szövegméretezés</string>
+    <string name="section_title_notifications">Értesítések</string>
+    <string name="colored_qs_notification_title">Színezett értesítésikon</string>
+    <string name="colored_qs_notification_desc">Az alkalmazásikon megjelenítése értesítési ikonként</string>
+    <string name="section_headsup_title">Felugró értesítés</string>
+    <string name="notification_headsup_blur_title">Elhomályosított felugró ablakok</string>
+    <string name="notification_headsup_blur_intensity_title">Az értesítés elhomályosítási értéke</string>
+    <string name="notification_headsup_blur_transparency_title">Az értesítés átlátszósága</string>
+    <string name="notification_headsup_blur_desc">Elhomályosítás megjelenítése a felugró értesítéseken</string>
     <string name="section_title_qs_margin">Csempemargók</string>
+    <string name="section_title_media_player">Médialejátszó</string>
+    <string name="compact_media_player_title">Kompakt médialejátszó</string>
+    <string name="compact_media_player_desc">Átalakítja a médialejátszót</string>
+    <string name="media_player_artwork_blur_title">Elmosott lemezborító</string>
+    <string name="media_player_artwork_blur_desc">A médialejátszón épp játszott album borítójának elmosása</string>
+    <string name="media_player_artwork_blur_radius_title">Az elmosás erőssége</string>
     <string name="section_title_qs_elements">Gyorsbeállítások elemei</string>
     <string name="hide_qs_on_lockscreen_title">Nincs gyorsbeállítás a záróképernyőn</string>
     <string name="hide_qs_on_lockscreen_desc">Letiltja a gyorbeállítások panelét a biztonságos záróképernyőn</string>
+    <string name="hide_qs_on_lockscreen_a15_title">Gyorsbeállítások kikapcsolása a képernyőzáron</string>
+    <string name="hide_qs_on_lockscreen_a15_desc">Letiltja a gyorsbeállítások csempéit a biztonságos képernyőzáron</string>
     <string name="hide_qs_silent_text_title">Szövegelrejtés</string>
     <string name="hide_qs_silent_text_desc">Elrejti a néma értesítések fejléceként megjelenő szöveget</string>
     <string name="hide_qs_footer_buttons_title">Láblécgombok rejtése</string>
@@ -685,8 +721,12 @@
     <string name="lockscreen_clock_auto_hide_clock_title">Az óra automatikus elrejtése</string>
     <string name="lockscreen_clock_auto_hide_clock_desc">Bejövő üzeneteknél nem látszik az óra</string>
     <string name="custom_lockscreen_clock_style_title">Órastílus</string>
+    <string name="lockscreen_clock_move_notification_icon_title">Mindig látható ikonok az óra alatt</string>
+    <string name="lockscreen_clock_move_notification_icon_desc">Helyezze a „Mindig látható” ikonokat az egyéni óra alá, ez a régebbi ROM-okon hibás lehet</string>
     <string name="lockscreen_clock_font_title">Az óra betűtipusa</string>
     <string name="lockscreen_clock_font_desc">Saját betűtípust használhat a záróképernyő órájához</string>
+    <string name="lockscreen_clock_image_title">Saját kép</string>
+    <string name="lockscreen_clock_image_desc">Saját képet használhat a záróképernyő órájához</string>
     <string name="lsclock_custom_color_title">Egyéni óraszín</string>
     <string name="lsclock_custom_color_desc">Egyedi szín az eddigi rendszer-színek helyett</string>
     <string name="lsclock_color_picker_title">Óraszín-választó</string>
@@ -714,12 +754,12 @@
     <!-- Xposed Depth Wallpaper -->
     <string name="enable_depth_wallpaper_title">A mélységi háttérkép engedélyezése</string>
     <string name="enable_depth_wallpaper_desc">iOS-ban megismert mélységi háttérkép\n%s</string>
-    <string name="depth_wallpaper_ai_mode">AI Mode</string>
+    <string name="depth_wallpaper_ai_mode">AI-mód</string>
     <string name="depth_wallpaper_ai_mlkit">MLKit (Google)</string>
-    <string name="depth_wallpaper_ai_plugin">Plugin</string>
-    <string name="depth_wallpaper_ai_status">AI Status</string>
-    <string name="depth_wallpaper_ai_status_plugin_not_installed">AI Plugin not installed.\nTap to download</string>
-    <string name="depth_wallpaper_ai_status_plugin_installed">AI Plugin installed.\nTap to open</string>
+    <string name="depth_wallpaper_ai_plugin">Bővítmény</string>
+    <string name="depth_wallpaper_ai_status">AI-állapot</string>
+    <string name="depth_wallpaper_ai_status_plugin_not_installed">Az AI-bővítmény nincs telepítve.\nKattintson a letöltéshez</string>
+    <string name="depth_wallpaper_ai_status_plugin_installed">Az AI-bővítmény telepítésre került.\nIndításhoz érintse meg</string>
     <string name="enable_custom_depth_wallpaper_title">Egyedi képek</string>
     <string name="enable_custom_depth_wallpaper_desc">Az egyedi kép beállítása mint mélységi háttérkép</string>
     <string name="depth_wallpaper_on_aod_title">\'Mindig bekapcsolva\' (AOD) esetén is</string>
@@ -749,6 +789,8 @@
     <string name="sb_clock_background_chip_desc">Óralap kijelzése az állapotikonok mögött</string>
     <string name="sb_clock_customize_chip_title">Óraháttér személyre szabása</string>
     <string name="sb_clock_customize_chip_desc">Egyedi színek, kerekítés, körvonal stb.</string>
+    <string name="statusbar_clock_clickable_title">Kattintható Óra</string>
+    <string name="statusbar_clock_clickable_desc">Kattintson az Óra megnyitásához</string>
     <string name="section_title_text">Szöveg</string>
     <string name="statusbar_clock_text_title">Az Óra betűszíne</string>
     <string name="sbclock_color_follow_system">Rendszerkövetés</string>
@@ -798,6 +840,85 @@
     <string name="hide_ls_carrier_desc">A záróképernyőről eltűnik a Szolgáltató neve</string>
     <string name="hide_ls_statusbar_title">Nincs Állapotsor a képernyőzáron</string>
     <string name="hide_ls_statusbar_desc">A záróképernyőről eltűnik az Állapotsor</string>
+    <string name="sb_swap_wifi_cellular_title">Wifi és Mobiladat váltás</string>
+    <string name="sb_swap_wifi_cellular_desc">Wifi és Mobiladat kapcsolóikon</string>
+    <string name="sb_swap_cellular_network_type_title">Mobiladat és Hálózattípus cseréje</string>
+    <string name="sb_swap_cellular_network_type_desc">Cserélje le a mobiladat és a hálózat ikonjait (3G 4G LTE stb.)</string>
+    <string name="sb_clock_position_title">Az óra helyzete</string>
+    <string name="section_title_clock">Óra</string>
+    <string name="sb_clock_position_left">Bal oldalon (alapértelmezett)</string>
+    <string name="sb_clock_position_center">Középen</string>
+    <string name="sb_clock_position_right">Jobb oldalon</string>
+    <string name="ongoing_action_chip_title">Folyamatban lévők kijelzője</string>
+    <string name="ongoing_action_chip_desc">Épp zajló műveletek, például letöltések kijelzőjének megjelenítése az állapotsoron</string>
+    <string name="sb_show_4g_icon_title">4G-ikon</string>
+    <string name="sb_show_4g_icon_desc">Jelenítse meg a 4G ikont az állapotsorban, az LTE helyett</string>
+    <string name="sb_max_notification_icons_title">Az értesítési ikonok maximuma</string>
+    <string name="dual_status_bar_title">Dupla Állapotsor</string>
+    <string name="dual_status_bar_desc">Az alkotóelemek két sorban helyezkednek el</string>
+    <string name="status_bar_logo_title">Logó</string>
+    <string name="status_bar_logo_desc">Egyéni logót jeleníthet meg az állapotsoron</string>
+    <string name="status_bar_logo_enable_title">A logó engedélyezése</string>
+    <string name="status_bar_logo_position_title">A logó pozíciója</string>
+    <string name="status_bar_logo_position_left">Bal oldalon</string>
+    <string name="status_bar_logo_position_right">Jobb oldalon</string>
+    <string name="status_bar_logo_style_title">A logó stílusa</string>
+    <string name="status_bar_logo_size_title">A logó mérete</string>
+    <string name="status_bar_logo_style_android">Android</string>
+    <string name="status_bar_logo_style_adidas">Adidas</string>
+    <string name="status_bar_logo_style_alien">Földönkívüli</string>
+    <string name="status_bar_logo_style_apple">Apple</string>
+    <string name="status_bar_logo_style_avengers">Bosszúállók</string>
+    <string name="status_bar_logo_style_batman">Batman</string>
+    <string name="status_bar_logo_style_batman_tdk">Batman A sötét lovag</string>
+    <string name="status_bar_logo_style_beats">Dobok</string>
+    <string name="status_bar_logo_style_biohazard">Biológiai veszély</string>
+    <string name="status_bar_logo_style_blackberry">BlackBerry</string>
+    <string name="status_bar_logo_style_cannabis">Kender</string>
+    <string name="status_bar_logo_style_emoticon_cool">Menő emoji</string>
+    <string name="status_bar_logo_style_emoticon_devil">Ördög emoji</string>
+    <string name="status_bar_logo_style_fire">Tűz</string>
+    <string name="status_bar_logo_style_heart">Szív</string>
+    <string name="status_bar_logo_style_nike">Nike</string>
+    <string name="status_bar_logo_style_pacman">Pac-man</string>
+    <string name="status_bar_logo_style_puma">Puma</string>
+    <string name="status_bar_logo_style_rog">ROG</string>
+    <string name="status_bar_logo_style_spiderman">Pókember</string>
+    <string name="status_bar_logo_style_superman">Superman</string>
+    <string name="status_bar_logo_style_windows">Windows</string>
+    <string name="status_bar_logo_style_xbox">Xbox</string>
+    <string name="status_bar_logo_style_ghost">Szellem</string>
+    <string name="status_bar_logo_style_ninja">Nindzsa</string>
+    <string name="status_bar_logo_style_robot">Robot</string>
+    <string name="status_bar_logo_style_ironman">Vasember</string>
+    <string name="status_bar_logo_style_captain_america">Amerika Kapitány</string>
+    <string name="status_bar_logo_style_flash">Villám</string>
+    <string name="status_bar_logo_style_tux">Tux</string>
+    <string name="status_bar_logo_style_ubuntu">Ubuntu</string>
+    <string name="status_bar_logo_style_mint">Linux Mint</string>
+    <string name="status_bar_logo_style_amogus">Amogus</string>
+    <string name="status_bar_logo_style_custom">Egyéni kép</string>
+    <string name="status_bar_logo_tint_title">Kövesse az Állpotsor kitöltőszínét</string>
+    <string name="status_bar_logo_tint_desc">A világos/sötét háttér kapcsolója a kitöltés frissítéséhez</string>
+    <!-- Xposed Dual Statusbar -->
+    <string name="dsb_title">Kétsoros Állapotsor</string>
+    <string name="dsb_portrait_only_title">Csak protrémódban</string>
+    <string name="dsb_single_line_start_side_title">Egysoros kezdőoldal</string>
+    <string name="dsb_single_line_start_side_desc">Az állapotsor kezdőoldala csak egysoros</string>
+    <string name="dsb_single_line_end_side_title">Egysoros záróoldal</string>
+    <string name="dsb_single_line_end_side_desc">Az állapotsor záróoldala csak egysoros</string>
+    <string name="dsb_swap_start_side_title">Kezdőoldali csere</string>
+    <string name="dsb_swap_start_side_desc">Megcseréli az óra és az értesítési ikonok helyzetét</string>
+    <string name="dsb_swap_end_side_title">Záróoldali csere</string>
+    <string name="dsb_swap_end_side_desc">Megcseréli az akkumulátor helyzetét és az állapotikonokat</string>
+    <string name="dsb_statusbar_height_title">Az Állapotsor magassága</string>
+    <string name="dsb_start_padding_title">Kezdeti kitöltés</string>
+    <string name="dsb_end_padding_title">Végző kitöltés</string>
+    <string name="dsb_top_padding_title">Felső kitöltés</string>
+    <string name="dsb_start_top_margin_title">Felső margó kezdése</string>
+    <string name="dsb_start_bottom_margin_title">Alsó margó kezdése</string>
+    <string name="dsb_end_top_margin_title">Felső margó végződése</string>
+    <string name="dsb_end_bottom_margin_title">Alsó margó végződése</string>
     <!-- Xposed Others -->
     <string name="qs_header">Gyorsbeállítások-fejléc</string>
     <string name="hide_carrier_group_title">Szolgáltatói csoport elrejtése</string>
@@ -809,6 +930,9 @@
     <string name="hide_ls_lock_icon_desc">A zárikon elrejtése a záróképernyőn</string>
     <string name="fixed_status_icons_title">Rögzített Állapotikonok</string>
     <string name="fixed_status_icons_desc">Az állapotikonok rögzített pozícióba kerülnek\nJónéhány ROM-on buggolást okoz</string>
+    <string name="ls_wallpaper_blur_title">Homályos háttérkép</string>
+    <string name="ls_wallpaper_blur_desc">Homályosítási effektus alkalmazása a záróképernyőn</string>
+    <string name="ls_wallpaper_blur_radius_title">A háttérkép homályosításának intenzitása</string>
     <!-- Changelog -->
     <string name="activity_title_changelog">Változáslista</string>
     <string name="no_internet_connection">Nem sikerült csatlakozni a szerverhez!\nProbléma lehet az internetkapcsolattal, vagy a szerver jelenleg nem működik. Kérjük, próbálja újra később.</string>
@@ -821,6 +945,7 @@
     <string name="view_changelog">Tekintse meg a változások listáját</string>
     <string name="hide_changelog">Ne látszódjon a változáslista</string>
     <string name="already_up_to_date">Az Ön rendszere naprakész.</string>
+    <string name="auto_update_disabled">Az automatikus frissítés le van tiltva a hibakeresési kiadásnál.</string>
     <string name="current_version">Jelenlegi verzió:</string>
     <string name="latest_version">Legfrisebb verzió:</string>
     <string name="update_checking_failed">A frissítéskeresés meghiúsult.</string>
@@ -846,10 +971,11 @@
     <string name="info_tester_desc">Az alkalmazás teszteléséért.</string>
     <string name="info_betterqs_desc">A jobb Gyorsbeállítások engedélyezéséért.</string>
     <string name="info_binaries_desc">Androidon futtatható binárisokhoz.</string>
-    <string name="info_buttercup_desc">For some lockscreen clock styles.</string>
+    <string name="info_buttercup_desc">Némelyik záróképernyői órastílushoz.</string>
     <string name="section_title_contributors">Közreműködők</string>
     <string name="info_contributor_desc">A githubon való közreműködésért.</string>
     <string name="info_contributor_desc_2">A Telegramban való segítségért.</string>
+    <string name="total_contributions">Az összes hozzájárulás: %d</string>
     <string name="section_title_translators">Fordítók</string>
     <string name="af_translation">Afrikai fordítás.</string>
     <string name="ar_translation">Arab fordítás.</string>
@@ -888,7 +1014,11 @@
     <string name="unzoom_depth_wallpaper_title">Zoom-mentes mélységi háttérkép</string>
     <string name="unzoom_depth_wallpaper_desc">Eltávolítja a nagyítási hatást a mélységi háttérképről</string>
     <string name="hide_data_disabled_icon_title">Letiltásjelző-ikon elrejtése</string>
-    <string name="hide_data_disabled_icon_desc">A \'Letiltott adatok\' ikon elrejtése</string>
+    <string name="hide_data_disabled_icon_desc">Kapcsolja ki és be a mobiladatokat a hatás megtekintéséhez</string>
+    <string name="colorize_notification_view_title">Színezett értesítési nézet</string>
+    <string name="colorize_notification_view_desc">Az értesítési nézet ugyanolyan színű, mint az alkalmazás ikonja</string>
+    <string name="colorize_notification_alternative_color_generation_title">Alternatív színgeneráció</string>
+    <string name="colorize_notification_alternative_color_generation_desc">Monet-pontszám és kvantáló használata a színek kinyeréséhez</string>
     <!-- Bottom Navigation -->
     <string name="navbar_home">Kezdőlap</string>
     <string name="navbar_tweaks">Trükkök</string>
@@ -933,6 +1063,8 @@
     <string name="btn_positive">Igen</string>
     <string name="btn_negative">Nem</string>
     <!-- Toast -->
+    <string name="toast_frame_always_white_title">Fehér háttér</string>
+    <string name="toast_frame_always_white_desc">A háttér fehér marad még sötét módban is</string>
     <string name="toast_applied">Alkalmazva</string>
     <string name="toast_disabled">Letiltva</string>
     <string name="toast_reset">Visszaállítás</string>
@@ -1061,6 +1193,10 @@
     <string name="accent_tertiary">Harmadfokú kiemelés</string>
     <string name="text_color_primary">A szöveg elsődleges színe</string>
     <string name="text_color_inverse">A szöveg fordított színe</string>
+    <string name="learn_more">Tudjon meg többet</string>
+    <string name="custom_tiles_footer_info">Az egyéni csempék megfelelő működésének biztosítása érdekében mielőtt egyéni csepéket használna az Internet és Bluetooth csempék helyett, használja az alapértelmezettet.</string>
+    <string name="hig_res_image_footer_info">Kerülje a nagy felbontású képek használatát, mert ezek a rendszerfelület összeomlását okozhatják.</string>
+    <string name="more">Egyebek</string>
     <!-- Weather -->
     <!-- Omni Jaws Strings -->
     <string name="units_title">Egység</string>
@@ -1168,6 +1304,48 @@
     <string name="lockscreen_weather_selection_str_gradient">Színátmenetes</string>
     <string name="lockscreen_weather_selection_str_border_accent">Sötét, kiemelt szegéllyel</string>
     <string name="lockscreen_weather_selection_str_border_gradient">Sötét, színátmenetes szegéllyel</string>
+    <string name="lockscreen_weather_font_title">Az Időjárás betűtípusa</string>
+    <string name="lockscreen_weather_font_desc">Használjon egyéni betűtípust az Időjáráshoz</string>
+    <!-- Media art -->
+    <string name="media_art_title">A Lemezborító megjelenítése</string>
+    <string name="media_art_summary">Amennyiben rendelkezésre áll a lemezborító is látható</string>
+    <string name="media_art_blur_level_title">Az elmosás erőssége</string>
+    <!-- Album art filter -->
+    <string name="albumart_filter_title">A Lemezborító művészi filtere</string>
+    <string name="albumart_filter_none">Nincs</string>
+    <string name="albumart_filter_grayscale">Szürkeárnyalatos</string>
+    <string name="albumart_filter_tint">Kiemelőszínhez igazodó</string>
+    <string name="albumart_filter_blur">Elmosott</string>
+    <string name="albumart_filter_grayblur">Szürkeárnyalatos és elmosott</string>
+    <!-- Launcher mods -->
+    <string name="section_title_icons">Ikonok</string>
+    <string name="section_title_home_screen">Kezdőképernyő</string>
+    <string name="section_title_app_drawer">Alkalmazásfiók</string>
+    <string name="section_title_recents">Előzmények</string>
+    <string name="force_themed_icons_title">Kényszerítetten témázott ikonok</string>
+    <string name="force_themed_icons_desc">Monokróm ikonok létrehozása, ha az alkalmazás nem hozná létre</string>
+    <string name="launcher_icon_size_title">Ikonméret</string>
+    <string name="launcher_text_size_title">Szövegméret</string>
+    <string name="app_drawer_themed_icons_title">Témázott ikonok az alkalmazásfiókban</string>
+    <string name="app_drawer_themed_icons_desc">Az alkalmazásfiókban is engedélyezi a témázott ikonokat</string>
+    <string name="double_tap_to_sleep_title">Képernyő-altatás duplakoppal</string>
+    <string name="double_tap_to_sleep_desc">Koppintson duplán a kezdőképernyő üres területére a képernyő kikapcsolásához</string>
+    <string name="desktop_icon_labels_title">Asztali ikonfeliratok</string>
+    <string name="hide_launcher_statusbar_title">Állapotsor-elrejtés</string>
+    <string name="hide_launcher_statusbar_desc">A gyorsbeállítasok-panel kibontása egyszer, ha az állapotsáv nincs rejtve</string>
+    <string name="hide_launcher_top_shadow_title">Felső árnyék elrejtése</string>
+    <string name="hide_launcher_top_shadow_desc">A felső árnyék eltávolítása a főképernyőn</string>
+    <string name="app_drawer_icon_labels_title">Alkalmazásfióki ikonfeliratok</string>
+    <string name="disable_recents_live_tile_title">Az Előzmények élő csempéjének letiltása</string>
+    <string name="disable_recents_live_tile_desc">Az élő csempe letiltása, ha az Előzmények-képernyő bugos</string>
+    <string name="hide_at_a_glance_title">A \'Bepillantás\' elrejtése</string>
+    <string name="hide_at_a_glance_desc">A kezdőképernyőn nem érhető el a \'Bepillantás\'</string>
+    <string name="hide_desktop_search_bar_title">Az asztali keresősáv eltüntetése</string>
+    <string name="hide_desktop_search_bar_desc">A keresősáv elrejtése az asztali dokkolóból</string>
+    <string name="dock_spacing_title">Dokkpanel-távolság</string>
+    <string name="app_drawer_background_opacity_title">Az alkalmazásfiók hátterének átlátszósága</string>
+    <string name="recents_background_opacity_title">Az Előzmények hátterének átlátszósága</string>
+    <string name="launcher_mod_footer_info">Jelenleg csak a \'Pixel Launcher\' és a \'Launcher3\' támogatott.</string>
     <!-- Alert Dialogs -->
     <string name="systemui_restart_required_title">Rendszerfelület-újraindítás szükséges</string>
     <string name="systemui_restart_required_desc">A változtatás életbe lépéséhez rendszerfelület-újraindítás szükséges.</string>

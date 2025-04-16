@@ -16,17 +16,17 @@ import androidx.core.app.ActivityCompat
 import com.drdisagree.iconify.BuildConfig
 import com.drdisagree.iconify.Iconify.Companion.appContext
 import com.drdisagree.iconify.R
-import com.drdisagree.iconify.common.Const.SYSTEMUI_PACKAGE
-import com.drdisagree.iconify.common.Preferences.BOOT_ID
-import com.drdisagree.iconify.common.Preferences.FORCE_RELOAD_OVERLAY_STATE
-import com.drdisagree.iconify.common.Preferences.FORCE_RELOAD_PACKAGE_NAME
-import com.drdisagree.iconify.common.Preferences.RESTART_SYSUI_BEHAVIOR_EXT
-import com.drdisagree.iconify.common.Preferences.VER_CODE
-import com.drdisagree.iconify.common.References.DEVICE_BOOT_ID_CMD
-import com.drdisagree.iconify.common.Resources
-import com.drdisagree.iconify.config.RPrefs
-import com.drdisagree.iconify.config.RPrefs.getString
-import com.drdisagree.iconify.config.RPrefs.putString
+import com.drdisagree.iconify.data.common.Const.SYSTEMUI_PACKAGE
+import com.drdisagree.iconify.data.common.Preferences.BOOT_ID
+import com.drdisagree.iconify.data.common.Preferences.FORCE_RELOAD_OVERLAY_STATE
+import com.drdisagree.iconify.data.common.Preferences.FORCE_RELOAD_PACKAGE_NAME
+import com.drdisagree.iconify.data.common.Preferences.RESTART_SYSUI_BEHAVIOR_EXT
+import com.drdisagree.iconify.data.common.Preferences.VER_CODE
+import com.drdisagree.iconify.data.common.References.DEVICE_BOOT_ID_CMD
+import com.drdisagree.iconify.data.common.Resources.MODULE_DIR
+import com.drdisagree.iconify.data.config.RPrefs
+import com.drdisagree.iconify.data.config.RPrefs.getString
+import com.drdisagree.iconify.data.config.RPrefs.putString
 import com.drdisagree.iconify.xposed.utils.BootLoopProtector.LOAD_TIME_KEY_KEY
 import com.drdisagree.iconify.xposed.utils.BootLoopProtector.PACKAGE_STRIKE_KEY_KEY
 import com.topjohnwu.superuser.Shell
@@ -99,9 +99,9 @@ object SystemUtils {
 
     fun disableBlur(force: Boolean) {
         Shell.cmd(
-            if (!force) "mv " + Resources.MODULE_DIR +
+            if (!force) "mv " + MODULE_DIR +
                     "/system.prop " +
-                    Resources.MODULE_DIR +
+                    MODULE_DIR +
                     "/system.txt; " +
                     "grep -vE \"" +
                     BLUR_CMD_1 + "|" +
@@ -109,26 +109,26 @@ object SystemUtils {
                     BLUR_CMD_3 + "|" +
                     BLUR_CMD_4 + "|" +
                     BLUR_CMD_5 + "\" " +
-                    Resources.MODULE_DIR +
+                    MODULE_DIR +
                     "/system.txt > " +
-                    Resources.MODULE_DIR +
+                    MODULE_DIR +
                     "/system.txt.tmp; " +
                     "rm -rf " +
-                    Resources.MODULE_DIR +
+                    MODULE_DIR +
                     "/system.prop; " +
-                    "mv " + Resources.MODULE_DIR +
+                    "mv " + MODULE_DIR +
                     "/system.txt.tmp " +
-                    Resources.MODULE_DIR +
+                    MODULE_DIR +
                     "/system.prop; " +
-                    "rm -rf " + Resources.MODULE_DIR +
+                    "rm -rf " + MODULE_DIR +
                     "/system.txt; " +
-                    "rm -rf " + Resources.MODULE_DIR +
+                    "rm -rf " + MODULE_DIR +
                     "/system.txt.tmp" else ":",  // do nothing
             "grep -v \"ro.surface_flinger.supports_background_blur\" " +
-                    Resources.MODULE_DIR + "/service.sh > " +
-                    Resources.MODULE_DIR + "/service.sh.tmp && mv " +
-                    Resources.MODULE_DIR + "/service.sh.tmp " +
-                    Resources.MODULE_DIR + "/service.sh"
+                    MODULE_DIR + "/service.sh > " +
+                    MODULE_DIR + "/service.sh.tmp && mv " +
+                    MODULE_DIR + "/service.sh.tmp " +
+                    MODULE_DIR + "/service.sh"
         ).submit()
     }
 
@@ -136,16 +136,16 @@ object SystemUtils {
         disableBlur(false)
         Shell.cmd(
             "echo \"$BLUR_CMD_1\n$BLUR_CMD_2\n$BLUR_CMD_3\n$BLUR_CMD_4\n$BLUR_CMD_5\"" +
-                    " >> ${Resources.MODULE_DIR}/system.prop",
+                    " >> $MODULE_DIR/system.prop",
             if (force) "sed '/*}/a " +
                     BLUR_CMD_0 + "' " +
-                    Resources.MODULE_DIR +
+                    MODULE_DIR +
                     "/service.sh > " +
-                    Resources.MODULE_DIR +
+                    MODULE_DIR +
                     "/service.sh.tmp && mv " +
-                    Resources.MODULE_DIR +
+                    MODULE_DIR +
                     "/service.sh.tmp " +
-                    Resources.MODULE_DIR +
+                    MODULE_DIR +
                     "/service.sh" else ":" // do nothing
         ).submit()
     }
@@ -199,7 +199,7 @@ object SystemUtils {
     fun isBlurEnabled(force: Boolean): Boolean {
         return Shell.cmd(
             "if grep -q \"ro.surface_flinger.supports_background_blur\" " +
-                    Resources.MODULE_DIR +
+                    MODULE_DIR +
                     (if (force) "/service.sh;" else "/system.prop;") +
                     " then echo yes; else echo no; fi"
         ).exec().out[0] == "yes"
@@ -243,13 +243,13 @@ object SystemUtils {
         disableRestartSystemuiAfterBoot()
 
         Shell.cmd(
-            "sed '/^sleep.6/i killall " + SYSTEMUI_PACKAGE + "' " + Resources.MODULE_DIR + "/service.sh > " + Resources.MODULE_DIR + "/service.sh.tmp && mv " + Resources.MODULE_DIR + "/service.sh.tmp " + Resources.MODULE_DIR + "/service.sh"
+            "sed '/^sleep.6/i killall $SYSTEMUI_PACKAGE' $MODULE_DIR/service.sh > $MODULE_DIR/service.sh.tmp && mv $MODULE_DIR/service.sh.tmp $MODULE_DIR/service.sh"
         ).submit()
     }
 
     fun disableRestartSystemuiAfterBoot() {
         Shell.cmd(
-            "grep -v \"killall " + SYSTEMUI_PACKAGE + "\" " + Resources.MODULE_DIR + "/service.sh > " + Resources.MODULE_DIR + "/service.sh.tmp && mv " + Resources.MODULE_DIR + "/service.sh.tmp " + Resources.MODULE_DIR + "/service.sh"
+            "grep -v \"killall $SYSTEMUI_PACKAGE\" $MODULE_DIR/service.sh > $MODULE_DIR/service.sh.tmp && mv $MODULE_DIR/service.sh.tmp $MODULE_DIR/service.sh"
         ).submit()
     }
 

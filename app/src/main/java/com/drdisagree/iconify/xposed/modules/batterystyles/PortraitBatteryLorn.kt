@@ -204,8 +204,8 @@ open class PortraitBatteryLorn(private val context: Context, frameColor: Int) :
             colorLevels[2 * i] = levels.getInt(i, 0)
             if (colors.getType(i) == TypedValue.TYPE_ATTRIBUTE) {
                 colorLevels[2 * i + 1] = getColorAttrDefaultColor(
-                                    colors.getResourceId(i, 0), context
-                                )
+                    colors.getResourceId(i, 0), context
+                )
             } else {
                 colorLevels[2 * i + 1] = colors.getColor(i, 0)
             }
@@ -429,6 +429,7 @@ open class PortraitBatteryLorn(private val context: Context, frameColor: Int) :
         scheduleSelf(invalidateRunnable, 0)
     }
 
+    @Suppress("DEPRECATION")
     private fun updateSize() {
         val b = bounds
         if (b.isEmpty) {
@@ -453,6 +454,7 @@ open class PortraitBatteryLorn(private val context: Context, frameColor: Int) :
         fillColorStrokeProtection.strokeWidth = scaledStrokeWidth
     }
 
+    @Suppress("DEPRECATION")
     @SuppressLint("RestrictedApi", "DiscouragedApi")
     private fun loadPaths() {
         val pathString =

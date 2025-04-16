@@ -9,20 +9,20 @@ import android.view.ViewGroup
 import android.widget.CompoundButton
 import android.widget.Toast
 import com.drdisagree.iconify.R
-import com.drdisagree.iconify.common.Const.SWITCH_ANIMATION_DELAY
-import com.drdisagree.iconify.common.Const.SYSTEMUI_PACKAGE
-import com.drdisagree.iconify.common.Dynamic.isAtleastA14
-import com.drdisagree.iconify.common.Preferences.QS_HIDE_LABEL_SWITCH
-import com.drdisagree.iconify.common.Preferences.QS_TEXT_COLOR_VARIANT
-import com.drdisagree.iconify.common.Preferences.QS_TEXT_COLOR_VARIANT_NORMAL
-import com.drdisagree.iconify.common.Preferences.QS_TEXT_COLOR_VARIANT_PIXEL
-import com.drdisagree.iconify.common.References.FABRICATED_QS_ICON_SIZE
-import com.drdisagree.iconify.common.References.FABRICATED_QS_MOVE_ICON
-import com.drdisagree.iconify.common.References.FABRICATED_QS_TEXT_SIZE
-import com.drdisagree.iconify.config.RPrefs.getBoolean
-import com.drdisagree.iconify.config.RPrefs.getString
-import com.drdisagree.iconify.config.RPrefs.putBoolean
-import com.drdisagree.iconify.config.RPrefs.putString
+import com.drdisagree.iconify.data.common.Const.SWITCH_ANIMATION_DELAY
+import com.drdisagree.iconify.data.common.Const.SYSTEMUI_PACKAGE
+import com.drdisagree.iconify.data.common.Dynamic.isAtleastA14
+import com.drdisagree.iconify.data.common.Preferences.QS_HIDE_LABEL_SWITCH
+import com.drdisagree.iconify.data.common.Preferences.QS_TEXT_COLOR_VARIANT
+import com.drdisagree.iconify.data.common.Preferences.QS_TEXT_COLOR_VARIANT_NORMAL
+import com.drdisagree.iconify.data.common.Preferences.QS_TEXT_COLOR_VARIANT_PIXEL
+import com.drdisagree.iconify.data.common.References.FABRICATED_QS_ICON_SIZE
+import com.drdisagree.iconify.data.common.References.FABRICATED_QS_MOVE_ICON
+import com.drdisagree.iconify.data.common.References.FABRICATED_QS_TEXT_SIZE
+import com.drdisagree.iconify.data.config.RPrefs.getBoolean
+import com.drdisagree.iconify.data.config.RPrefs.getString
+import com.drdisagree.iconify.data.config.RPrefs.putBoolean
+import com.drdisagree.iconify.data.config.RPrefs.putString
 import com.drdisagree.iconify.databinding.FragmentQsIconLabelBinding
 import com.drdisagree.iconify.ui.base.BaseFragment
 import com.drdisagree.iconify.ui.utils.ViewHelper.setHeader
@@ -37,6 +37,9 @@ import com.drdisagree.iconify.utils.overlay.manager.resource.ResourceManager.bui
 import com.drdisagree.iconify.utils.overlay.manager.resource.ResourceManager.removeResourceFromOverlay
 import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.android.material.slider.Slider
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.concurrent.atomic.AtomicBoolean
 
 class QsIconLabel : BaseFragment() {
@@ -71,10 +74,11 @@ class QsIconLabel : BaseFragment() {
             finalTextSize[0] = 14
             putString(FABRICATED_QS_TEXT_SIZE, finalTextSize[0].toString())
 
-            removeResourceFromOverlay(
-                requireContext(),
-                ResourceEntry(SYSTEMUI_PACKAGE, "dimen", "qs_tile_text_size")
-            )
+            CoroutineScope(Dispatchers.IO).launch {
+                removeResourceFromOverlay(
+                    ResourceEntry(SYSTEMUI_PACKAGE, "dimen", "qs_tile_text_size")
+                )
+            }
 
             true
         }
@@ -85,15 +89,16 @@ class QsIconLabel : BaseFragment() {
                 finalTextSize[0] = slider.value.toInt()
                 putString(FABRICATED_QS_TEXT_SIZE, finalTextSize[0].toString())
 
-                buildOverlayWithResource(
-                    requireContext(),
-                    ResourceEntry(
-                        SYSTEMUI_PACKAGE,
-                        "dimen",
-                        "qs_tile_text_size",
-                        finalTextSize[0].toString() + "sp"
+                CoroutineScope(Dispatchers.IO).launch {
+                    buildOverlayWithResource(
+                        ResourceEntry(
+                            SYSTEMUI_PACKAGE,
+                            "dimen",
+                            "qs_tile_text_size",
+                            finalTextSize[0].toString() + "sp"
+                        )
                     )
-                )
+                }
             }
         })
 
@@ -109,10 +114,11 @@ class QsIconLabel : BaseFragment() {
             finalIconSize[0] = 20
             putString(FABRICATED_QS_ICON_SIZE, finalIconSize[0].toString())
 
-            removeResourceFromOverlay(
-                requireContext(),
-                ResourceEntry(SYSTEMUI_PACKAGE, "dimen", "qs_icon_size")
-            )
+            CoroutineScope(Dispatchers.IO).launch {
+                removeResourceFromOverlay(
+                    ResourceEntry(SYSTEMUI_PACKAGE, "dimen", "qs_icon_size")
+                )
+            }
 
             true
         }
@@ -123,15 +129,16 @@ class QsIconLabel : BaseFragment() {
                 finalIconSize[0] = slider.value.toInt()
                 putString(FABRICATED_QS_ICON_SIZE, finalIconSize[0].toString())
 
-                buildOverlayWithResource(
-                    requireContext(),
-                    ResourceEntry(
-                        SYSTEMUI_PACKAGE,
-                        "dimen",
-                        "qs_icon_size",
-                        finalIconSize[0].toString() + "sp"
+                CoroutineScope(Dispatchers.IO).launch {
+                    buildOverlayWithResource(
+                        ResourceEntry(
+                            SYSTEMUI_PACKAGE,
+                            "dimen",
+                            "qs_icon_size",
+                            finalIconSize[0].toString() + "sp"
+                        )
                     )
-                )
+                }
             }
         })
 
@@ -430,25 +437,31 @@ class QsIconLabel : BaseFragment() {
                 isHideLabelContainerClicked.set(false)
                 putBoolean(QS_HIDE_LABEL_SWITCH, isChecked)
 
-                if (isChecked) {
-                    buildOverlayWithResource(
-                        requireContext(),
-                        ResourceEntry(SYSTEMUI_PACKAGE, "dimen", "qs_tile_text_size", "0sp"),
-                        ResourceEntry(
-                            SYSTEMUI_PACKAGE,
-                            "dimen",
-                            "qs_label_container_margin",
-                            "-120dp"
-                        )
+                val resources = listOf(
+                    ResourceEntry(
+                        SYSTEMUI_PACKAGE,
+                        "dimen",
+                        "qs_tile_text_size",
+                        "0sp"
+                    ),
+                    ResourceEntry(
+                        SYSTEMUI_PACKAGE,
+                        "dimen",
+                        "qs_label_container_margin",
+                        "-120dp"
                     )
+                )
+
+                if (isChecked) {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        buildOverlayWithResource(*resources.toTypedArray())
+                    }
 
                     binding.textSize.visibility = View.GONE
                 } else {
-                    removeResourceFromOverlay(
-                        requireContext(),
-                        ResourceEntry(SYSTEMUI_PACKAGE, "dimen", "qs_tile_text_size"),
-                        ResourceEntry(SYSTEMUI_PACKAGE, "dimen", "qs_label_container_margin")
-                    )
+                    CoroutineScope(Dispatchers.IO).launch {
+                        removeResourceFromOverlay(*resources.toTypedArray())
+                    }
 
                     binding.textSize.visibility = View.VISIBLE
                 }
@@ -470,10 +483,11 @@ class QsIconLabel : BaseFragment() {
             finalMoveIcon[0] = 16
             putString(FABRICATED_QS_MOVE_ICON, finalMoveIcon[0].toString())
 
-            removeResourceFromOverlay(
-                requireContext(),
-                ResourceEntry(SYSTEMUI_PACKAGE, "dimen", "qs_tile_start_padding")
-            )
+            CoroutineScope(Dispatchers.IO).launch {
+                removeResourceFromOverlay(
+                    ResourceEntry(SYSTEMUI_PACKAGE, "dimen", "qs_tile_start_padding")
+                )
+            }
 
             true
         }
@@ -484,15 +498,16 @@ class QsIconLabel : BaseFragment() {
                 finalMoveIcon[0] = slider.value.toInt()
                 putString(FABRICATED_QS_MOVE_ICON, finalMoveIcon[0].toString())
 
-                buildOverlayWithResource(
-                    requireContext(),
-                    ResourceEntry(
-                        SYSTEMUI_PACKAGE,
-                        "dimen",
-                        "qs_tile_start_padding",
-                        finalMoveIcon[0].toString() + "dp"
+                CoroutineScope(Dispatchers.IO).launch {
+                    buildOverlayWithResource(
+                        ResourceEntry(
+                            SYSTEMUI_PACKAGE,
+                            "dimen",
+                            "qs_tile_start_padding",
+                            finalMoveIcon[0].toString() + "dp"
+                        )
                     )
-                )
+                }
             }
         })
 

@@ -12,4 +12,8 @@
     <item name="yt_music" type="id" />
     <item name="youtube_revanced" type="id" />
     <item name="yt_music_revanced" type="id" />
+
+    <!-- Tags -->
+    <item name="tag_slider_touch_listener_set" type="id" />
+    <item name="tag_slider_reset_listener_set" type="id" />
 </resources>

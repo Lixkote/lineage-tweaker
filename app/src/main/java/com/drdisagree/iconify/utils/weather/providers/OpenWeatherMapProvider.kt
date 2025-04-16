@@ -17,12 +17,14 @@ class OpenWeatherMapProvider(context: Context?) : AbstractWeatherProvider(contex
     private val mHasAPIKey: Boolean
 
     override fun getCustomWeather(lat: String?, lon: String?, metric: Boolean): WeatherInfo? {
-        val coordinates = String.format(Locale.US, PART_COORDINATES, lat!!.toFloat(), lon!!.toFloat())
+        val coordinates =
+            String.format(Locale.US, PART_COORDINATES, lat!!.toFloat(), lon!!.toFloat())
         return handleWeatherRequest(coordinates, metric)
     }
 
-    override fun getLocationWeather(location: Location?, metric: Boolean): WeatherInfo? {
-        val coordinates = String.format(Locale.US, PART_COORDINATES, location!!.latitude,location.longitude)
+    override fun getLocationWeather(location: Location, metric: Boolean): WeatherInfo? {
+        val coordinates =
+            String.format(Locale.US, PART_COORDINATES, location.latitude, location.longitude)
         return handleWeatherRequest(coordinates, metric)
     }
 
@@ -36,7 +38,7 @@ class OpenWeatherMapProvider(context: Context?) : AbstractWeatherProvider(contex
             Locale.US, URL_WEATHER, selection, units, locale,
             aPIKey
         )
-        val conditionResponse: String = retrieve(conditionUrl) ?: return null
+        val conditionResponse: String = retrieve(conditionUrl)
         log(
             TAG,
             "Condition URL = $conditionUrl returning a response of $conditionResponse"
@@ -90,7 +92,10 @@ class OpenWeatherMapProvider(context: Context?) : AbstractWeatherProvider(contex
     }
 
     @Throws(JSONException::class)
-    private fun parseForecasts(forecasts: JSONArray, metric: Boolean): ArrayList<WeatherInfo.DayForecast> {
+    private fun parseForecasts(
+        forecasts: JSONArray,
+        metric: Boolean
+    ): ArrayList<WeatherInfo.DayForecast> {
         val result: ArrayList<WeatherInfo.DayForecast> = ArrayList()
         val count = forecasts.length()
 
@@ -157,7 +162,7 @@ class OpenWeatherMapProvider(context: Context?) : AbstractWeatherProvider(contex
 
     private val languageCode: String
         get() {
-            val locale: Locale = mContext.resources.configuration.locale
+            val locale: Locale = mContext.resources.configuration.locales[0]
             val selector = locale.language + "-" + locale.country
 
             for ((key, value) in LANGUAGE_CODE_MAPPING) {
@@ -262,23 +267,23 @@ class OpenWeatherMapProvider(context: Context?) : AbstractWeatherProvider(contex
 
         private const val FORECAST_DAYS = 5
         private const val URL_WEATHER =
-            "https://api.openweathermap.org/data/2.5/weather?%s&mode=json&units=%s&lang=%s&cnt=" + FORECAST_DAYS + "&appid=%s"
+            "https://api.openweathermap.org/data/2.5/weather?%s&mode=json&units=%s&lang=%s&cnt=$FORECAST_DAYS&appid=%s"
 
         // OpenWeatherMap sometimes returns temperatures in Kelvin even if we ask it
         // for deg C or deg F. Detect this and convert accordingly.
         private fun sanitizeTemperature(value: Double, metric: Boolean): Float {
             // threshold chosen to work for both C and F. 170 deg F is hotter
             // than the hottest place on earth.
-            var value = value
-            if (value > 170) {
+            var newValue = value
+            if (newValue > 170) {
                 // K -> deg C
-                value -= 273.15
+                newValue -= 273.15
                 if (!metric) {
                     // deg C -> deg F
-                    value = (value * 1.8) + 32
+                    newValue = (newValue * 1.8) + 32
                 }
             }
-            return value.toFloat()
+            return newValue.toFloat()
         }
 
         private val LANGUAGE_CODE_MAPPING = HashMap<String, String>()

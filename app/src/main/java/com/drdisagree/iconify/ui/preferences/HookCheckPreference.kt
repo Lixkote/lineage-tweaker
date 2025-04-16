@@ -12,72 +12,96 @@ import android.os.CountDownTimer
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
-import android.widget.ImageView
+import android.widget.TextView
 import androidx.preference.Preference
 import androidx.preference.PreferenceViewHolder
 import com.drdisagree.iconify.Iconify.Companion.appContextLocale
 import com.drdisagree.iconify.R
-import com.drdisagree.iconify.common.Const.ACTION_HOOK_CHECK_REQUEST
-import com.drdisagree.iconify.common.Const.ACTION_HOOK_CHECK_RESULT
-import com.drdisagree.iconify.common.Preferences
-import com.drdisagree.iconify.common.Preferences.XPOSED_HOOK_CHECK
-import com.drdisagree.iconify.config.RPrefs
+import com.drdisagree.iconify.data.common.Const.ACTION_HOOK_CHECK_REQUEST
+import com.drdisagree.iconify.data.common.Const.ACTION_HOOK_CHECK_RESULT
+import com.drdisagree.iconify.data.common.Preferences
+import com.drdisagree.iconify.data.common.Preferences.XPOSED_HOOK_CHECK
+import com.drdisagree.iconify.data.config.RPrefs
+import com.drdisagree.iconify.xposed.utils.BootLoopProtector.PACKAGE_STRIKE_KEY_KEY
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import java.lang.ref.WeakReference
 
 class HookCheckPreference(context: Context, attrs: AttributeSet?) : Preference(context, attrs) {
 
     private val handler = Handler(Looper.getMainLooper())
     private val delayedHandler = Handler(Looper.getMainLooper())
-    private val intentFilterHookedSystemUI = IntentFilter()
     private var isHookSuccessful = false
-    var isHooked: Boolean = false
-
-    init {
-        intentFilterHookedSystemUI.addAction(ACTION_HOOK_CHECK_RESULT)
+    private var holderRef: WeakReference<PreferenceViewHolder>? = null
+    private var hookPackages = context.resources.getStringArray(R.array.module_scope)
+    private val intentFilterHookedSystemUI = IntentFilter().apply {
+        addAction(ACTION_HOOK_CHECK_RESULT)
     }
 
     override fun onBindViewHolder(holder: PreferenceViewHolder) {
         super.onBindViewHolder(holder)
+        holderRef = WeakReference(holder)
+        updateUI()
+    }
 
-        holder.itemView.setOnClickListener {
-            try {
-                context.startActivity(
-                    Intent(Intent.ACTION_MAIN).apply {
-                        setComponent(
-                            ComponentName(
-                                "org.lsposed.manager",
-                                "org.lsposed.manager.ui.activity.MainActivity"
-                            )
-                        )
-                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    }
-                )
-            } catch (ignored: Exception) {
+    private fun updateUI() {
+        holderRef?.get()?.itemView?.let { itemView ->
+            if (hasBootlooped) {
+                itemView.findViewById<TextView>(R.id.title)
+                    .setText(R.string.xposed_module_bootlooped_title)
+                itemView.findViewById<TextView>(R.id.summary)
+                    .setText(R.string.xposed_module_bootlooped_desc)
+            } else {
+                itemView.findViewById<TextView>(R.id.title)
+                    .setText(R.string.xposed_module_disabled_title)
+                itemView.findViewById<TextView>(R.id.summary)
+                    .setText(R.string.xposed_module_disabled_desc)
             }
-        }
 
-        holder.itemView.findViewById<ImageView>(R.id.info_icon).setOnClickListener {
-            MaterialAlertDialogBuilder(context)
-                .setTitle(context.resources.getString(R.string.attention))
-                .setMessage(
-                    buildString {
-                        append(
-                            (if (Preferences.isXposedOnlyMode) {
-                                appContextLocale.resources.getString(
-                                    R.string.xposed_only_desc
-                                ) + "\n\n"
-                            } else {
-                                ""
-                            })
-                        )
-                        append(appContextLocale.resources.getString(R.string.lsposed_warn))
-                    }
-                )
-                .setPositiveButton(context.resources.getString(R.string.understood)) { dialog: DialogInterface, _: Int ->
-                    dialog.dismiss()
+            itemView.setOnClickListener {
+                try {
+                    context.startActivity(
+                        Intent(Intent.ACTION_MAIN).apply {
+                            setComponent(
+                                ComponentName(
+                                    "org.lsposed.manager",
+                                    "org.lsposed.manager.ui.activity.MainActivity"
+                                )
+                            )
+                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        }
+                    )
+                } catch (ignored: Exception) {
                 }
-                .setCancelable(true)
-                .show()
+            }
+
+            itemView.findViewById<MaterialButton>(R.id.btn_more).setOnClickListener {
+                MaterialAlertDialogBuilder(context)
+                    .setTitle(context.resources.getString(R.string.attention))
+                    .setMessage(
+                        if (!hasBootlooped) {
+                            buildString {
+                                append(
+                                    (if (Preferences.isXposedOnlyMode) {
+                                        appContextLocale.resources.getString(
+                                            R.string.xposed_only_desc
+                                        ) + "\n\n"
+                                    } else {
+                                        ""
+                                    })
+                                )
+                                append(appContextLocale.resources.getString(R.string.lsposed_warn))
+                            }
+                        } else {
+                            context.resources.getString(R.string.lsposed_bootloop_warn)
+                        }
+                    )
+                    .setPositiveButton(context.resources.getString(R.string.understood)) { dialog: DialogInterface, _: Int ->
+                        dialog.dismiss()
+                    }
+                    .setCancelable(true)
+                    .show()
+            }
         }
     }
 
@@ -104,6 +128,18 @@ class HookCheckPreference(context: Context, attrs: AttributeSet?) : Preference(c
     private val delayedHookCheck: Runnable = Runnable {
         if (!isHooked) {
             RPrefs.putBoolean(XPOSED_HOOK_CHECK, false)
+
+            hasBootlooped = false
+            for (packageName in hookPackages) {
+                val strikeKey = "$PACKAGE_STRIKE_KEY_KEY$packageName"
+
+                if (RPrefs.getInt(strikeKey, 0) >= 3) {
+                    hasBootlooped = true
+                    break
+                }
+            }
+
+            notifyChanged()
         }
     }
 
@@ -171,5 +207,10 @@ class HookCheckPreference(context: Context, attrs: AttributeSet?) : Preference(c
             context.unregisterReceiver(receiverHookedSystemUI)
         } catch (ignored: Exception) {
         }
+    }
+
+    companion object {
+        private var hasBootlooped: Boolean = false
+        var isHooked: Boolean = false
     }
 }

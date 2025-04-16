@@ -16,7 +16,7 @@ import androidx.core.text.HtmlCompat
 import com.drdisagree.iconify.BuildConfig
 import com.drdisagree.iconify.Iconify.Companion.appContextLocale
 import com.drdisagree.iconify.R
-import com.drdisagree.iconify.common.Const.CHANGELOG_URL
+import com.drdisagree.iconify.data.common.Const.CHANGELOG_URL
 import com.drdisagree.iconify.databinding.FragmentChangelogBinding
 import com.drdisagree.iconify.ui.base.BaseFragment
 import com.drdisagree.iconify.ui.dialogs.LoadingDialog

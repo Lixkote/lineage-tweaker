@@ -10,7 +10,7 @@ import com.drdisagree.iconify.databinding.FragmentNotificationPixelBinding
 import com.drdisagree.iconify.ui.adapters.NotificationAdapter
 import com.drdisagree.iconify.ui.base.BaseFragment
 import com.drdisagree.iconify.ui.dialogs.LoadingDialog
-import com.drdisagree.iconify.ui.models.NotificationModel
+import com.drdisagree.iconify.data.models.NotificationModel
 import com.drdisagree.iconify.ui.utils.ViewHelper.setHeader
 
 class NotificationPixel : BaseFragment() {

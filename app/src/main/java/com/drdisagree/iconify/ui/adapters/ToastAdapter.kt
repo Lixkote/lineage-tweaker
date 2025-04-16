@@ -8,10 +8,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.drdisagree.iconify.Iconify.Companion.appContext
 import com.drdisagree.iconify.Iconify.Companion.appContextLocale
 import com.drdisagree.iconify.R
-import com.drdisagree.iconify.common.Preferences.SELECTED_TOAST_FRAME
-import com.drdisagree.iconify.config.RPrefs
+import com.drdisagree.iconify.data.common.Preferences.SELECTED_TOAST_FRAME
+import com.drdisagree.iconify.data.config.RPrefs
 import com.drdisagree.iconify.databinding.ViewToastFrameBinding
-import com.drdisagree.iconify.ui.models.ToastModel
+import com.drdisagree.iconify.data.models.ToastModel
 
 class ToastAdapter (
     var context: Context,

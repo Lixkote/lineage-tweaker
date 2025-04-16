@@ -8,20 +8,23 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
 import com.drdisagree.iconify.R
-import com.drdisagree.iconify.common.Const.SWITCH_ANIMATION_DELAY
-import com.drdisagree.iconify.common.Preferences.COLOR_ACCENT_PRIMARY
-import com.drdisagree.iconify.common.Preferences.COLOR_ACCENT_SECONDARY
-import com.drdisagree.iconify.config.RPrefs.getBoolean
-import com.drdisagree.iconify.config.RPrefs.getString
+import com.drdisagree.iconify.data.common.Const.COLORBLENDR_PACKAGE
+import com.drdisagree.iconify.data.common.Const.COLORBLENDR_URL
+import com.drdisagree.iconify.data.common.Const.SWITCH_ANIMATION_DELAY
+import com.drdisagree.iconify.data.common.Preferences.COLOR_ACCENT_PRIMARY
+import com.drdisagree.iconify.data.common.Preferences.COLOR_ACCENT_SECONDARY
+import com.drdisagree.iconify.data.config.RPrefs.getBoolean
+import com.drdisagree.iconify.data.config.RPrefs.getString
 import com.drdisagree.iconify.databinding.FragmentColorEngineBinding
 import com.drdisagree.iconify.ui.activities.MainActivity.Companion.replaceFragment
 import com.drdisagree.iconify.ui.base.BaseFragment
 import com.drdisagree.iconify.ui.utils.ViewHelper.setHeader
+import com.drdisagree.iconify.utils.AppUtils.launchAppThrowError
+import com.drdisagree.iconify.utils.AppUtils.openUrl
 import com.drdisagree.iconify.utils.overlay.OverlayUtils.changeOverlayState
 import com.drdisagree.iconify.utils.overlay.OverlayUtils.disableOverlay
 import com.drdisagree.iconify.utils.overlay.OverlayUtils.disableOverlays
 import com.drdisagree.iconify.utils.overlay.OverlayUtils.enableOverlay
-import com.drdisagree.iconify.utils.overlay.OverlayUtils.isOverlayDisabled
 
 class ColorEngine : BaseFragment() {
 
@@ -49,9 +52,19 @@ class ColorEngine : BaseFragment() {
             replaceFragment(parentFragmentManager, BasicColors())
         }
 
-        // Monet engine
+        // Monet engine (ColorBlender)
         binding.monetEngine.setOnClickListener {
-            replaceFragment(parentFragmentManager, MonetEngine())
+            try {
+                launchAppThrowError(
+                    requireActivity(),
+                    COLORBLENDR_PACKAGE
+                )
+            } catch (ignored: Exception) {
+                openUrl(
+                    requireActivity(),
+                    COLORBLENDR_URL
+                )
+            }
         }
 
         // Apply monet accent and gradient
@@ -109,23 +122,17 @@ class ColorEngine : BaseFragment() {
         disableOverlay("IconifyComponentAMGC.overlay")
     }
 
-    private fun shouldUseDefaultColors(): Boolean {
-        return isOverlayDisabled("IconifyComponentME.overlay")
-    }
-
     private fun applyDefaultColors() {
-        if (shouldUseDefaultColors()) {
-            if (getString(COLOR_ACCENT_PRIMARY) == null) {
-                BasicColors.applyDefaultPrimaryColors()
-            } else {
-                BasicColors.applyPrimaryColors()
-            }
+        if (getString(COLOR_ACCENT_PRIMARY) == null) {
+            BasicColors.applyDefaultPrimaryColors()
+        } else {
+            BasicColors.applyPrimaryColors()
+        }
 
-            if (getString(COLOR_ACCENT_SECONDARY) == null) {
-                BasicColors.applyDefaultSecondaryColors()
-            } else {
-                BasicColors.applySecondaryColors()
-            }
+        if (getString(COLOR_ACCENT_SECONDARY) == null) {
+            BasicColors.applyDefaultSecondaryColors()
+        } else {
+            BasicColors.applySecondaryColors()
         }
     }
 

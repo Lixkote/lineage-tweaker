@@ -394,6 +394,7 @@ open class DefaultBattery(private val context: Context, frameColor: Int) : Batte
         scheduleSelf(invalidateRunnable, 0)
     }
 
+    @Suppress("DEPRECATION")
     private fun updateSize() {
         val b = bounds
         if (b.isEmpty) {
@@ -424,6 +425,7 @@ open class DefaultBattery(private val context: Context, frameColor: Int) : Batte
     }
 
 
+    @Suppress("DEPRECATION")
     @SuppressLint("RestrictedApi")
     private fun loadPaths() {
         val pathString = getResources(context).getString(

@@ -2,7 +2,7 @@ package com.drdisagree.iconify.ui.preferences.preferencesearch
 
 import android.content.Context
 import android.text.TextUtils
-import com.drdisagree.iconify.config.PrefsHelper.isVisible
+import com.drdisagree.iconify.data.config.PrefsHelper.isVisible
 import com.drdisagree.iconify.ui.preferences.preferencesearch.SearchConfiguration.SearchIndexItem
 import org.xmlpull.v1.XmlPullParser
 

@@ -15,6 +15,7 @@ import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.RawValue
 import java.text.DecimalFormat
 import java.util.Objects
+import kotlin.math.abs
 
 class SliderWidget : RelativeLayout {
 
@@ -22,14 +23,22 @@ class SliderWidget : RelativeLayout {
     private lateinit var titleTextView: TextView
     private lateinit var summaryTextView: TextView
     private lateinit var materialSlider: Slider
+    private lateinit var minusButton: MaterialButton
+    private lateinit var plusButton: MaterialButton
     private lateinit var resetButton: MaterialButton
     private var valueFormat: String? = ""
     private var defaultValue = 0
+    private var valueFrom = 0
+    private var valueTo = 100
+    private var tickInterval = 1
     private var outputScale = 1f
     private var isDecimalFormat = false
     private var decimalFormat: String? = "#.#"
     private var resetClickListener: OnLongClickListener? = null
     private var onSliderTouchListener: Slider.OnSliderTouchListener? = null
+    private var tickVisible: Boolean = false
+    private var showResetButton: Boolean = false
+    private var showController: Boolean = false
 
     constructor(context: Context) : super(context) {
         init(context, null)
@@ -56,17 +65,28 @@ class SliderWidget : RelativeLayout {
 
         valueFormat = typedArray.getString(R.styleable.SliderWidget_valueFormat)
         defaultValue = typedArray.getInt(R.styleable.SliderWidget_sliderDefaultValue, Int.MAX_VALUE)
-        setTitle(typedArray.getString(R.styleable.SliderWidget_titleText))
-        setSliderValueFrom(typedArray.getInt(R.styleable.SliderWidget_sliderValueFrom, 0))
-        setSliderValueTo(typedArray.getInt(R.styleable.SliderWidget_sliderValueTo, 100))
-        setSliderStepSize(typedArray.getInt(R.styleable.SliderWidget_sliderStepSize, 1))
+        valueFrom = typedArray.getInt(R.styleable.SliderWidget_sliderValueFrom, 0)
+        valueTo = typedArray.getInt(R.styleable.SliderWidget_sliderValueTo, 100)
         sliderValue = typedArray.getInt(
             R.styleable.SliderWidget_sliderValue,
             typedArray.getInt(R.styleable.SliderWidget_sliderDefaultValue, 50)
         )
+        tickInterval = typedArray.getInt(R.styleable.SliderWidget_sliderStepSize, 1)
         isDecimalFormat = typedArray.getBoolean(R.styleable.SliderWidget_isDecimalFormat, false)
         decimalFormat = typedArray.getString(R.styleable.SliderWidget_decimalFormat)
         outputScale = typedArray.getFloat(R.styleable.SliderWidget_outputScale, 1f)
+        showResetButton = typedArray.getBoolean(R.styleable.SliderWidget_showResetButton, false)
+        showController = typedArray.getBoolean(R.styleable.SliderWidget_showController, false)
+        tickVisible = typedArray.getBoolean(
+            R.styleable.SliderWidget_tickVisible,
+            abs(valueTo - valueFrom) <= 25
+        )
+
+        setTitle(typedArray.getString(R.styleable.SliderWidget_titleText))
+        setSliderValueFrom(valueFrom)
+        setSliderValueTo(valueTo)
+        setSliderStepSize(tickInterval)
+        materialSlider.isTickVisible = tickVisible
 
         typedArray.recycle()
 
@@ -79,9 +99,33 @@ class SliderWidget : RelativeLayout {
         }
 
         setSelectedText()
-        handleResetButton()
+        handleResetButtonState()
         setOnSliderTouchListener(null)
         setResetClickListener(null)
+
+        if (showController) {
+            minusButton.visibility = View.VISIBLE
+            plusButton.visibility = View.VISIBLE
+
+            minusButton.setOnClickListener { v: View ->
+                v.weakVibrate()
+                if (sliderValue <= valueFrom) return@setOnClickListener
+
+                sliderValue = (sliderValue - tickInterval).coerceAtLeast(valueFrom)
+            }
+
+            plusButton.setOnClickListener { v: View ->
+                v.weakVibrate()
+                if (sliderValue >= valueTo) return@setOnClickListener
+
+                sliderValue = (sliderValue + tickInterval).coerceAtMost(valueTo)
+            }
+
+            updateControllerButtons()
+        } else {
+            minusButton.visibility = View.GONE
+            plusButton.visibility = View.GONE
+        }
     }
 
     fun setTitle(titleResId: Int) {
@@ -118,7 +162,9 @@ class SliderWidget : RelativeLayout {
         set(value) {
             materialSlider.value = value.toFloat()
             setSelectedText()
-            handleResetButton()
+            handleResetButtonState()
+            if (showController) updateControllerButtons()
+            notifyOnSliderTouchStopped(materialSlider)
         }
 
     fun setSliderValueFrom(value: Int) {
@@ -147,26 +193,7 @@ class SliderWidget : RelativeLayout {
     fun setOnSliderTouchListener(listener: Slider.OnSliderTouchListener?) {
         onSliderTouchListener = listener
 
-        materialSlider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
-            override fun onStartTrackingTouch(slider: Slider) {
-                notifyOnSliderTouchStarted(slider)
-            }
-
-            override fun onStopTrackingTouch(slider: Slider) {
-                setSelectedText()
-                handleResetButton()
-                notifyOnSliderTouchStopped(slider)
-            }
-        })
-
-        materialSlider.setLabelFormatter {
-            if (valueFormat!!.isBlank() || valueFormat!!.isEmpty()) (if (!isDecimalFormat) (materialSlider.value / outputScale).toInt() else DecimalFormat(
-                decimalFormat
-            )
-                .format((materialSlider.value / outputScale).toDouble())).toString() + valueFormat else (if (!isDecimalFormat) materialSlider.value.toInt()
-                .toString() else DecimalFormat(decimalFormat)
-                .format((materialSlider.value / outputScale).toDouble())) + valueFormat
-        }
+        setOnSliderTouchListenerOnce()
     }
 
     fun setOnSliderChangeListener(listener: Slider.OnChangeListener) {
@@ -176,16 +203,7 @@ class SliderWidget : RelativeLayout {
     fun setResetClickListener(listener: OnLongClickListener?) {
         resetClickListener = listener
 
-        resetButton.setOnClickListener { v: View ->
-            if (defaultValue == Int.MAX_VALUE) {
-                return@setOnClickListener
-            }
-
-            sliderValue = defaultValue
-
-            handleResetButton()
-            notifyOnResetClicked(v)
-        }
+        setResetClickListenerOnce()
     }
 
     fun resetSlider() {
@@ -205,13 +223,19 @@ class SliderWidget : RelativeLayout {
         resetClickListener?.onLongClick(v)
     }
 
-    private fun handleResetButton() {
+    private fun handleResetButtonState() {
         if (defaultValue != Int.MAX_VALUE) {
             resetButton.visibility = VISIBLE
             resetButton.isEnabled = isEnabled && materialSlider.value != defaultValue.toFloat()
         } else {
             resetButton.visibility = GONE
         }
+    }
+
+    private fun updateControllerButtons() {
+        val currentValue = materialSlider.value
+        minusButton.isEnabled = currentValue > valueFrom
+        plusButton.isEnabled = currentValue < valueTo
     }
 
     override fun setEnabled(enabled: Boolean) {
@@ -230,11 +254,15 @@ class SliderWidget : RelativeLayout {
         titleTextView = findViewById(R.id.title)
         summaryTextView = findViewById(R.id.summary)
         materialSlider = findViewById(R.id.slider_widget)
+        minusButton = findViewById(R.id.minus_button)
+        plusButton = findViewById(R.id.plus_button)
         resetButton = findViewById(R.id.reset_button)
         container.id = generateViewId()
         titleTextView.id = generateViewId()
         summaryTextView.id = generateViewId()
         materialSlider.id = generateViewId()
+        minusButton.id = generateViewId()
+        plusButton.id = generateViewId()
         resetButton.id = generateViewId()
     }
 
@@ -251,7 +279,8 @@ class SliderWidget : RelativeLayout {
         super.onRestoreInstanceState(state.superState)
         materialSlider.value = state.sliderValue
         setSelectedText()
-        handleResetButton()
+        handleResetButtonState()
+        if (showController) updateControllerButtons()
     }
 
     @Parcelize
@@ -259,4 +288,53 @@ class SliderWidget : RelativeLayout {
         private val parentState: @RawValue Parcelable?,
         val sliderValue: Float
     ) : BaseSavedState(parentState)
+
+    companion object {
+
+        private fun SliderWidget.setOnSliderTouchListenerOnce() {
+            if (getTag(R.id.tag_slider_touch_listener_set) != null) return
+
+            materialSlider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
+                override fun onStartTrackingTouch(slider: Slider) {
+                    notifyOnSliderTouchStarted(slider)
+                }
+
+                override fun onStopTrackingTouch(slider: Slider) {
+                    setSelectedText()
+                    handleResetButtonState()
+                    notifyOnSliderTouchStopped(slider)
+                    if (showController) updateControllerButtons()
+                }
+            })
+
+            setTag(R.id.tag_slider_touch_listener_set, "set")
+
+            materialSlider.setLabelFormatter {
+                if (valueFormat!!.isBlank() || valueFormat!!.isEmpty()) (
+                        if (!isDecimalFormat) (materialSlider.value / outputScale).toInt()
+                        else DecimalFormat(decimalFormat)
+                            .format((materialSlider.value / outputScale).toDouble())).toString() + valueFormat else (if (!isDecimalFormat) materialSlider.value.toInt()
+                    .toString() else DecimalFormat(decimalFormat)
+                    .format((materialSlider.value / outputScale).toDouble())) + valueFormat
+            }
+        }
+
+        private fun SliderWidget.setResetClickListenerOnce() {
+            if (getTag(R.id.tag_slider_reset_listener_set) != null) return
+
+            resetButton.setOnClickListener { v: View ->
+                if (defaultValue == Int.MAX_VALUE) {
+                    return@setOnClickListener
+                }
+
+                materialSlider.value = defaultValue.toFloat()
+                setSelectedText()
+                handleResetButtonState()
+                notifyOnResetClicked(v)
+                if (showController) updateControllerButtons()
+            }
+
+            setTag(R.id.tag_slider_reset_listener_set, "set")
+        }
+    }
 }

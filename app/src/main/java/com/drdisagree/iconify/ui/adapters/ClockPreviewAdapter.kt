@@ -15,9 +15,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.drdisagree.iconify.R
-import com.drdisagree.iconify.common.Preferences.LSCLOCK_SWITCH
-import com.drdisagree.iconify.config.RPrefs
-import com.drdisagree.iconify.ui.models.ClockModel
+import com.drdisagree.iconify.data.common.Preferences.LSCLOCK_SWITCH
+import com.drdisagree.iconify.data.config.RPrefs
+import com.drdisagree.iconify.data.models.ClockModel
 import com.drdisagree.iconify.ui.utils.ViewBindingHelpers.setBitmapWithAnimation
 import com.drdisagree.iconify.utils.WallpaperUtils
 import com.google.android.material.button.MaterialButton
@@ -106,8 +106,8 @@ class ClockPreviewAdapter(
             button.setEnabled(!isSelected)
             checkIcon.setVisibility(if (isSelected) View.VISIBLE else View.GONE)
 
-            if (wallpaperBitmap != null) {
-                setBitmapWithAnimation(wallpaperView, wallpaperBitmap)
+            wallpaperBitmap?.let {
+                wallpaperView.setBitmapWithAnimation(it)
             }
         }
     }

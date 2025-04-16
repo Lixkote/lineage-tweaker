@@ -45,13 +45,6 @@
         app:fragment="com.drdisagree.iconify.ui.fragments.tweaks.QsTileSize" />
 
     <com.drdisagree.iconify.ui.preferences.PreferenceMenu
-        android:icon="@drawable/ic_qs_top_margin"
-        android:key="qsPanelMargin"
-        android:summary="@string/activity_desc_qs_panel_margin"
-        android:title="@string/activity_title_qs_panel_margin"
-        app:fragment="com.drdisagree.iconify.ui.fragments.tweaks.QsPanelMargin" />
-
-    <com.drdisagree.iconify.ui.preferences.PreferenceMenu
         android:icon="@drawable/ic_tweaks_statusbar"
         android:key="statusBarTweaks"
         android:summary="@string/activity_desc_statusbar"

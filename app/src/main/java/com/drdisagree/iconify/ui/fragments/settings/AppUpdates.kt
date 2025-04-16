@@ -19,12 +19,12 @@ import com.drdisagree.iconify.BuildConfig
 import com.drdisagree.iconify.Iconify.Companion.appContext
 import com.drdisagree.iconify.Iconify.Companion.appContextLocale
 import com.drdisagree.iconify.R
-import com.drdisagree.iconify.common.Const.LATEST_VERSION_URL
-import com.drdisagree.iconify.common.Preferences.UPDATE_CHECK_TIME
-import com.drdisagree.iconify.common.Preferences.UPDATE_SCHEDULE
-import com.drdisagree.iconify.common.Preferences.VER_CODE
-import com.drdisagree.iconify.config.RPrefs
-import com.drdisagree.iconify.config.RPrefs.putLong
+import com.drdisagree.iconify.data.common.Const.LATEST_VERSION_URL
+import com.drdisagree.iconify.data.common.Preferences.UPDATE_CHECK_TIME
+import com.drdisagree.iconify.data.common.Preferences.UPDATE_SCHEDULE
+import com.drdisagree.iconify.data.common.Preferences.VER_CODE
+import com.drdisagree.iconify.data.config.RPrefs
+import com.drdisagree.iconify.data.config.RPrefs.putLong
 import com.drdisagree.iconify.databinding.FragmentAppUpdatesBinding
 import com.drdisagree.iconify.ui.base.BaseFragment
 import com.drdisagree.iconify.ui.utils.ViewHelper.dp2px
@@ -274,8 +274,11 @@ class AppUpdates : BaseFragment() {
 
                         binding.showChangelog.visibility = View.VISIBLE
                     } else {
-                        binding.updateTitle.text =
+                        binding.updateTitle.text = if (BuildConfig.DEBUG) {
+                            resources.getString(R.string.auto_update_disabled)
+                        } else {
                             resources.getString(R.string.already_up_to_date)
+                        }
                     }
 
                     binding.currentVersion.text =

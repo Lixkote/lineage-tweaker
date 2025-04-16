@@ -2,8 +2,8 @@ package com.drdisagree.iconify.utils
 
 import android.view.HapticFeedbackConstants
 import android.view.View
-import com.drdisagree.iconify.common.Preferences.VIBRATE_UI
-import com.drdisagree.iconify.config.RPrefs
+import com.drdisagree.iconify.data.common.Preferences.VIBRATE_UI
+import com.drdisagree.iconify.data.config.RPrefs
 
 object HapticUtils {
 

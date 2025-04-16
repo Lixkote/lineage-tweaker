@@ -1,8 +1,12 @@
 package com.drdisagree.iconify.utils
 
 import android.content.Context
+import android.os.Build
+import android.util.Log
 import com.drdisagree.iconify.R
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 object MiscUtils {
 
@@ -37,5 +41,21 @@ object MiscUtils {
             }
             .setCancelable(true)
             .show()
+    }
+
+    fun requiresNewToastStyle(): Boolean {
+        val isAndroid15 = Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM
+        val patchLevel = Build.VERSION.SECURITY_PATCH
+        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+
+        return try {
+            val patchDate = sdf.parse(patchLevel)
+            val thresholdDate = sdf.parse("2024-12-01")
+
+            isAndroid15 && patchDate != null && patchDate.after(thresholdDate)
+        } catch (e: Exception) {
+            Log.e("SECURITY_PATCH_CHECK", "Error parsing security patch date", e)
+            false
+        }
     }
 }

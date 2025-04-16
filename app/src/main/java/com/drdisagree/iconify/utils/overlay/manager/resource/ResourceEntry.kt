@@ -7,9 +7,9 @@ class ResourceEntry {
     var startEndTag: String
     var resourceName: String
     var resourceValue: String
-    private var isPortrait: Boolean
-    var isNightMode: Boolean
-    private var isLandscape: Boolean
+    private var _isPortrait: Boolean
+    private var _isLandscape: Boolean
+    private var _isNightMode: Boolean
 
     constructor(
         packageName: String,
@@ -22,9 +22,9 @@ class ResourceEntry {
         this.resourceName = resourceName
         this.resourceValue = resourceValue
 
-        isPortrait = true
-        isNightMode = false
-        isLandscape = false
+        _isPortrait = true
+        _isLandscape = false
+        _isNightMode = false
     }
 
     constructor(packageName: String, startEndTag: String, resourceName: String) {
@@ -33,26 +33,26 @@ class ResourceEntry {
         this.resourceName = resourceName
 
         resourceValue = ""
-        isPortrait = true
-        isNightMode = false
-        isLandscape = false
+        _isPortrait = true
+        _isLandscape = false
+        _isNightMode = false
     }
 
-    fun isPortrait(): Boolean {
-        return isPortrait
-    }
+    var isPortrait: Boolean
+        get() = _isPortrait
+        set(value) {
+            _isPortrait = value
+        }
 
-    fun setPortrait(portrait: Boolean) {
-        isPortrait = portrait
-        isLandscape = !portrait
-    }
+    var isLandscape: Boolean
+        get() = _isLandscape
+        set(value) {
+            _isLandscape = value
+        }
 
-    fun isLandscape(): Boolean {
-        return isLandscape
-    }
-
-    fun setLandscape(landscape: Boolean) {
-        isLandscape = landscape
-        isPortrait = !landscape
-    }
+    var isNightMode: Boolean
+        get() = _isNightMode
+        set(value) {
+            _isNightMode = value
+        }
 }

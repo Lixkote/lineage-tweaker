@@ -20,9 +20,9 @@ class OpenMeteoProvider(context: Context?) : AbstractWeatherProvider(context!!) 
         return handleWeatherRequest(coordinates, metric)
     }
 
-    override fun getLocationWeather(location: Location?, metric: Boolean): WeatherInfo? {
+    override fun getLocationWeather(location: Location, metric: Boolean): WeatherInfo? {
         val coordinates =
-            String.format(Locale.US, PART_COORDINATES, location!!.latitude, location.longitude)
+            String.format(Locale.US, PART_COORDINATES, location.latitude, location.longitude)
         return handleWeatherRequest(coordinates, metric)
     }
 
@@ -38,7 +38,7 @@ class OpenMeteoProvider(context: Context?) : AbstractWeatherProvider(context!!) 
             speedUnit,
             timeZone
         )
-        val conditionResponse = retrieve(conditionUrl) ?: return null
+        val conditionResponse = retrieve(conditionUrl)
         log(
             TAG,
             "Condition URL = $conditionUrl returning a response of $conditionResponse"
@@ -54,14 +54,22 @@ class OpenMeteoProvider(context: Context?) : AbstractWeatherProvider(context!!) 
 
             val w = WeatherInfo(
                 mContext,
-                /* id */ selection,
-                /* cityId */ city!!,
-                /* condition */ getWeatherDescription(weathercode),
-                /* conditionCode */ mapConditionIconToCode(weathercode, isDay),
-                /* temperature */ weather.getDouble("temperature_2m").toFloat(),  // Api: Humidity included in current
-                /* humidity */ weather.getDouble("relative_humidity_2m").toFloat(),
-                /* wind */ weather.getDouble("wind_speed_10m").toFloat(),
-                /* windDir */weather.getInt("wind_direction_10m"),
+                /* id */
+                selection,
+                /* cityId */
+                city!!,
+                /* condition */
+                getWeatherDescription(weathercode),
+                /* conditionCode */
+                mapConditionIconToCode(weathercode, isDay),
+                /* temperature */
+                weather.getDouble("temperature_2m").toFloat(),  // Api: Humidity included in current
+                /* humidity */
+                weather.getDouble("relative_humidity_2m").toFloat(),
+                /* wind */
+                weather.getDouble("wind_speed_10m").toFloat(),
+                /* windDir */
+                weather.getInt("wind_direction_10m"),
                 metric,
                 parseHourlyForecasts(JSONObject(conditionResponse).getJSONObject("hourly"), metric),
                 parseForecasts(JSONObject(conditionResponse).getJSONObject("daily"), metric),
@@ -132,8 +140,8 @@ class OpenMeteoProvider(context: Context?) : AbstractWeatherProvider(context!!) 
         }
         // clients assume there are 5  entries - so fill with dummy if needed
         if (result.size < 5) {
-            for (i in result.size..4) {
-                Log.w(TAG, "Missing forecast for day $i creating dummy")
+            for (j in result.size..4) {
+                Log.w(TAG, "Missing forecast for day $j creating dummy")
                 val item: WeatherInfo.DayForecast = WeatherInfo.DayForecast( /* low */
                     0F,  /* high */
                     0F,  /* condition */
@@ -199,8 +207,8 @@ class OpenMeteoProvider(context: Context?) : AbstractWeatherProvider(context!!) 
         }
         // clients assume there are 5  entries - so fill with dummy if needed
         if (result.size < 10) {
-            for (i in result.size..9) {
-                Log.w(TAG, "Missing forecast for hour $i creating dummy")
+            for (j in result.size..9) {
+                Log.w(TAG, "Missing forecast for hour $j creating dummy")
                 val item: WeatherInfo.HourForecast = WeatherInfo.HourForecast( /* temp */
                     0F,  /* condition */
                     "",  /* conditionCode */
@@ -217,7 +225,7 @@ class OpenMeteoProvider(context: Context?) : AbstractWeatherProvider(context!!) 
 
     private val languageCode: String
         get() {
-            val locale = mContext.resources.configuration.locale
+            val locale = mContext.resources.configuration.locales[0]
             val selector = locale.language + "-" + locale.country
 
             for ((key, value) in LANGUAGE_CODE_MAPPING) {
@@ -400,16 +408,16 @@ class OpenMeteoProvider(context: Context?) : AbstractWeatherProvider(context!!) 
         private fun sanitizeTemperature(value: Double, metric: Boolean): Float {
             // threshold chosen to work for both C and F. 170 deg F is hotter
             // than the hottest place on earth.
-            var value = value
-            if (value > 170) {
+            var newValue = value
+            if (newValue > 170) {
                 // K -> deg C
-                value -= 273.15
+                newValue -= 273.15
                 if (!metric) {
                     // deg C -> deg F
-                    value = (value * 1.8) + 32
+                    newValue = (newValue * 1.8) + 32
                 }
             }
-            return value.toFloat()
+            return newValue.toFloat()
         }
 
         private val LANGUAGE_CODE_MAPPING = HashMap<String, String>()

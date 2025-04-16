@@ -51,19 +51,19 @@ class ForecastHourAdapter(client: OmniJawsClient) :
 
         @SuppressLint("SetTextI18n")
         fun bind(forecast: OmniJawsClient.HourForecast) {
-            binding.forecastTime.setText(fotmatHour(forecast.time!!))
+            binding.forecastTime.text = formatHour(forecast.time!!)
             binding.forecastIcon.setImageDrawable(mWeatherClient.getWeatherConditionImage(forecast.conditionCode))
-            binding.forecastTemperature.setText(forecast.temperature + "°")
+            binding.forecastTemperature.text = forecast.temperature + "°"
         }
 
-        private fun fotmatHour(inputDate: String): String? {
+        private fun formatHour(inputDate: String): String? {
             val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.getDefault())
             val dayMonthFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
 
             try {
                 val date = inputFormat.parse(inputDate)
 
-                return dayMonthFormat.format(date)
+                return date?.let { dayMonthFormat.format(it) }
             } catch (e: Exception) {
                 Log.e("ForecastHourAdapter", "Error parsing hours", e)
                 return null

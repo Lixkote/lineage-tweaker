@@ -41,23 +41,21 @@
                     android:layout_height="wrap_content"
                     android:format12Hour="hh:mm"
                     android:format24Hour="HH:mm"
-                    android:includeFontPadding="false"
                     android:singleLine="true"
-                    android:tag="text1"
+                    android:includeFontPadding="false"
+                    android:tag="text1|tickIndicator"
                     android:textColor="@android:color/white"
                     android:textSize="40dp" />
 
-                <TextClock
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:format12Hour="hh:mm"
-                    android:format24Hour="HH:mm"
+                    android:tag="hours"
+                    android:text=""
                     android:includeFontPadding="false"
-                    android:maxLength="1"
-                    android:singleLine="true"
-                    android:tag="accent1"
-                    android:textColor="@android:color/system_accent1_300"
+                    android:textColor="@android:color/white"
                     android:textSize="40dp" />
+
             </FrameLayout>
         </LinearLayout>
 

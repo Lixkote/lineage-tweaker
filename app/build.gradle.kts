@@ -4,22 +4,26 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.agp.app)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.kotlin.ksp)
     alias(libs.plugins.kotlin.parcelize)
 }
 
 android {
     namespace = "com.drdisagree.iconify"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.drdisagree.iconify"
         minSdk = 31
-        targetSdk = 34
-        versionCode = 21
-        versionName = "6.9.0"
-        setProperty("archivesBaseName", "Iconify v$versionName")
+        targetSdk = 35
+        versionCode = 24
+        versionName = "7.2.0"
+        setProperty("archivesBaseName", "Iconify v${defaultConfig.versionName}")
         buildConfigField("int", "MIN_SDK_VERSION", "$minSdk")
+
+        ksp {
+            arg("room.schemaLocation", "$projectDir/schemas")
+        }
     }
 
     val keystorePropertiesFile = rootProject.file("keystore.properties")
@@ -44,7 +48,7 @@ android {
         debug {
             isMinifyEnabled = true
             isShrinkResources = true
-            isCrunchPngs = true
+            isCrunchPngs = false
             proguardFiles("proguard-android-optimize.txt", "proguard.pro", "proguard-rules.pro")
             applicationIdSuffix = ".debug"
             resValue("string", "derived_app_name", "Iconify (Debug)")
@@ -54,16 +58,57 @@ android {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
-            isCrunchPngs = true
+            isCrunchPngs = false
             proguardFiles("proguard-android-optimize.txt", "proguard.pro", "proguard-rules.pro")
             resValue("string", "derived_app_name", "Iconify")
             signingConfig = releaseSigning
         }
     }
 
+    flavorDimensions += "distribution"
+
+    productFlavors {
+        create("standard") {
+            isDefault = true
+            dimension = "distribution"
+            resValue("string", "derived_app_name", "Iconify")
+        }
+
+        create("foss") {
+            dimension = "distribution"
+            applicationIdSuffix = ".foss"
+            resValue("string", "derived_app_name", "Iconify (FOSS)")
+        }
+    }
+
+    sourceSets {
+        getByName("standard") {
+            java.srcDirs("src/standard/java")
+        }
+
+        getByName("foss") {
+            java.srcDirs("src/foss/java")
+        }
+    }
+
+    if (hasProperty("splitApks")) {
+        splits {
+            abi {
+                isEnable = true
+                reset()
+                include("arm64-v8a", "armeabi-v7a", "x86", "x86_64")
+                isUniversalApk = false
+            }
+        }
+    }
+
+    dependenciesInfo {
+        includeInApk = false
+        includeInBundle = false
+    }
+
     buildFeatures {
         viewBinding = true
-        dataBinding = true
         buildConfig = true
         aidl = true
     }
@@ -107,6 +152,18 @@ android {
     }
 }
 
+tasks.withType<JavaCompile>().configureEach {
+    options.compilerArgs.add("-Xlint:-deprecation")
+}
+
+gradle.taskGraph.whenReady {
+    gradle.startParameter.showStacktrace = ShowStacktrace.ALWAYS
+    gradle.startParameter.warningMode = WarningMode.Summary
+}
+
+val fossImplementation by configurations
+val standardImplementation by configurations
+
 dependencies {
     // Kotlin
     implementation(libs.androidx.core.ktx)
@@ -116,15 +173,17 @@ dependencies {
     implementation(libs.androidx.palette.ktx)
 
     // Xposed API
-    compileOnly(files("libs/api-82.jar"))
-    compileOnly(files("libs/api-82-sources.jar"))
+    // F-Droid disallow `api.xposed.info` since it's not a "Trusted Maven Repository".
+    // So we create a mirror GitHub repository and obtain the library from `jitpack.io` instead.
+    // Equivalent to `implementation 'de.robv.android.xposed:api:82'`.
+    compileOnly(libs.xposedbridge)
 
     // The core module that provides APIs to a shell
-    implementation(libs.core)
+    implementation(libs.su.core)
     // Optional: APIs for creating root services. Depends on ":core"
-    implementation(libs.service)
+    implementation(libs.su.service)
     // Optional: Provides remote file system support
-    implementation(libs.nio)
+    implementation(libs.su.nio)
 
     // Coroutines
     implementation(libs.kotlinx.coroutines.android)
@@ -155,8 +214,7 @@ dependencies {
 
     // Glide
     implementation(libs.glide)
-    //noinspection KaptUsageInsteadOfKsp
-    kapt(libs.compiler)
+    ksp(libs.glide.compiler)
 
     // RecyclerView
     implementation(libs.androidx.recyclerview)
@@ -196,8 +254,8 @@ dependencies {
     implementation(libs.fadingedgelayout)
 
     // Google Subject Segmentation - MLKit
-    implementation(libs.com.google.android.gms.play.services.mlkit.subject.segmentation)
-    implementation(libs.play.services.base)
+    standardImplementation(libs.com.google.android.gms.play.services.mlkit.subject.segmentation)
+    standardImplementation(libs.play.services.base)
 
     // Blur View
     implementation(libs.blurview)
@@ -212,6 +270,11 @@ dependencies {
 
     // OkHttp
     implementation(libs.okhttp)
+
+    // Room Database
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    ksp(libs.room.compiler)
 }
 
 tasks.register("printVersionName") {

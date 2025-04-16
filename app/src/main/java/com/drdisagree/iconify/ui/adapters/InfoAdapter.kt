@@ -13,7 +13,8 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.drdisagree.iconify.R
-import com.drdisagree.iconify.ui.models.InfoModel
+import com.drdisagree.iconify.data.models.InfoModel
+import com.drdisagree.iconify.ui.utils.ViewBindingHelpers.setRoundImageUrl
 
 class InfoAdapter(
     var context: Context,
@@ -52,25 +53,24 @@ class InfoAdapter(
                 holder.itemView.setLayoutParams(RecyclerView.LayoutParams(0, 0))
             }
         } else if (holder is ItemViewHolder) {
-            holder.icon.setImageResource(itemList[position].icon)
             holder.title.text = itemList[position].title
             holder.desc.text = itemList[position].desc
             holder.container.setOnClickListener(itemList[position].onClickListener)
 
-            val drawableName = context.resources.getResourceEntryName(itemList[position].icon)
             val typedValue = TypedValue()
-
             context.theme.resolveAttribute(
                 com.google.android.material.R.attr.colorOnSurface,
                 typedValue,
                 true
             )
-
             val colorOnSurface = typedValue.data
-            if (drawableName.contains("flag_")) {
-                holder.icon.clearColorFilter()
-            } else {
+
+            if (itemList[position].icon is Int) {
                 holder.icon.colorFilter = BlendModeColorFilter(colorOnSurface, BlendMode.SRC_IN)
+                holder.icon.setImageResource(itemList[position].icon as Int)
+            } else if (itemList[position].icon is String) {
+                holder.icon.clearColorFilter()
+                holder.icon.setRoundImageUrl(itemList[position].icon as String)
             }
         }
     }

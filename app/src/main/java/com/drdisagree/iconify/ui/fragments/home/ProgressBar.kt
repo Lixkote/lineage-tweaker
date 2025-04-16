@@ -10,7 +10,7 @@ import com.drdisagree.iconify.databinding.FragmentProgressBarBinding
 import com.drdisagree.iconify.ui.adapters.ProgressBarAdapter
 import com.drdisagree.iconify.ui.base.BaseFragment
 import com.drdisagree.iconify.ui.dialogs.LoadingDialog
-import com.drdisagree.iconify.ui.models.ProgressBarModel
+import com.drdisagree.iconify.data.models.ProgressBarModel
 import com.drdisagree.iconify.ui.utils.ViewHelper.setHeader
 
 class ProgressBar : BaseFragment() {

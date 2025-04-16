@@ -1,8 +1,8 @@
 package com.drdisagree.iconify.ui.utils
 
 import androidx.appcompat.app.AppCompatDelegate
-import com.drdisagree.iconify.common.Preferences.APP_THEME
-import com.drdisagree.iconify.config.RPrefs
+import com.drdisagree.iconify.data.common.Preferences.APP_THEME
+import com.drdisagree.iconify.data.config.RPrefs
 
 object ThemeHelper {
 

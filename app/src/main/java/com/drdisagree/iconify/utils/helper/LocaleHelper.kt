@@ -3,16 +3,17 @@ package com.drdisagree.iconify.utils.helper
 import android.content.Context
 import android.os.LocaleList
 import com.drdisagree.iconify.R
-import com.drdisagree.iconify.common.Preferences.APP_LANGUAGE
-import com.drdisagree.iconify.config.RPrefs.getString
+import com.drdisagree.iconify.data.common.Preferences.APP_LANGUAGE
+import com.drdisagree.iconify.data.config.RPrefs.getString
+import com.drdisagree.iconify.data.config.RPrefs.putString
 import java.util.Locale
 
 object LocaleHelper {
 
     fun setLocale(context: Context): Context {
-        var localeCode = getString(APP_LANGUAGE, "")!!
+        var localeCode = getString(APP_LANGUAGE)
 
-        if (localeCode.isEmpty()) {
+        if (localeCode.isNullOrEmpty()) {
             val locales = context.resources.configuration.getLocales()
             val localeCodes = listOf(*context.resources.getStringArray(R.array.locale_code))
 
@@ -27,9 +28,11 @@ object LocaleHelper {
                 }
             }
 
-            if (localeCode.isEmpty()) {
+            if (localeCode.isNullOrEmpty()) {
                 localeCode = "en-US"
             }
+
+            putString(APP_LANGUAGE, localeCode)
         }
 
         val locale = Locale.forLanguageTag(localeCode)

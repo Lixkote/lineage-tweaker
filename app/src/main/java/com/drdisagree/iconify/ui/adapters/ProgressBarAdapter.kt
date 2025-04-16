@@ -18,11 +18,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.drdisagree.iconify.Iconify.Companion.appContext
 import com.drdisagree.iconify.R
-import com.drdisagree.iconify.common.Const.FRAMEWORK_PACKAGE
-import com.drdisagree.iconify.common.Preferences.SELECTED_PROGRESSBAR
-import com.drdisagree.iconify.config.RPrefs
+import com.drdisagree.iconify.data.common.Const.FRAMEWORK_PACKAGE
+import com.drdisagree.iconify.data.common.Preferences.SELECTED_PROGRESSBAR
+import com.drdisagree.iconify.data.config.RPrefs
 import com.drdisagree.iconify.ui.dialogs.LoadingDialog
-import com.drdisagree.iconify.ui.models.ProgressBarModel
+import com.drdisagree.iconify.data.models.ProgressBarModel
 import com.drdisagree.iconify.utils.SystemUtils
 import com.drdisagree.iconify.utils.overlay.OverlayUtils
 import com.drdisagree.iconify.utils.overlay.compiler.OnDemandCompiler

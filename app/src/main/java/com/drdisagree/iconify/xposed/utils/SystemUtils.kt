@@ -13,7 +13,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-
 class SystemUtils(var mContext: Context) {
 
     init {
@@ -65,6 +64,12 @@ class SystemUtils(var mContext: Context) {
             }
         }
 
+        fun sleepDevice() {
+            enqueueProxyCommand { proxy ->
+                proxy.runCommand("input keyevent 223")
+            }
+        }
+
         fun <Method> killSelf() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 resetCounter(Process.myProcessName())
@@ -73,7 +78,5 @@ class SystemUtils(var mContext: Context) {
             }
             Process.killProcess(Process.myPid())
         }
-
-        private val TAG = "Iconify - ${this::class.java.simpleName}: "
     }
 }

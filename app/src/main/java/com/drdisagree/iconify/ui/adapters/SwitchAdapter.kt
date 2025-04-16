@@ -19,11 +19,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.drdisagree.iconify.Iconify.Companion.appContext
 import com.drdisagree.iconify.R
-import com.drdisagree.iconify.common.Const.SWITCH_ANIMATION_DELAY
-import com.drdisagree.iconify.common.Preferences.SELECTED_SWITCH
-import com.drdisagree.iconify.config.RPrefs
+import com.drdisagree.iconify.data.common.Const.SWITCH_ANIMATION_DELAY
+import com.drdisagree.iconify.data.common.Preferences.SELECTED_SWITCH
+import com.drdisagree.iconify.data.config.RPrefs
 import com.drdisagree.iconify.ui.dialogs.LoadingDialog
-import com.drdisagree.iconify.ui.models.SwitchModel
+import com.drdisagree.iconify.data.models.SwitchModel
 import com.drdisagree.iconify.utils.SystemUtils
 import com.drdisagree.iconify.utils.overlay.OverlayUtils
 import com.drdisagree.iconify.utils.overlay.compiler.SwitchCompiler

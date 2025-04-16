@@ -13,40 +13,38 @@ import android.view.ViewTreeObserver
 import android.widget.CompoundButton
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.drdisagree.iconify.R
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUSBAR_CLOCK_ACCENT
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUSBAR_CLOCK_END_COLOR
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUSBAR_CLOCK_GRADIENT_DIRECTION
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUSBAR_CLOCK_PADDING_BOTTOM
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUSBAR_CLOCK_PADDING_LEFT
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUSBAR_CLOCK_PADDING_RIGHT
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUSBAR_CLOCK_PADDING_TOP
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUSBAR_CLOCK_RADIUS_BOTTOM_LEFT
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUSBAR_CLOCK_RADIUS_BOTTOM_RIGHT
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUSBAR_CLOCK_RADIUS_TOP_LEFT
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUSBAR_CLOCK_RADIUS_TOP_RIGHT
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUSBAR_CLOCK_START_COLOR
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUSBAR_CLOCK_STROKE_ACCENT
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUSBAR_CLOCK_STROKE_COLOR
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUSBAR_CLOCK_STROKE_DASH
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUSBAR_CLOCK_STROKE_DASH_GAP
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUSBAR_CLOCK_STROKE_DASH_WIDTH
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUSBAR_CLOCK_STROKE_SWITCH
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUSBAR_CLOCK_STROKE_WIDTH
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUSBAR_CLOCK_STYLE_CHANGED
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUSBAR_CLOCK_TEXT_COLOR_CODE
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUSBAR_CLOCK_TEXT_COLOR_OPTION
-import com.drdisagree.iconify.config.RPrefs
-import com.drdisagree.iconify.config.RPrefs.getBoolean
-import com.drdisagree.iconify.config.RPrefs.getInt
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUSBAR_CLOCK_ACCENT
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUSBAR_CLOCK_END_COLOR
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUSBAR_CLOCK_GRADIENT_DIRECTION
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUSBAR_CLOCK_PADDING_BOTTOM
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUSBAR_CLOCK_PADDING_LEFT
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUSBAR_CLOCK_PADDING_RIGHT
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUSBAR_CLOCK_PADDING_TOP
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUSBAR_CLOCK_RADIUS_BOTTOM_LEFT
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUSBAR_CLOCK_RADIUS_BOTTOM_RIGHT
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUSBAR_CLOCK_RADIUS_TOP_LEFT
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUSBAR_CLOCK_RADIUS_TOP_RIGHT
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUSBAR_CLOCK_START_COLOR
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUSBAR_CLOCK_STROKE_ACCENT
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUSBAR_CLOCK_STROKE_COLOR
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUSBAR_CLOCK_STROKE_DASH
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUSBAR_CLOCK_STROKE_DASH_GAP
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUSBAR_CLOCK_STROKE_DASH_WIDTH
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUSBAR_CLOCK_STROKE_SWITCH
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUSBAR_CLOCK_STROKE_WIDTH
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUSBAR_CLOCK_STYLE_CHANGED
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUSBAR_CLOCK_TEXT_COLOR_CODE
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUSBAR_CLOCK_TEXT_COLOR_OPTION
+import com.drdisagree.iconify.data.config.RPrefs
+import com.drdisagree.iconify.data.config.RPrefs.getBoolean
+import com.drdisagree.iconify.data.config.RPrefs.getInt
 import com.drdisagree.iconify.databinding.FragmentXposedClockChipBinding
 import com.drdisagree.iconify.ui.base.BaseFragment
 import com.drdisagree.iconify.ui.utils.ViewHelper.setHeader
-import com.drdisagree.iconify.xposed.modules.utils.ViewHelper.toPx
-import com.drdisagree.iconify.xposed.modules.views.ChipDrawable
-import com.drdisagree.iconify.xposed.modules.views.ChipDrawable.GradientDirection.Companion.toIndex
+import com.drdisagree.iconify.xposed.modules.extras.utils.ViewHelper.toPx
+import com.drdisagree.iconify.xposed.modules.extras.views.ChipDrawable
+import com.drdisagree.iconify.xposed.modules.extras.views.ChipDrawable.GradientDirection.Companion.toIndex
 import com.google.android.material.slider.Slider
 import eightbitlab.com.blurview.RenderEffectBlur
 
@@ -110,23 +108,13 @@ class ClockChip : BaseFragment() {
             override fun onGlobalLayout() {
                 binding.header.appBarLayout.viewTreeObserver.removeOnGlobalLayoutListener(this)
 
-                val windowInsetsCompat = ViewCompat.getRootWindowInsets(binding.root)
-                val statusBarHeight =
-                    windowInsetsCompat?.isVisible(WindowInsetsCompat.Type.statusBars())?.let {
-                        windowInsetsCompat.getInsets(WindowInsetsCompat.Type.statusBars()).top
-                    } ?: 0
-
-                val headerHeight = binding.header.appBarLayout.height
-
                 val params = binding.blurView.layoutParams as CoordinatorLayout.LayoutParams
-                params.topMargin = headerHeight
+                params.topMargin = binding.header.appBarLayout.height
                 binding.blurView.layoutParams = params
-
-                val blurViewHeight = binding.header.appBarLayout.height
 
                 binding.linearLayout.setPadding(
                     binding.linearLayout.paddingLeft,
-                    blurViewHeight - statusBarHeight,
+                    binding.blurView.height,
                     binding.linearLayout.paddingRight,
                     binding.linearLayout.paddingBottom
                 )

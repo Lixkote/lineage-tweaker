@@ -1,9 +1,9 @@
 package com.drdisagree.iconify.utils.overlay.manager
 
-import com.drdisagree.iconify.common.Dynamic.TOTAL_QSSHAPES
-import com.drdisagree.iconify.common.Dynamic.isAtleastA14
-import com.drdisagree.iconify.common.Preferences.FIX_QS_TILE_COLOR
-import com.drdisagree.iconify.config.RPrefs
+import com.drdisagree.iconify.data.common.Dynamic.TOTAL_QSSHAPES
+import com.drdisagree.iconify.data.common.Dynamic.isAtleastA14
+import com.drdisagree.iconify.data.common.Preferences.FIX_QS_TILE_COLOR
+import com.drdisagree.iconify.data.config.RPrefs
 import com.drdisagree.iconify.utils.SystemUtils
 import com.drdisagree.iconify.utils.overlay.OverlayUtils.changeOverlayState
 import com.drdisagree.iconify.utils.overlay.OverlayUtils.disableOverlay

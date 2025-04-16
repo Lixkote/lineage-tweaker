@@ -13,56 +13,63 @@ import com.bumptech.glide.request.transition.Transition
 
 object ViewBindingHelpers {
 
-    fun setImageUrl(imageView: ImageView, url: String) {
-        Glide.with(imageView.context).load(url.replace("http://", "https://"))
+    fun ImageView.setImageUrl(url: String) {
+        Glide.with(context).load(url.replace("http://", "https://"))
             .apply(RequestOptions.centerCropTransform())
-            .transition(DrawableTransitionOptions.withCrossFade()).into(imageView)
+            .transition(DrawableTransitionOptions.withCrossFade()).into(this)
     }
 
-    fun setDrawable(imageView: ImageView, drawable: Drawable?) {
-        Glide.with(imageView.context).load(drawable).into(imageView)
+    fun ImageView.setRoundImageUrl(url: String) {
+        Glide.with(context).load(url.replace("http://", "https://"))
+            .apply(RequestOptions.centerCropTransform())
+            .circleCrop()
+            .transition(DrawableTransitionOptions.withCrossFade()).into(this)
     }
 
-    fun setDrawableWithAnimation(imageView: ImageView, drawable: Drawable?) {
-        Glide.with(imageView.context).load(drawable)
-            .transition(DrawableTransitionOptions.withCrossFade()).into(imageView)
+    fun ImageView.setDrawable(drawable: Drawable?) {
+        Glide.with(context).load(drawable).into(this)
     }
 
-    fun setDrawable(viewGroup: ViewGroup, drawable: Drawable?) {
-        Glide.with(viewGroup.context).load(drawable).into(object : CustomTarget<Drawable?>() {
+    fun ImageView.setDrawableWithAnimation(drawable: Drawable?) {
+        Glide.with(context).load(drawable)
+            .transition(DrawableTransitionOptions.withCrossFade()).into(this)
+    }
+
+    fun ViewGroup.setDrawable(drawable: Drawable?) {
+        Glide.with(context).load(drawable).into(object : CustomTarget<Drawable?>() {
             override fun onResourceReady(
                 resource: Drawable,
                 transition: Transition<in Drawable?>?
             ) {
-                viewGroup.background = resource
+                background = resource
             }
 
             override fun onLoadCleared(placeholder: Drawable?) {}
         })
     }
 
-    fun setDrawableWithAnimation(viewGroup: ViewGroup, drawable: Drawable?) {
-        Glide.with(viewGroup.context).load(drawable)
+    fun ViewGroup.setDrawableWithAnimation(drawable: Drawable?) {
+        Glide.with(context).load(drawable)
             .transition(DrawableTransitionOptions.withCrossFade())
             .into(object : CustomTarget<Drawable?>() {
                 override fun onResourceReady(
                     resource: Drawable,
                     transition: Transition<in Drawable?>?
                 ) {
-                    viewGroup.background = resource
+                    background = resource
                 }
 
                 override fun onLoadCleared(placeholder: Drawable?) {}
             })
     }
 
-    fun setBitmap(imageView: ImageView, bitmap: Bitmap?) {
-        val drawable: Drawable = BitmapDrawable(imageView.context.resources, bitmap)
-        setDrawable(imageView, drawable)
+    fun ImageView.setBitmap(bitmap: Bitmap?) {
+        val drawable: Drawable = BitmapDrawable(context.resources, bitmap)
+        setDrawable(drawable)
     }
 
-    fun setBitmapWithAnimation(imageView: ImageView, bitmap: Bitmap?) {
-        val drawable: Drawable = BitmapDrawable(imageView.context.resources, bitmap)
-        setDrawableWithAnimation(imageView, drawable)
+    fun ImageView.setBitmapWithAnimation(bitmap: Bitmap?) {
+        val drawable: Drawable = BitmapDrawable(context.resources, bitmap)
+        setDrawableWithAnimation(drawable)
     }
 }

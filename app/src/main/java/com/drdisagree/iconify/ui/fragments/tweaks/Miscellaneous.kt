@@ -9,15 +9,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
 import com.drdisagree.iconify.R
-import com.drdisagree.iconify.common.Const.FRAMEWORK_PACKAGE
-import com.drdisagree.iconify.common.Const.SWITCH_ANIMATION_DELAY
-import com.drdisagree.iconify.common.Const.SYSTEMUI_PACKAGE
-import com.drdisagree.iconify.common.Preferences.NOTCH_BAR_KILLER_SWITCH
-import com.drdisagree.iconify.common.Preferences.PROGRESS_WAVE_ANIMATION_SWITCH
-import com.drdisagree.iconify.common.Preferences.TABLET_LANDSCAPE_SWITCH
-import com.drdisagree.iconify.common.References.FABRICATED_TABLET_HEADER
-import com.drdisagree.iconify.config.RPrefs
-import com.drdisagree.iconify.config.RPrefs.getBoolean
+import com.drdisagree.iconify.data.common.Const.FRAMEWORK_PACKAGE
+import com.drdisagree.iconify.data.common.Const.SWITCH_ANIMATION_DELAY
+import com.drdisagree.iconify.data.common.Const.SYSTEMUI_PACKAGE
+import com.drdisagree.iconify.data.common.Preferences.NOTCH_BAR_KILLER_SWITCH
+import com.drdisagree.iconify.data.common.Preferences.PROGRESS_WAVE_ANIMATION_SWITCH
+import com.drdisagree.iconify.data.common.Preferences.TABLET_LANDSCAPE_SWITCH
+import com.drdisagree.iconify.data.common.References.FABRICATED_TABLET_HEADER
+import com.drdisagree.iconify.data.config.RPrefs
+import com.drdisagree.iconify.data.config.RPrefs.getBoolean
 import com.drdisagree.iconify.databinding.FragmentMiscellaneousBinding
 import com.drdisagree.iconify.ui.base.BaseFragment
 import com.drdisagree.iconify.ui.utils.ViewHelper.setHeader
@@ -25,12 +25,14 @@ import com.drdisagree.iconify.utils.SystemUtils.hasStoragePermission
 import com.drdisagree.iconify.utils.SystemUtils.requestStoragePermission
 import com.drdisagree.iconify.utils.SystemUtils.restartSystemUI
 import com.drdisagree.iconify.utils.overlay.FabricatedUtils
-import com.drdisagree.iconify.utils.overlay.FabricatedUtils.buildAndEnableOverlay
 import com.drdisagree.iconify.utils.overlay.OverlayUtils
 import com.drdisagree.iconify.utils.overlay.OverlayUtils.enableOverlay
 import com.drdisagree.iconify.utils.overlay.manager.resource.ResourceEntry
 import com.drdisagree.iconify.utils.overlay.manager.resource.ResourceManager.buildOverlayWithResource
 import com.drdisagree.iconify.utils.overlay.manager.resource.ResourceManager.removeResourceFromOverlay
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.concurrent.atomic.AtomicBoolean
 
 class Miscellaneous : BaseFragment() {
@@ -70,133 +72,106 @@ class Miscellaneous : BaseFragment() {
 
                 RPrefs.putBoolean(TABLET_LANDSCAPE_SWITCH, isChecked)
 
-                val resourceEntry1 = ResourceEntry(
-                    SYSTEMUI_PACKAGE,
-                    "bool",
-                    "config_use_split_notification_shade",
-                    "true"
-                )
-                val resourceEntry2 = ResourceEntry(
-                    SYSTEMUI_PACKAGE,
-                    "bool",
-                    "config_skinnyNotifsInLandscape",
-                    "false"
-                )
-                val resourceEntry3 = ResourceEntry(
-                    SYSTEMUI_PACKAGE,
-                    "bool",
-                    "can_use_one_handed_bouncer",
-                    "true"
-                )
-                val resourceEntry4 = ResourceEntry(
-                    SYSTEMUI_PACKAGE,
-                    "dimen",
-                    "notifications_top_padding_split_shade",
-                    "40.0dip"
-                )
-                val resourceEntry5 = ResourceEntry(
-                    SYSTEMUI_PACKAGE,
-                    "dimen",
-                    "split_shade_notifications_scrim_margin_bottom",
-                    "14.0dip"
-                )
-                val resourceEntry6 = ResourceEntry(
-                    SYSTEMUI_PACKAGE,
-                    "dimen",
-                    "qs_header_system_icons_area_height",
-                    "0.0dip"
-                )
-                val resourceEntry7 = ResourceEntry(
-                    SYSTEMUI_PACKAGE,
-                    "dimen",
-                    "qs_panel_padding_top",
-                    "0.0dip"
-                )
-                val resourceEntry8 = ResourceEntry(
-                    SYSTEMUI_PACKAGE,
-                    "integer",
-                    "quick_settings_num_columns",
-                    "2"
-                )
-                val resourceEntry9 = ResourceEntry(
-                    SYSTEMUI_PACKAGE,
-                    "integer",
-                    "quick_qs_panel_max_rows",
-                    "2"
-                )
-                val resourceEntry10 = ResourceEntry(
-                    SYSTEMUI_PACKAGE,
-                    "integer",
-                    "quick_qs_panel_max_tiles",
-                    "4"
-                )
-                val resourceEntry11 = ResourceEntry(
-                    FRAMEWORK_PACKAGE,
-                    "bool",
-                    "config_fillMainBuiltInDisplayCutout",
-                    "true"
-                )
-                val resourceEntry12 = ResourceEntry(
-                    FRAMEWORK_PACKAGE,
-                    "string",
-                    "config_mainBuiltInDisplayCutout",
-                    "M 0,0 L 0, 0 C 0,0 0,0 0,0"
-                )
-                val resourceEntry13 = ResourceEntry(
-                    FRAMEWORK_PACKAGE,
-                    "string",
-                    "config_mainBuiltInDisplayCutoutRectApproximation",
-                    "@string/config_mainBuiltInDisplayCutout"
+                val resources = listOf(
+                    ResourceEntry(
+                        SYSTEMUI_PACKAGE,
+                        "bool",
+                        "config_use_split_notification_shade",
+                        "true"
+                    ),
+                    ResourceEntry(
+                        SYSTEMUI_PACKAGE,
+                        "bool",
+                        "config_skinnyNotifsInLandscape",
+                        "false"
+                    ),
+                    ResourceEntry(
+                        SYSTEMUI_PACKAGE,
+                        "bool",
+                        "can_use_one_handed_bouncer",
+                        "true"
+                    ),
+                    ResourceEntry(
+                        SYSTEMUI_PACKAGE,
+                        "dimen",
+                        "notifications_top_padding_split_shade",
+                        "40.0dip"
+                    ),
+                    ResourceEntry(
+                        SYSTEMUI_PACKAGE,
+                        "dimen",
+                        "split_shade_notifications_scrim_margin_bottom",
+                        "14.0dip"
+                    ),
+                    ResourceEntry(
+                        SYSTEMUI_PACKAGE,
+                        "dimen",
+                        "qs_header_system_icons_area_height",
+                        "0.0dip"
+                    ),
+                    ResourceEntry(
+                        SYSTEMUI_PACKAGE,
+                        "dimen",
+                        "qs_panel_padding_top",
+                        "0.0dip"
+                    ),
+                    ResourceEntry(
+                        SYSTEMUI_PACKAGE,
+                        "integer",
+                        "quick_settings_num_columns",
+                        "2"
+                    ),
+                    ResourceEntry(
+                        SYSTEMUI_PACKAGE,
+                        "integer",
+                        "quick_qs_panel_max_rows",
+                        "2"
+                    ),
+                    ResourceEntry(
+                        SYSTEMUI_PACKAGE,
+                        "integer",
+                        "quick_qs_panel_max_tiles",
+                        "4"
+                    ),
+                    ResourceEntry(
+                        FRAMEWORK_PACKAGE,
+                        "bool",
+                        "config_fillMainBuiltInDisplayCutout",
+                        "false"
+                    ),
+                    ResourceEntry(
+                        FRAMEWORK_PACKAGE,
+                        "bool",
+                        "config_maskMainBuiltInDisplayCutout",
+                        "true"
+                    ),
+                    ResourceEntry(
+                        FRAMEWORK_PACKAGE,
+                        "string",
+                        "config_mainBuiltInDisplayCutout",
+                        "M 0,0 L 0, 0 C 0,0 0,0 0,0"
+                    ),
+                    ResourceEntry(
+                        FRAMEWORK_PACKAGE,
+                        "string",
+                        "config_mainBuiltInDisplayCutoutRectApproximation",
+                        "@string/config_mainBuiltInDisplayCutout"
+                    )
                 )
 
-                resourceEntry1.setLandscape(true)
-                resourceEntry2.setLandscape(true)
-                resourceEntry3.setLandscape(true)
-                resourceEntry4.setLandscape(true)
-                resourceEntry5.setLandscape(true)
-                resourceEntry6.setLandscape(true)
-                resourceEntry7.setLandscape(true)
-                resourceEntry8.setLandscape(true)
-                resourceEntry9.setLandscape(true)
-                resourceEntry10.setLandscape(true)
-                resourceEntry11.setLandscape(true)
-                resourceEntry12.setLandscape(true)
-                resourceEntry13.setLandscape(true)
+                resources.forEach {
+                    it.apply {
+                        isPortrait = false
+                        isLandscape = true
+                    }
+                }
 
-                if (isChecked) {
-                    buildOverlayWithResource(
-                        requireContext(),
-                        resourceEntry1,
-                        resourceEntry2,
-                        resourceEntry3,
-                        resourceEntry4,
-                        resourceEntry5,
-                        resourceEntry6,
-                        resourceEntry7,
-                        resourceEntry8,
-                        resourceEntry9,
-                        resourceEntry10,
-                        resourceEntry11,
-                        resourceEntry12,
-                        resourceEntry13
-                    )
-                } else {
-                    removeResourceFromOverlay(
-                        requireContext(),
-                        resourceEntry1,
-                        resourceEntry2,
-                        resourceEntry3,
-                        resourceEntry4,
-                        resourceEntry5,
-                        resourceEntry6,
-                        resourceEntry7,
-                        resourceEntry8,
-                        resourceEntry9,
-                        resourceEntry10,
-                        resourceEntry11,
-                        resourceEntry12,
-                        resourceEntry13
-                    )
+                CoroutineScope(Dispatchers.IO).launch {
+                    if (isChecked) {
+                        buildOverlayWithResource(*resources.toTypedArray())
+                    } else {
+                        removeResourceFromOverlay(*resources.toTypedArray())
+                    }
                 }
             }
         }
@@ -221,47 +196,39 @@ class Miscellaneous : BaseFragment() {
 
                 RPrefs.putBoolean(NOTCH_BAR_KILLER_SWITCH, isChecked)
 
-                if (isChecked) {
-                    buildOverlayWithResource(
-                        requireContext(),
-                        ResourceEntry(
-                            FRAMEWORK_PACKAGE,
-                            "bool",
-                            "config_fillMainBuiltInDisplayCutout",
-                            "true"
-                        ),
-                        ResourceEntry(
-                            FRAMEWORK_PACKAGE,
-                            "string",
-                            "config_mainBuiltInDisplayCutout",
-                            "M 0,0 L 0, 0 C 0,0 0,0 0,0"
-                        ),
-                        ResourceEntry(
-                            FRAMEWORK_PACKAGE,
-                            "string",
-                            "config_mainBuiltInDisplayCutoutRectApproximation",
-                            "@string/config_mainBuiltInDisplayCutout"
-                        )
+                val resources = listOf(
+                    ResourceEntry(
+                        FRAMEWORK_PACKAGE,
+                        "bool",
+                        "config_fillMainBuiltInDisplayCutout",
+                        "false"
+                    ),
+                    ResourceEntry(
+                        FRAMEWORK_PACKAGE,
+                        "bool",
+                        "config_maskMainBuiltInDisplayCutout",
+                        "true"
+                    ),
+                    ResourceEntry(
+                        FRAMEWORK_PACKAGE,
+                        "string",
+                        "config_mainBuiltInDisplayCutout",
+                        "M 0,0 L 0, 0 C 0,0 0,0 0,0"
+                    ),
+                    ResourceEntry(
+                        FRAMEWORK_PACKAGE,
+                        "string",
+                        "config_mainBuiltInDisplayCutoutRectApproximation",
+                        "@string/config_mainBuiltInDisplayCutout"
                     )
-                } else {
-                    removeResourceFromOverlay(
-                        requireContext(),
-                        ResourceEntry(
-                            FRAMEWORK_PACKAGE,
-                            "bool",
-                            "config_fillMainBuiltInDisplayCutout"
-                        ),
-                        ResourceEntry(
-                            FRAMEWORK_PACKAGE,
-                            "string",
-                            "config_mainBuiltInDisplayCutout"
-                        ),
-                        ResourceEntry(
-                            FRAMEWORK_PACKAGE,
-                            "string",
-                            "config_mainBuiltInDisplayCutoutRectApproximation"
-                        )
-                    )
+                )
+
+                CoroutineScope(Dispatchers.IO).launch {
+                    if (isChecked) {
+                        buildOverlayWithResource(*resources.toTypedArray())
+                    } else {
+                        removeResourceFromOverlay(*resources.toTypedArray())
+                    }
                 }
             }
         }
@@ -277,7 +244,7 @@ class Miscellaneous : BaseFragment() {
                     RPrefs.putBoolean(FABRICATED_TABLET_HEADER, isChecked)
 
                     if (isChecked) {
-                        buildAndEnableOverlay(
+                        FabricatedUtils.buildAndEnableOverlay(
                             SYSTEMUI_PACKAGE,
                             FABRICATED_TABLET_HEADER,
                             "bool",
@@ -329,36 +296,27 @@ class Miscellaneous : BaseFragment() {
 
                 RPrefs.putBoolean(PROGRESS_WAVE_ANIMATION_SWITCH, isChecked)
 
-                if (isChecked) {
-                    buildOverlayWithResource(
-                        requireContext(),
-                        ResourceEntry(
-                            SYSTEMUI_PACKAGE,
-                            "dimen",
-                            "qs_media_seekbar_progress_amplitude",
-                            "0dp"
-                        ),
-                        ResourceEntry(
-                            SYSTEMUI_PACKAGE,
-                            "dimen",
-                            "qs_media_seekbar_progress_phase",
-                            "0dp"
-                        )
+                val resources = listOf(
+                    ResourceEntry(
+                        SYSTEMUI_PACKAGE,
+                        "dimen",
+                        "qs_media_seekbar_progress_amplitude",
+                        "0dp"
+                    ),
+                    ResourceEntry(
+                        SYSTEMUI_PACKAGE,
+                        "dimen",
+                        "qs_media_seekbar_progress_phase",
+                        "0dp"
                     )
-                } else {
-                    removeResourceFromOverlay(
-                        requireContext(),
-                        ResourceEntry(
-                            SYSTEMUI_PACKAGE,
-                            "dimen",
-                            "qs_media_seekbar_progress_amplitude"
-                        ),
-                        ResourceEntry(
-                            SYSTEMUI_PACKAGE,
-                            "dimen",
-                            "qs_media_seekbar_progress_phase"
-                        )
-                    )
+                )
+
+                CoroutineScope(Dispatchers.IO).launch {
+                    if (isChecked) {
+                        buildOverlayWithResource(*resources.toTypedArray())
+                    } else {
+                        removeResourceFromOverlay(*resources.toTypedArray())
+                    }
                 }
 
                 Handler(Looper.getMainLooper()).postDelayed(

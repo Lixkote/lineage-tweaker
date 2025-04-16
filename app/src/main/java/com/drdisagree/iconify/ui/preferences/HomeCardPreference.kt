@@ -5,8 +5,8 @@ import android.util.AttributeSet
 import androidx.preference.Preference
 import androidx.preference.PreferenceViewHolder
 import com.drdisagree.iconify.R
-import com.drdisagree.iconify.common.Preferences.SHOW_HOME_CARD
-import com.drdisagree.iconify.config.RPrefs
+import com.drdisagree.iconify.data.common.Preferences.SHOW_HOME_CARD
+import com.drdisagree.iconify.data.config.RPrefs
 import com.google.android.material.button.MaterialButton
 
 class HomeCardPreference(context: Context, attrs: AttributeSet?) : Preference(context, attrs) {

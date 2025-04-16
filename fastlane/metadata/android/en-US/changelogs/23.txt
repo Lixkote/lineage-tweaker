@@ -1,0 +1,11 @@
+Iconify v7.1.0 has arrived! It has the following new changes:
+
+Feature Changes:
+• Improved lockscreen clock, weather, widgets & AOD burn-in protection
+• Enhanced Quick Settings customization & fixed layout issues
+• Fixed status bar & icon theming bugs, added dual status bar mod
+• Launcher improvements: themed icons, opacity controls & UI tweaks
+• Migrated volume styles to safer method
+• Numerous optimizations & bug fixes
+
+Full changelog at https://github.com/Mahmud0808/Iconify/releases/tag/v7.1.0

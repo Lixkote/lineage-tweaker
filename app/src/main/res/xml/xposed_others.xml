@@ -4,40 +4,6 @@
     xmlns:search="http://schemas.android.com/apk/com.drdisagree.iconify.ui.preferences.preferencesearch">
 
     <com.drdisagree.iconify.ui.preferences.PreferenceCategory
-        android:key="xposedOthersQsHeader"
-        android:title="@string/qs_header"
-        app:iconSpaceReserved="false"
-        search:ignore="true">
-
-        <com.drdisagree.iconify.ui.preferences.SwitchPreference
-            android:key="xposed_qspanelhidecarrier"
-            android:summary="@string/hide_carrier_group_desc"
-            android:title="@string/hide_carrier_group_title"
-            app:iconSpaceReserved="false" />
-
-        <com.drdisagree.iconify.ui.preferences.SwitchPreference
-            android:key="xposed_hidestatusicons"
-            android:summary="@string/hide_status_icons_desc"
-            android:title="@string/hide_status_icons_title"
-            app:iconSpaceReserved="false" />
-
-    </com.drdisagree.iconify.ui.preferences.PreferenceCategory>
-
-    <com.drdisagree.iconify.ui.preferences.PreferenceCategory
-        android:key="xposedOthersLockScreen"
-        android:title="@string/lock_screen"
-        app:iconSpaceReserved="false"
-        search:ignore="true">
-
-        <com.drdisagree.iconify.ui.preferences.SwitchPreference
-            android:key="xposed_hidelockscreenlockicon"
-            android:summary="@string/hide_ls_lock_icon_desc"
-            android:title="@string/hide_ls_lock_icon_title"
-            app:iconSpaceReserved="false" />
-
-    </com.drdisagree.iconify.ui.preferences.PreferenceCategory>
-
-    <com.drdisagree.iconify.ui.preferences.PreferenceCategory
         android:key="xposedOthersStatusIcons"
         android:title="@string/section_title_status_icons"
         app:iconSpaceReserved="false"

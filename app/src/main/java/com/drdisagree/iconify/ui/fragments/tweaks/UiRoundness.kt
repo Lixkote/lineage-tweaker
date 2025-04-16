@@ -14,8 +14,8 @@ import android.widget.Toast
 import com.drdisagree.iconify.Iconify.Companion.appContext
 import com.drdisagree.iconify.Iconify.Companion.appContextLocale
 import com.drdisagree.iconify.R
-import com.drdisagree.iconify.common.Preferences.UI_CORNER_RADIUS
-import com.drdisagree.iconify.config.RPrefs
+import com.drdisagree.iconify.data.common.Preferences.UI_CORNER_RADIUS
+import com.drdisagree.iconify.data.config.RPrefs
 import com.drdisagree.iconify.databinding.FragmentUiRoundnessBinding
 import com.drdisagree.iconify.ui.base.BaseFragment
 import com.drdisagree.iconify.ui.dialogs.LoadingDialog

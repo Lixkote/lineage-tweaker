@@ -15,12 +15,11 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.drdisagree.iconify.Iconify
 import com.drdisagree.iconify.Iconify.Companion.appContext
 import com.drdisagree.iconify.R
-import com.drdisagree.iconify.config.RPrefs.getBoolean
+import com.drdisagree.iconify.data.config.RPrefs.getBoolean
 import com.drdisagree.iconify.ui.dialogs.LoadingDialog
-import com.drdisagree.iconify.ui.models.NotificationModel
+import com.drdisagree.iconify.data.models.NotificationModel
 import com.drdisagree.iconify.ui.utils.ViewBindingHelpers.setDrawable
 import com.drdisagree.iconify.utils.overlay.manager.NotificationManager
 import com.drdisagree.iconify.utils.overlay.manager.NotificationPixelManager
@@ -48,8 +47,7 @@ class NotificationAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        setDrawable(
-            holder.container,
+        holder.container.setDrawable(
             ContextCompat.getDrawable(context, itemList[position].background)
         )
 
@@ -360,18 +358,10 @@ class NotificationAdapter(
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        var container: LinearLayout
-        var styleName: TextView
-        var icCollapseExpand: ImageView
-        var btnEnable: Button
-        var btnDisable: Button
-
-        init {
-            container = itemView.findViewById(R.id.notification_child)
-            styleName = itemView.findViewById(R.id.notif_title)
-            icCollapseExpand = itemView.findViewById(R.id.notif_arrow)
-            btnEnable = itemView.findViewById(R.id.enable_notif)
-            btnDisable = itemView.findViewById(R.id.disable_notif)
-        }
+        var container: LinearLayout = itemView.findViewById(R.id.notification_child)
+        var styleName: TextView = itemView.findViewById(R.id.notif_title)
+        var icCollapseExpand: ImageView = itemView.findViewById(R.id.notif_arrow)
+        var btnEnable: Button = itemView.findViewById(R.id.enable_notif)
+        var btnDisable: Button = itemView.findViewById(R.id.disable_notif)
     }
 }

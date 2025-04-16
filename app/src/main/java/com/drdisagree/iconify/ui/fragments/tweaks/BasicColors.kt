@@ -11,21 +11,21 @@ import android.widget.Toast
 import com.drdisagree.iconify.Iconify.Companion.appContext
 import com.drdisagree.iconify.Iconify.Companion.appContextLocale
 import com.drdisagree.iconify.R
-import com.drdisagree.iconify.common.Const.FRAMEWORK_PACKAGE
-import com.drdisagree.iconify.common.Preferences.COLOR_ACCENT_PRIMARY
-import com.drdisagree.iconify.common.Preferences.COLOR_ACCENT_PRIMARY_LIGHT
-import com.drdisagree.iconify.common.Preferences.COLOR_ACCENT_SECONDARY
-import com.drdisagree.iconify.common.Preferences.COLOR_ACCENT_SECONDARY_LIGHT
-import com.drdisagree.iconify.common.Preferences.CUSTOM_ACCENT
-import com.drdisagree.iconify.common.Preferences.CUSTOM_PRIMARY_COLOR_SWITCH
-import com.drdisagree.iconify.common.Preferences.CUSTOM_SECONDARY_COLOR_SWITCH
-import com.drdisagree.iconify.common.References.ICONIFY_COLOR_ACCENT_PRIMARY
-import com.drdisagree.iconify.common.References.ICONIFY_COLOR_ACCENT_SECONDARY
-import com.drdisagree.iconify.config.RPrefs.clearPrefs
-import com.drdisagree.iconify.config.RPrefs.getBoolean
-import com.drdisagree.iconify.config.RPrefs.getString
-import com.drdisagree.iconify.config.RPrefs.putBoolean
-import com.drdisagree.iconify.config.RPrefs.putString
+import com.drdisagree.iconify.data.common.Const.FRAMEWORK_PACKAGE
+import com.drdisagree.iconify.data.common.Preferences.COLOR_ACCENT_PRIMARY
+import com.drdisagree.iconify.data.common.Preferences.COLOR_ACCENT_PRIMARY_LIGHT
+import com.drdisagree.iconify.data.common.Preferences.COLOR_ACCENT_SECONDARY
+import com.drdisagree.iconify.data.common.Preferences.COLOR_ACCENT_SECONDARY_LIGHT
+import com.drdisagree.iconify.data.common.Preferences.CUSTOM_ACCENT
+import com.drdisagree.iconify.data.common.Preferences.CUSTOM_PRIMARY_COLOR_SWITCH
+import com.drdisagree.iconify.data.common.Preferences.CUSTOM_SECONDARY_COLOR_SWITCH
+import com.drdisagree.iconify.data.common.References.ICONIFY_COLOR_ACCENT_PRIMARY
+import com.drdisagree.iconify.data.common.References.ICONIFY_COLOR_ACCENT_SECONDARY
+import com.drdisagree.iconify.data.config.RPrefs.clearPrefs
+import com.drdisagree.iconify.data.config.RPrefs.getBoolean
+import com.drdisagree.iconify.data.config.RPrefs.getString
+import com.drdisagree.iconify.data.config.RPrefs.putBoolean
+import com.drdisagree.iconify.data.config.RPrefs.putString
 import com.drdisagree.iconify.databinding.FragmentBasicColorsBinding
 import com.drdisagree.iconify.ui.base.BaseFragment
 import com.drdisagree.iconify.ui.utils.ViewHelper.setHeader
@@ -304,8 +304,7 @@ class BasicColors : BaseFragment() {
 
         private fun shouldUseDefaultColors(): Boolean {
             return isOverlayDisabled("IconifyComponentAMAC.overlay") &&
-                    isOverlayDisabled("IconifyComponentAMGC.overlay") &&
-                    isOverlayDisabled("IconifyComponentME.overlay")
+                    isOverlayDisabled("IconifyComponentAMGC.overlay")
         }
     }
 }

@@ -22,11 +22,10 @@
             android:animateLayoutChanges="true"
             android:orientation="vertical">
 
-            <com.drdisagree.iconify.ui.widgets.SwitchWidget
+            <com.drdisagree.iconify.ui.widgets.MasterSwitchWidget
                 android:id="@+id/ls_clock_switch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:summaryText="@string/custom_lockscreen_clock_desc"
                 app:titleText="@string/custom_lockscreen_clock_title" />
 
             <include

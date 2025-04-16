@@ -13,8 +13,8 @@ import android.graphics.Shader
 import androidx.annotation.ColorInt
 import androidx.core.graphics.ColorUtils
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
-import com.drdisagree.iconify.common.Preferences
-import com.drdisagree.iconify.config.RPrefs
+import com.drdisagree.iconify.data.common.Preferences
+import com.drdisagree.iconify.data.config.RPrefs
 import com.drdisagree.iconify.xposed.utils.XPrefs.Xprefs
 import kotlin.math.max
 
@@ -188,7 +188,7 @@ open class CircleFilledBattery(private val mContext: Context, frameColor: Int) :
 
     private fun initColors() {
         customBlendColor = try {
-            Xprefs.getBoolean(Preferences.CUSTOM_BATTERY_BLEND_COLOR, false) ?: false
+            Xprefs.getBoolean(Preferences.CUSTOM_BATTERY_BLEND_COLOR, false)
         } catch (ignored: Throwable) {
             RPrefs.getBoolean(Preferences.CUSTOM_BATTERY_BLEND_COLOR, false)
         }

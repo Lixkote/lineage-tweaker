@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -15,14 +14,11 @@
         android:orientation="vertical"
         tools:ignore="UselessParent">
 
-        <com.google.android.material.card.MaterialCardView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="top|center"
-            app:cardBackgroundColor="@android:color/system_accent1_200"
-            app:cardCornerRadius="18dp"
-            app:strokeColor="@android:color/system_accent1_900"
-            app:strokeWidth="4dp">
+            android:background="@drawable/lockscreen_clock_28_bg">
 
             <TextClock
                 android:layout_width="wrap_content"
@@ -41,7 +37,7 @@
                 android:textSize="28sp"
                 android:textStyle="bold" />
 
-        </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"

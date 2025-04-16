@@ -10,7 +10,8 @@
     <uses-permission
         android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" /> <!-- Manage storage to be able to see what the compilation created -->
-    <queries> <!-- Checking for Installed Music Players -->
+    <queries>
+        <!-- Checking for Installed Music Players -->
         <package android:name="com.maxmpz.audioplayer" />
         <package android:name="code.name.monkey.retromusic" />
         <package android:name="com.awedea.nyx" />
@@ -21,14 +22,16 @@
         <package android:name="com.google.android.apps.youtube.music" />
         <package android:name="app.revanced.android.youtube" />
         <package android:name="app.revanced.android.apps.youtube.music" />
+
+        <!-- Other Apps -->
+        <package android:name="com.drdisagree.colorblendr" />
+        <package android:name="com.drdisagree.pixellauncherenhanced" />
+        <package android:name="it.dhd.oxygencustomizer.aiplugin" />
+        <package android:name="org.lsposed.manager" />
     </queries>
-    <uses-permission
-        android:name="android.permission.QUERY_ALL_PACKAGES"
-        tools:ignore="QueryAllPackagesPermission" />
 
     <!-- Weather Updater -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- Weather Updater -->
-    <uses-permission android:name="android.permission.INTERNET" /> <!-- Weather Updater -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- Get Location for Weather -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- Get Location for Weather -->
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" /> <!-- Get Location for Weather -->
@@ -56,8 +59,8 @@
             android:exported="false" />
         <activity
             android:name=".ui.activities.WeatherActivity"
-            android:exported="true"
             android:excludeFromRecents="true"
+            android:exported="true"
             android:theme="@style/Theme.Iconify" />
         <activity
             android:name=".SplashActivity"
@@ -102,22 +105,13 @@
         </activity-alias> <!-- Custom App Icon -->
 
         <receiver
-            android:name=".receiver.BootReceiver"
-            android:enabled="true"
+            android:name=".receivers.BootReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
             </intent-filter>
         </receiver> <!-- Boot Receiver -->
-        <!--
-        @Deprecated
-        <service
-            android:name=".services.BackgroundService"
-            android:enabled="true"
-            android:exported="true"
-            tools:ignore="ExportedService" />
-        -->
+
         <service
             android:name=".services.RootProviderProxy"
             android:exported="true"
@@ -127,20 +121,6 @@
             android:exported="true"
             android:icon="@drawable/ic_tile_notch_bar_killer"
             android:label="@string/notch_bar_killer_title"
-            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
-            <intent-filter>
-                <action android:name="android.service.quicksettings.action.QS_TILE" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.service.quicksettings.TOGGLEABLE_TILE"
-                android:value="true" />
-        </service> <!-- Quick Settings Tile -->
-        <service
-            android:name=".services.TileMonetEngine"
-            android:exported="true"
-            android:icon="@drawable/ic_tile_monet_engine"
-            android:label="@string/activity_title_monet_engine"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
@@ -179,9 +159,6 @@
                 android:value="true" />
         </service> <!-- Quick Settings Tile -->
         <meta-data
-            android:name="com.google.mlkit.vision.DEPENDENCIES"
-            android:value="subject_segment" /> <!-- ML Kit download -->
-        <meta-data
             android:name="xposedmodule"
             android:value="true" /> <!-- xposed meta data -->
         <meta-data
@@ -193,11 +170,8 @@
         <meta-data
             android:name="xposedscope"
             android:resource="@array/module_scope" /> <!-- xposed meta data -->
-        <meta-data
-            android:name="com.google.mlkit.vision.DEPENDENCIES"
-            android:value="subject_segment" /> <!-- ML Kit download -->
         <provider
-            android:name=".provider.RemotePrefProvider"
+            android:name=".data.provider.RemotePrefProvider"
             android:authorities="${applicationId}"
             android:directBootAware="true"
             android:exported="true"
@@ -373,6 +347,16 @@
             android:name=".weather_vclouds"
             android:exported="false"
             android:label="VClouds">
+            <intent-filter>
+                <action android:name="${applicationId}.WeatherIconPack" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".nothing"
+            android:exported="false"
+            android:label="Nothing">
             <intent-filter>
                 <action android:name="${applicationId}.WeatherIconPack" />
                 <category android:name="android.intent.category.DEFAULT" />

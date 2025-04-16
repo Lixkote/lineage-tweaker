@@ -20,12 +20,12 @@ import kotlin.math.max
 
 class METNorwayProvider(context: Context?) : AbstractWeatherProvider(context!!) {
 
-    override fun getLocationWeather(location: Location?, metric: Boolean): WeatherInfo? {
+    override fun getLocationWeather(location: Location, metric: Boolean): WeatherInfo? {
         val coordinates = java.lang.String.format(
             Locale.US,
             PART_COORDINATES,
-            location!!.latitude,
-            location!!.longitude
+            location.latitude,
+            location.longitude
         )
         return getAllWeather(coordinates, metric)
     }
@@ -38,7 +38,10 @@ class METNorwayProvider(context: Context?) : AbstractWeatherProvider(context!!) 
 
     private fun getAllWeather(coordinates: String?, metric: Boolean): WeatherInfo? {
         val url = URL_WEATHER + coordinates
-        val response: String = retrieve(url, arrayOf("User-Agent", "Iconify/${BuildConfig.VERSION_NAME}-${BuildConfig.VERSION_CODE}"))
+        val response: String = retrieve(
+            url,
+            arrayOf("User-Agent", "Iconify/${BuildConfig.VERSION_NAME}-${BuildConfig.VERSION_CODE}")
+        )
 
         log(TAG, "URL = $url returning a response of $response")
         Log.w(TAG, "Response: $response")
@@ -61,10 +64,8 @@ class METNorwayProvider(context: Context?) : AbstractWeatherProvider(context!!) 
             }
 
             val city = getWeatherDataLocality(coordinates!!)
-            val hourlyForecasts: ArrayList<WeatherInfo.HourForecast> =
-                ArrayList()
 
-            val w: WeatherInfo = WeatherInfo(
+            val weatherInfo = WeatherInfo(
                 mContext,  /* id */
                 coordinates,  /* cityId */
                 city!!,  /* condition */
@@ -80,8 +81,8 @@ class METNorwayProvider(context: Context?) : AbstractWeatherProvider(context!!) 
                 System.currentTimeMillis()
             )
 
-            log(TAG, "Weather updated: $w")
-            return w
+            log(TAG, "Weather updated: $weatherInfo")
+            return weatherInfo
         } catch (e: JSONException) {
             Log.w(
                 TAG,
@@ -93,7 +94,10 @@ class METNorwayProvider(context: Context?) : AbstractWeatherProvider(context!!) 
     }
 
     @Throws(JSONException::class)
-    private fun parseForecasts(timeseries: JSONArray, metric: Boolean): ArrayList<WeatherInfo.DayForecast> {
+    private fun parseForecasts(
+        timeseries: JSONArray,
+        metric: Boolean
+    ): ArrayList<WeatherInfo.DayForecast> {
         val result: ArrayList<WeatherInfo.DayForecast> = ArrayList(5)
         val count = timeseries.length()
 
@@ -125,8 +129,8 @@ class METNorwayProvider(context: Context?) : AbstractWeatherProvider(context!!) 
             var item: WeatherInfo.DayForecast
             try {
                 // temp = temperature
-                var temp_max = Double.MIN_VALUE
-                var temp_min = Double.MAX_VALUE
+                var tempMax = Double.MIN_VALUE
+                var tempMin = Double.MAX_VALUE
                 val day: String = getDay(i)
                 var symbolCode = 0
                 var scSixToTwelve = 0 // symbolCode next_6_hours at 06:00
@@ -145,11 +149,11 @@ class METNorwayProvider(context: Context?) : AbstractWeatherProvider(context!!) 
                         .getJSONObject("instant").getJSONObject("details")
                         .getDouble("air_temperature")
 
-                    if (tempI > temp_max) {
-                        temp_max = tempI
+                    if (tempI > tempMax) {
+                        tempMax = tempI
                     }
-                    if (tempI < temp_min) {
-                        temp_min = tempI
+                    if (tempI < tempMin) {
+                        tempMin = tempI
                     }
 
                     val hasOneHour = timeseries.getJSONObject(whileIndex).getJSONObject("data")
@@ -232,8 +236,8 @@ class METNorwayProvider(context: Context?) : AbstractWeatherProvider(context!!) 
                 val formattedConditionDescription = getWeatherCondition(conditionDescription)
 
                 item = WeatherInfo.DayForecast( /* low */
-                    convertTemperature(temp_min, metric),  /* high */
-                    convertTemperature(temp_max, metric),  /* condition */
+                    convertTemperature(tempMin, metric),  /* high */
+                    convertTemperature(tempMax, metric),  /* condition */
                     formattedConditionDescription,  /* conditionCode */
                     arrayWeatherIconToCode[symbolCode],
                     day,
@@ -355,7 +359,7 @@ class METNorwayProvider(context: Context?) : AbstractWeatherProvider(context!!) 
 
     private fun convertTimeZone(tmp: String): String {
         return try {
-            userTimeZoneFormat.format(gmt0Format.parse(tmp))
+            userTimeZoneFormat.format(gmt0Format.parse(tmp)!!)
         } catch (e: ParseException) {
             tmp
         }
@@ -547,11 +551,11 @@ class METNorwayProvider(context: Context?) : AbstractWeatherProvider(context!!) 
         )
 
         private fun convertTemperature(value: Double, metric: Boolean): Float {
-            var value = value
+            var newValue = value
             if (!metric) {
-                value = (value * 1.8) + 32
+                newValue = (value * 1.8) + 32
             }
-            return value.toFloat()
+            return newValue.toFloat()
         }
 
         private fun convertWindSpeed(valueMs: Double, metric: Boolean): Float {

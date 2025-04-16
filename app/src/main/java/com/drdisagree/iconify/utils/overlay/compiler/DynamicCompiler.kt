@@ -1,8 +1,21 @@
 package com.drdisagree.iconify.utils.overlay.compiler
 
 import android.util.Log
-import com.drdisagree.iconify.common.Const
-import com.drdisagree.iconify.common.Resources
+import com.drdisagree.iconify.data.common.Const.FRAMEWORK_PACKAGE
+import com.drdisagree.iconify.data.common.Const.LAUNCHER3_PACKAGE
+import com.drdisagree.iconify.data.common.Const.PIXEL_LAUNCHER_PACKAGE
+import com.drdisagree.iconify.data.common.Const.SETTINGS_PACKAGE
+import com.drdisagree.iconify.data.common.Const.SYSTEMUI_PACKAGE
+import com.drdisagree.iconify.data.common.Dynamic.DATA_DIR
+import com.drdisagree.iconify.data.common.Resources.BACKUP_DIR
+import com.drdisagree.iconify.data.common.Resources.OVERLAY_DIR
+import com.drdisagree.iconify.data.common.Resources.SIGNED_DIR
+import com.drdisagree.iconify.data.common.Resources.SYSTEM_OVERLAY_DIR
+import com.drdisagree.iconify.data.common.Resources.TEMP_CACHE_DIR
+import com.drdisagree.iconify.data.common.Resources.TEMP_DIR
+import com.drdisagree.iconify.data.common.Resources.TEMP_OVERLAY_DIR
+import com.drdisagree.iconify.data.common.Resources.UNSIGNED_DIR
+import com.drdisagree.iconify.data.common.Resources.UNSIGNED_UNALIGNED_DIR
 import com.drdisagree.iconify.utils.FileUtils.copyAssets
 import com.drdisagree.iconify.utils.RootUtils.setPermissions
 import com.drdisagree.iconify.utils.SystemUtils.mountRO
@@ -10,49 +23,50 @@ import com.drdisagree.iconify.utils.SystemUtils.mountRW
 import com.drdisagree.iconify.utils.helper.BinaryInstaller.symLinkBinaries
 import com.drdisagree.iconify.utils.overlay.OverlayUtils.disableOverlays
 import com.drdisagree.iconify.utils.overlay.OverlayUtils.enableOverlays
-import com.drdisagree.iconify.utils.overlay.manager.resource.ResourceManager
+import com.drdisagree.iconify.utils.overlay.manager.resource.ResourceManager.ResourceType
+import com.drdisagree.iconify.utils.overlay.manager.resource.ResourceManager.generateXmlStructureForAllResources
 import com.topjohnwu.superuser.Shell
-import org.json.JSONObject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.IOException
 
 object DynamicCompiler {
 
     private val TAG = DynamicCompiler::class.java.simpleName
-    private val mResource = arrayOfNulls<String>(3)
-    private val jsonResources = arrayOfNulls<JSONObject>(3)
-    private var mOverlayName: String? = null
-    private var mPackage: String? = null
     private var mForce = false
+    private var mPackage: String? = null
+    private var mOverlayName: String? = null
+    private val mResource: MutableMap<ResourceType, ArrayList<String>> = mutableMapOf()
 
     @JvmOverloads
     @Throws(IOException::class)
-    fun buildOverlay(force: Boolean = true): Boolean {
+    suspend fun buildDynamicOverlay(
+        force: Boolean = true,
+        overlaysToUpdate: List<String>? = null
+    ): Boolean {
         mForce = force
 
         try {
-            val jsonObject = ResourceManager.resources
+            Shell.cmd("mkdir -p $BACKUP_DIR").exec()
 
-            Shell.cmd("mkdir -p " + Resources.BACKUP_DIR).exec()
-
-            for (i in 0..2) {
-                jsonResources[i] = ResourceManager.generateJsonResource(
-                    jsonObject[i]
-                )
-            }
-
-            val keys = jsonResources[0]!!.keys()
+            val resourcesMap = generateXmlStructureForAllResources(overlaysToUpdate)
 
             // Create overlay for each package
-            while (keys.hasNext()) {
-                mPackage = keys.next()
+            for (packageName in resourcesMap.keys) {
+                Log.i(TAG, packageName)
+                mPackage = packageName
 
-                for (i in 0..2) {
-                    mResource[i] = jsonResources[i]!!.getString(mPackage!!)
-                        .replace("'", "\"")
-                        .replace("><", ">\n<")
+                mResource.clear()
+                mResource[ResourceType.PORTRAIT] =
+                    ArrayList(resourcesMap[packageName]!![ResourceType.PORTRAIT]!!)
+                resourcesMap[packageName]!![ResourceType.LANDSCAPE]?.let {
+                    mResource[ResourceType.LANDSCAPE] = ArrayList(it)
+                }
+                resourcesMap[packageName]!![ResourceType.NIGHT]?.let {
+                    mResource[ResourceType.NIGHT] = ArrayList(it)
                 }
 
-                mOverlayName = if (mPackage == Const.FRAMEWORK_PACKAGE) "Dynamic1" else "Dynamic2"
+                mOverlayName = getOverlayName(packageName)
 
                 preExecute()
                 moveOverlaysToCache()
@@ -61,7 +75,7 @@ object DynamicCompiler {
                 if (createManifestResource(
                         mOverlayName,
                         mPackage,
-                        Resources.TEMP_CACHE_DIR + "/" + mPackage + "/" + mOverlayName
+                        "$TEMP_CACHE_DIR/$mPackage/$mOverlayName"
                     )
                 ) {
                     Log.e(TAG, "Failed to create Manifest for $mOverlayName! Exiting...")
@@ -71,7 +85,7 @@ object DynamicCompiler {
 
                 // Build APK using AAPT
                 if (OverlayCompiler.runAapt(
-                        Resources.TEMP_CACHE_DIR + "/" + mPackage + "/" + mOverlayName,
+                        "$TEMP_CACHE_DIR/$mPackage/$mOverlayName",
                         mPackage
                     )
                 ) {
@@ -81,7 +95,7 @@ object DynamicCompiler {
                 }
 
                 // ZipAlign the APK
-                if (OverlayCompiler.zipAlign(Resources.UNSIGNED_UNALIGNED_DIR + "/" + mOverlayName + "-unsigned-unaligned.apk")) {
+                if (OverlayCompiler.zipAlign("$UNSIGNED_UNALIGNED_DIR/$mOverlayName-unsigned-unaligned.apk")) {
                     Log.e(
                         TAG,
                         "Failed to align $mOverlayName-unsigned-unaligned.apk! Exiting..."
@@ -91,110 +105,113 @@ object DynamicCompiler {
                 }
 
                 // Sign the APK
-                if (OverlayCompiler.apkSigner(Resources.UNSIGNED_DIR + "/" + mOverlayName + "-unsigned.apk")) {
+                if (OverlayCompiler.apkSigner("$UNSIGNED_DIR/$mOverlayName-unsigned.apk")) {
                     Log.e(TAG, "Failed to sign $mOverlayName-unsigned.apk! Exiting...")
                     postExecute(true)
                     return true
                 }
+
                 postExecute(false)
             }
+
             if (mForce) {
-                Shell.cmd("rm -rf " + Resources.BACKUP_DIR).exec()
+                Shell.cmd("rm -rf $BACKUP_DIR").exec()
+                val overlayPackageNames = resourcesMap.keys
+                    .map { "IconifyComponent${getOverlayName(it)}.overlay" }
+                    .toTypedArray()
 
                 // Disable the overlays in case they are already enabled
-                disableOverlays(
-                    "IconifyComponentDynamic1.overlay",
-                    "IconifyComponentDynamic2.overlay"
-                )
+                disableOverlays(*overlayPackageNames)
 
                 // Install from files dir
-                for (i in 1..2) {
+                for (packageName in resourcesMap.keys) {
+                    val apkName = "IconifyComponent${getOverlayName(packageName)}.apk"
+
                     Shell.cmd(
-                        "pm install -r " + Resources.DATA_DIR + "/IconifyComponentDynamic" + i + ".apk"
-                    ).exec()
-                    Shell.cmd(
-                        "rm -rf " + Resources.DATA_DIR + "/IconifyComponentDynamic" + i + ".apk"
+                        "pm install -r $DATA_DIR/$apkName",
+                        "rm -rf $DATA_DIR/$apkName"
                     ).exec()
                 }
 
                 // Move to system overlay dir
                 mountRW()
-                for (i in 1..2) {
-                    Shell.cmd(
-                        "cp -rf " + Resources.SIGNED_DIR + "/IconifyComponentDynamic" + i + ".apk " + Resources.SYSTEM_OVERLAY_DIR + "/IconifyComponentDynamic" + i + ".apk"
-                    ).exec()
-                    setPermissions(644, "/system/product/overlay/IconifyComponentDynamic$i.apk")
+                for (packageName in resourcesMap.keys) {
+                    val apkName = "IconifyComponent${getOverlayName(packageName)}.apk"
+
+                    Shell.cmd("cp -rf $SIGNED_DIR/$apkName $SYSTEM_OVERLAY_DIR/$apkName").exec()
+                    setPermissions(644, "/system/product/overlay/$apkName")
                 }
                 mountRO()
 
                 // Enable the overlays
-                enableOverlays(
-                    "IconifyComponentDynamic1.overlay",
-                    "IconifyComponentDynamic2.overlay"
-                )
+                enableOverlays(*overlayPackageNames)
             }
         } catch (e: Exception) {
             Log.e(TAG, "Failed to build overlay! Exiting...", e)
             postExecute(true)
             return true
         }
+
         return false
     }
 
     @Throws(IOException::class)
-    private fun preExecute() {
+    private suspend fun preExecute() = withContext(Dispatchers.IO) {
         // Create symbolic link
         symLinkBinaries()
 
         // Clean data directory
-        Shell.cmd("rm -rf " + Resources.TEMP_DIR).exec()
-        Shell.cmd("rm -rf " + Resources.DATA_DIR + "/Overlays").exec()
+        Shell.cmd(
+            "rm -rf $TEMP_DIR",
+            "rm -rf $DATA_DIR/Overlays"
+        ).exec()
 
         // Extract overlay from assets
         copyAssets("Overlays/$mPackage/$mOverlayName")
 
         // Create temp directory
-        Shell.cmd("rm -rf " + Resources.TEMP_DIR + "; mkdir -p " + Resources.TEMP_DIR).exec()
-        Shell.cmd("mkdir -p " + Resources.TEMP_OVERLAY_DIR).exec()
-        Shell.cmd("mkdir -p " + Resources.TEMP_CACHE_DIR).exec()
-        Shell.cmd("mkdir -p " + Resources.UNSIGNED_UNALIGNED_DIR).exec()
-        Shell.cmd("mkdir -p " + Resources.UNSIGNED_DIR).exec()
-        Shell.cmd("mkdir -p " + Resources.SIGNED_DIR).exec()
-        Shell.cmd("mkdir -p " + Resources.TEMP_CACHE_DIR + "/" + mPackage + "/").exec()
-        Shell.cmd("mkdir -p " + Resources.BACKUP_DIR).exec()
+        Shell.cmd(
+            "rm -rf $TEMP_DIR; mkdir -p $TEMP_DIR",
+            "mkdir -p $TEMP_OVERLAY_DIR",
+            "mkdir -p $TEMP_CACHE_DIR",
+            "mkdir -p $UNSIGNED_UNALIGNED_DIR",
+            "mkdir -p $UNSIGNED_DIR",
+            "mkdir -p $SIGNED_DIR",
+            "mkdir -p $TEMP_CACHE_DIR/$mPackage/",
+            "mkdir -p $BACKUP_DIR"
+        ).exec()
     }
 
     private fun postExecute(hasErroredOut: Boolean) {
         if (!hasErroredOut) {
             // Move all generated overlays to module
             Shell.cmd(
-                "cp -rf " + Resources.SIGNED_DIR + "/IconifyComponent" + mOverlayName + ".apk " + Resources.OVERLAY_DIR + "/IconifyComponent" + mOverlayName + ".apk"
+                "cp -rf $SIGNED_DIR/IconifyComponent$mOverlayName.apk $OVERLAY_DIR/IconifyComponent$mOverlayName.apk"
             ).exec()
-            setPermissions(644, Resources.OVERLAY_DIR + "/IconifyComponent" + mOverlayName + ".apk")
+            setPermissions(644, "$OVERLAY_DIR/IconifyComponent$mOverlayName.apk")
             Shell.cmd(
-                "cp -rf " + Resources.SIGNED_DIR + "/IconifyComponent" + mOverlayName + ".apk " + Resources.BACKUP_DIR + "/IconifyComponent" + mOverlayName + ".apk"
+                "cp -rf $SIGNED_DIR/IconifyComponent$mOverlayName.apk $BACKUP_DIR/IconifyComponent$mOverlayName.apk"
             ).exec()
 
             // Move to files dir
             if (mForce) {
                 Shell.cmd(
-                    "cp -rf " + Resources.SIGNED_DIR + "/IconifyComponent" + mOverlayName + ".apk " + Resources.DATA_DIR + "/IconifyComponent" + mOverlayName + ".apk"
+                    "cp -rf $SIGNED_DIR/IconifyComponent$mOverlayName.apk $DATA_DIR/IconifyComponent$mOverlayName.apk"
                 ).exec()
-                setPermissions(
-                    644,
-                    Resources.DATA_DIR + "/IconifyComponent" + mOverlayName + ".apk"
-                )
+                setPermissions(644, "$DATA_DIR/IconifyComponent$mOverlayName.apk")
             }
         }
 
         // Clean temp directory
-        Shell.cmd("rm -rf " + Resources.TEMP_DIR).exec()
-        Shell.cmd("rm -rf " + Resources.DATA_DIR + "/Overlays").exec()
+        Shell.cmd(
+            "rm -rf $TEMP_DIR",
+            "rm -rf $DATA_DIR/Overlays"
+        ).exec()
     }
 
     private fun moveOverlaysToCache() {
         Shell.cmd(
-            "mv -f \"" + Resources.DATA_DIR + "/Overlays/" + mPackage + "/" + mOverlayName + "\" \"" + Resources.TEMP_CACHE_DIR + "/" + mPackage + "/" + mOverlayName + "\""
+            "mv -f \"$DATA_DIR/Overlays/$mPackage/$mOverlayName\" \"$TEMP_CACHE_DIR/$mPackage/$mOverlayName\""
         ).exec().isSuccess
     }
 
@@ -205,15 +222,41 @@ object DynamicCompiler {
     ): Boolean {
         Shell.cmd("mkdir -p $source/res").exec()
 
-        val values = arrayOf("values", "values-land", "values-night")
+        val resourceTypes = arrayOf(
+            ResourceType.PORTRAIT to "values",
+            ResourceType.LANDSCAPE to "values-land",
+            ResourceType.NIGHT to "values-night"
+        )
 
-        for (i in 0..2) {
-            Shell.cmd("mkdir -p " + source + "/res/" + values[i]).exec()
-            Shell.cmd(
-                "printf '" + mResource[i] + "' > " + source + "/res/" + values[i] + "/iconify.xml;"
-            ).exec()
+        resourceTypes.forEach { (resourceType, values) ->
+            val dirPath = "$source/res/${values}"
+            val filePath = "$source/res/${values}/iconify.xml"
+            val resourceList = mResource[resourceType]?.let { ArrayList(it) }
+
+            if (!resourceList.isNullOrEmpty()) {
+                val commands = mutableListOf(
+                    "mkdir -p $dirPath",            // Create the directory
+                    "rm -f $filePath",              // Remove the file if it exists
+                    "touch $filePath"               // Create an empty file
+                ).apply {
+                    add("echo '${resourceList.joinToString("\n")}' >> $filePath")
+                }
+
+                Shell.cmd(*commands.toTypedArray()).exec()
+            }
         }
 
         return OverlayCompiler.createManifest(overlayName, targetPackage, source)
+    }
+
+    private fun getOverlayName(packageName: String): String {
+        return when (packageName) {
+            FRAMEWORK_PACKAGE -> "Dynamic1"
+            SYSTEMUI_PACKAGE -> "Dynamic2"
+            PIXEL_LAUNCHER_PACKAGE -> "Dynamic3"
+            LAUNCHER3_PACKAGE -> "Dynamic4"
+            SETTINGS_PACKAGE -> "Dynamic5"
+            else -> throw Exception("Unknown package: $packageName")
+        }
     }
 }

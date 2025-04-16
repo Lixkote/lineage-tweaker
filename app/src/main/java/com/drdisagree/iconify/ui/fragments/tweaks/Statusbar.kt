@@ -9,21 +9,21 @@ import android.view.ViewGroup
 import android.widget.RadioGroup
 import com.drdisagree.iconify.Iconify.Companion.appContext
 import com.drdisagree.iconify.R
-import com.drdisagree.iconify.common.Const.FRAMEWORK_PACKAGE
-import com.drdisagree.iconify.common.Const.SWITCH_ANIMATION_DELAY
-import com.drdisagree.iconify.common.Const.SYSTEMUI_PACKAGE
-import com.drdisagree.iconify.common.References.FABRICATED_SB_COLOR_SOURCE
-import com.drdisagree.iconify.common.References.FABRICATED_SB_COLOR_TINT
-import com.drdisagree.iconify.common.References.FABRICATED_SB_HEIGHT
-import com.drdisagree.iconify.common.References.FABRICATED_SB_LEFT_PADDING
-import com.drdisagree.iconify.common.References.FABRICATED_SB_RIGHT_PADDING
-import com.drdisagree.iconify.config.RPrefs
-import com.drdisagree.iconify.config.RPrefs.putString
+import com.drdisagree.iconify.data.common.Const.FRAMEWORK_PACKAGE
+import com.drdisagree.iconify.data.common.Const.SWITCH_ANIMATION_DELAY
+import com.drdisagree.iconify.data.common.Const.SYSTEMUI_PACKAGE
+import com.drdisagree.iconify.data.common.References.FABRICATED_SB_COLOR_SOURCE
+import com.drdisagree.iconify.data.common.References.FABRICATED_SB_COLOR_TINT
+import com.drdisagree.iconify.data.common.References.FABRICATED_SB_HEIGHT
+import com.drdisagree.iconify.data.common.References.FABRICATED_SB_LEFT_PADDING
+import com.drdisagree.iconify.data.common.References.FABRICATED_SB_RIGHT_PADDING
+import com.drdisagree.iconify.data.config.RPrefs
+import com.drdisagree.iconify.data.config.RPrefs.putString
+import com.drdisagree.iconify.data.events.ColorDismissedEvent
+import com.drdisagree.iconify.data.events.ColorSelectedEvent
 import com.drdisagree.iconify.databinding.FragmentStatusbarBinding
 import com.drdisagree.iconify.ui.activities.MainActivity
 import com.drdisagree.iconify.ui.base.BaseFragment
-import com.drdisagree.iconify.ui.events.ColorDismissedEvent
-import com.drdisagree.iconify.ui.events.ColorSelectedEvent
 import com.drdisagree.iconify.ui.utils.ViewHelper.setHeader
 import com.drdisagree.iconify.utils.SystemUtils
 import com.drdisagree.iconify.utils.color.ColorUtils.colorToSpecialHex
@@ -35,6 +35,9 @@ import com.drdisagree.iconify.utils.overlay.manager.resource.ResourceEntry
 import com.drdisagree.iconify.utils.overlay.manager.resource.ResourceManager.buildOverlayWithResource
 import com.drdisagree.iconify.utils.overlay.manager.resource.ResourceManager.removeResourceFromOverlay
 import com.google.android.material.slider.Slider
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 
@@ -54,15 +57,16 @@ class Statusbar : BaseFragment() {
                 finalSBLeftPadding[0] = slider.value.toInt()
                 RPrefs.putInt(FABRICATED_SB_LEFT_PADDING, finalSBLeftPadding[0])
 
-                buildOverlayWithResource(
-                    requireContext(),
-                    ResourceEntry(
-                        SYSTEMUI_PACKAGE,
-                        "dimen",
-                        "status_bar_padding_start",
-                        finalSBLeftPadding[0].toString() + "dp"
+                CoroutineScope(Dispatchers.IO).launch {
+                    buildOverlayWithResource(
+                        ResourceEntry(
+                            SYSTEMUI_PACKAGE,
+                            "dimen",
+                            "status_bar_padding_start",
+                            finalSBLeftPadding[0].toString() + "dp"
+                        )
                     )
-                )
+                }
             }
         }
 
@@ -74,15 +78,16 @@ class Statusbar : BaseFragment() {
                 finalSBRightPadding[0] = slider.value.toInt()
                 RPrefs.putInt(FABRICATED_SB_RIGHT_PADDING, finalSBRightPadding[0])
 
-                buildOverlayWithResource(
-                    requireContext(),
-                    ResourceEntry(
-                        SYSTEMUI_PACKAGE,
-                        "dimen",
-                        "status_bar_padding_end",
-                        finalSBRightPadding[0].toString() + "dp"
+                CoroutineScope(Dispatchers.IO).launch {
+                    buildOverlayWithResource(
+                        ResourceEntry(
+                            SYSTEMUI_PACKAGE,
+                            "dimen",
+                            "status_bar_padding_end",
+                            finalSBRightPadding[0].toString() + "dp"
+                        )
                     )
-                )
+                }
             }
         }
 
@@ -94,33 +99,40 @@ class Statusbar : BaseFragment() {
                 finalSBHeight[0] = slider.value.toInt()
                 RPrefs.putInt(FABRICATED_SB_HEIGHT, finalSBHeight[0])
 
-                buildOverlayWithResource(
-                    requireContext(),
-                    ResourceEntry(
-                        FRAMEWORK_PACKAGE,
-                        "dimen",
-                        "status_bar_height",
-                        finalSBHeight[0].toString() + "dp"
-                    ),
-                    ResourceEntry(
-                        FRAMEWORK_PACKAGE,
-                        "dimen",
-                        "status_bar_height_default",
-                        finalSBHeight[0].toString() + "dp"
-                    ),
-                    ResourceEntry(
-                        FRAMEWORK_PACKAGE,
-                        "dimen",
-                        "status_bar_height_portrait",
-                        finalSBHeight[0].toString() + "dp"
-                    ),
-                    ResourceEntry(
-                        FRAMEWORK_PACKAGE,
-                        "dimen",
-                        "status_bar_height_landscape",
-                        finalSBHeight[0].toString() + "dp"
+                CoroutineScope(Dispatchers.IO).launch {
+                    buildOverlayWithResource(
+                        ResourceEntry(
+                            SYSTEMUI_PACKAGE,
+                            "dimen",
+                            "status_bar_height",
+                            finalSBHeight[0].toString() + "dp"
+                        ),
+                        ResourceEntry(
+                            FRAMEWORK_PACKAGE,
+                            "dimen",
+                            "status_bar_height",
+                            finalSBHeight[0].toString() + "dp"
+                        ),
+                        ResourceEntry(
+                            FRAMEWORK_PACKAGE,
+                            "dimen",
+                            "status_bar_height_default",
+                            finalSBHeight[0].toString() + "dp"
+                        ),
+                        ResourceEntry(
+                            FRAMEWORK_PACKAGE,
+                            "dimen",
+                            "status_bar_height_portrait",
+                            finalSBHeight[0].toString() + "dp"
+                        ),
+                        ResourceEntry(
+                            FRAMEWORK_PACKAGE,
+                            "dimen",
+                            "status_bar_height_landscape",
+                            finalSBHeight[0].toString() + "dp"
+                        )
                     )
-                )
+                }
             }
         }
 
@@ -148,10 +160,11 @@ class Statusbar : BaseFragment() {
         binding.sbLeftPadding.setResetClickListener {
             RPrefs.putInt(FABRICATED_SB_LEFT_PADDING, 8)
 
-            removeResourceFromOverlay(
-                requireContext(),
-                ResourceEntry(SYSTEMUI_PACKAGE, "dimen", "status_bar_padding_start")
-            )
+            CoroutineScope(Dispatchers.IO).launch {
+                removeResourceFromOverlay(
+                    ResourceEntry(SYSTEMUI_PACKAGE, "dimen", "status_bar_padding_start")
+                )
+            }
 
             true
         }
@@ -164,10 +177,11 @@ class Statusbar : BaseFragment() {
         binding.sbRightPadding.setResetClickListener {
             RPrefs.putInt(FABRICATED_SB_RIGHT_PADDING, 8)
 
-            removeResourceFromOverlay(
-                requireContext(),
-                ResourceEntry(SYSTEMUI_PACKAGE, "dimen", "status_bar_padding_end")
-            )
+            CoroutineScope(Dispatchers.IO).launch {
+                removeResourceFromOverlay(
+                    ResourceEntry(SYSTEMUI_PACKAGE, "dimen", "status_bar_padding_end")
+                )
+            }
 
             true
         }
@@ -180,13 +194,15 @@ class Statusbar : BaseFragment() {
         binding.sbHeight.setResetClickListener {
             RPrefs.putInt(FABRICATED_SB_HEIGHT, 28)
 
-            removeResourceFromOverlay(
-                requireContext(),
-                ResourceEntry(FRAMEWORK_PACKAGE, "dimen", "status_bar_height"),
-                ResourceEntry(FRAMEWORK_PACKAGE, "dimen", "status_bar_height_default"),
-                ResourceEntry(FRAMEWORK_PACKAGE, "dimen", "status_bar_height_portrait"),
-                ResourceEntry(FRAMEWORK_PACKAGE, "dimen", "status_bar_height_landscape")
-            )
+            CoroutineScope(Dispatchers.IO).launch {
+                removeResourceFromOverlay(
+                    ResourceEntry(SYSTEMUI_PACKAGE, "dimen", "status_bar_height"),
+                    ResourceEntry(FRAMEWORK_PACKAGE, "dimen", "status_bar_height"),
+                    ResourceEntry(FRAMEWORK_PACKAGE, "dimen", "status_bar_height_default"),
+                    ResourceEntry(FRAMEWORK_PACKAGE, "dimen", "status_bar_height_portrait"),
+                    ResourceEntry(FRAMEWORK_PACKAGE, "dimen", "status_bar_height_landscape")
+                )
+            }
 
             true
         }

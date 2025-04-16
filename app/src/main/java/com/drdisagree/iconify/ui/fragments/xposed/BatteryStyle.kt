@@ -2,11 +2,11 @@ package com.drdisagree.iconify.ui.fragments.xposed
 
 import android.os.Bundle
 import com.drdisagree.iconify.R
-import com.drdisagree.iconify.common.Preferences.CUSTOM_BATTERY_CHARGING_ICON_STYLE
-import com.drdisagree.iconify.common.Preferences.CUSTOM_BATTERY_HEIGHT
-import com.drdisagree.iconify.common.Preferences.CUSTOM_BATTERY_STYLE
-import com.drdisagree.iconify.common.Preferences.CUSTOM_BATTERY_WIDTH
-import com.drdisagree.iconify.config.RPrefs
+import com.drdisagree.iconify.data.common.Preferences.CUSTOM_BATTERY_CHARGING_ICON_STYLE
+import com.drdisagree.iconify.data.common.Preferences.CUSTOM_BATTERY_HEIGHT
+import com.drdisagree.iconify.data.common.Preferences.CUSTOM_BATTERY_STYLE
+import com.drdisagree.iconify.data.common.Preferences.CUSTOM_BATTERY_WIDTH
+import com.drdisagree.iconify.data.config.RPrefs
 import com.drdisagree.iconify.ui.activities.MainActivity
 import com.drdisagree.iconify.ui.adapters.ListPreferenceAdapter
 import com.drdisagree.iconify.ui.base.ControlledPreferenceFragmentCompat

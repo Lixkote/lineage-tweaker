@@ -2,12 +2,13 @@ package com.drdisagree.iconify.utils.overlay.compiler
 
 import android.util.Log
 import com.drdisagree.iconify.Iconify.Companion.appContext
-import com.drdisagree.iconify.common.Dynamic.AAPT
-import com.drdisagree.iconify.common.Dynamic.AAPT2
-import com.drdisagree.iconify.common.Dynamic.ZIPALIGN
-import com.drdisagree.iconify.common.Dynamic.isAtleastA14
-import com.drdisagree.iconify.common.Resources
-import com.drdisagree.iconify.common.Resources.FRAMEWORK_DIR
+import com.drdisagree.iconify.data.common.Dynamic.AAPT
+import com.drdisagree.iconify.data.common.Dynamic.AAPT2
+import com.drdisagree.iconify.data.common.Dynamic.ZIPALIGN
+import com.drdisagree.iconify.data.common.Dynamic.isAtleastA14
+import com.drdisagree.iconify.data.common.Resources
+import com.drdisagree.iconify.data.common.Resources.FRAMEWORK_DIR
+import com.drdisagree.iconify.data.common.Resources.UNSIGNED_DIR
 import com.drdisagree.iconify.utils.AppUtils.getSplitLocations
 import com.drdisagree.iconify.utils.apksigner.CryptoUtils
 import com.drdisagree.iconify.utils.apksigner.SignAPK
@@ -58,12 +59,7 @@ object OverlayCompiler {
     }
 
     fun runAapt(source: String, targetPackage: String?): Boolean {
-        val name = CompilerUtils.getOverlayName(source) +
-                if (source.contains("SpecialOverlays")) {
-                    ".zip"
-                } else {
-                    "-unsigned-unaligned.apk"
-                }
+        val name = CompilerUtils.getOverlayName(source) + "-unsigned-unaligned.apk"
         val aaptCommand = buildAAPT2Command(source, name)
         val splitLocations = getSplitLocations(targetPackage)
 
@@ -98,21 +94,27 @@ object OverlayCompiler {
         } else {
             Log.e(
                 "$TAG - AAPT",
-                "Failed to build APK for $name\n${java.lang.String.join("\n", result.out)}"
+                "Failed to build APK for $name\n${result.out.joinToString("\n")}"
             )
-            writeLog("$TAG - AAPT", "Failed to build APK for $name", result.out)
+
+            val fileContents = Shell.cmd(
+                "find $source/res/values -type f -exec sh -c 'echo \"===== \$1 =====\"; cat \"\$1\"; echo' sh {} \\;"
+            ).exec().out
+
+            writeLog(
+                tag = "$TAG - AAPT",
+                header = "Failed to build APK for $name",
+                command = command,
+                fileContents = fileContents,
+                errorLog = result.out
+            )
         }
 
         return !result.isSuccess
     }
 
     private fun buildAAPT2Command(source: String, name: String): StringBuilder {
-        val outputDir =
-            if (source.contains("SpecialOverlays")) {
-                Resources.COMPANION_COMPILED_DIR
-            } else {
-                Resources.UNSIGNED_UNALIGNED_DIR
-            }
+        val outputDir = Resources.UNSIGNED_UNALIGNED_DIR
 
         return if (!isAtleastA14) {
             StringBuilder("$aapt p -f -M $source/AndroidManifest.xml -S $source/res -F $outputDir/$name -I $FRAMEWORK_DIR --include-meta-data --auto-add-overlay")
@@ -135,7 +137,8 @@ object OverlayCompiler {
         val fileName = CompilerUtils.getOverlayName(source)
         val result =
             Shell.cmd(
-                zipalign + " 4 " + source + ' ' + Resources.UNSIGNED_DIR + "/" + fileName + "-unsigned.apk"
+                "rm -rf $UNSIGNED_DIR/$fileName-unsigned.apk",
+                "$zipalign 4 $source $UNSIGNED_DIR/$fileName-unsigned.apk"
             ).exec()
 
         if (result.isSuccess) Log.i(

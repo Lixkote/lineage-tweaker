@@ -13,8 +13,8 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import com.drdisagree.iconify.R
 import com.drdisagree.iconify.ui.activities.MainActivity
-import com.drdisagree.iconify.ui.events.ColorDismissedEvent
-import com.drdisagree.iconify.ui.events.ColorSelectedEvent
+import com.drdisagree.iconify.data.events.ColorDismissedEvent
+import com.drdisagree.iconify.data.events.ColorSelectedEvent
 import com.drdisagree.iconify.utils.SystemUtils
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.RawValue

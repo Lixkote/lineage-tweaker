@@ -3,6 +3,7 @@ package com.drdisagree.iconify.xposed.modules
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Configuration
+import android.content.res.XResources
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
@@ -17,82 +18,82 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
-import com.drdisagree.iconify.common.Const.SYSTEMUI_PACKAGE
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUSBAR_CLOCK_ACCENT
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUSBAR_CLOCK_END_COLOR
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUSBAR_CLOCK_GRADIENT_DIRECTION
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUSBAR_CLOCK_PADDING_BOTTOM
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUSBAR_CLOCK_PADDING_LEFT
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUSBAR_CLOCK_PADDING_RIGHT
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUSBAR_CLOCK_PADDING_TOP
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUSBAR_CLOCK_RADIUS_BOTTOM_LEFT
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUSBAR_CLOCK_RADIUS_BOTTOM_RIGHT
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUSBAR_CLOCK_RADIUS_TOP_LEFT
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUSBAR_CLOCK_RADIUS_TOP_RIGHT
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUSBAR_CLOCK_START_COLOR
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUSBAR_CLOCK_STROKE_ACCENT
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUSBAR_CLOCK_STROKE_COLOR
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUSBAR_CLOCK_STROKE_DASH
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUSBAR_CLOCK_STROKE_DASH_GAP
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUSBAR_CLOCK_STROKE_DASH_WIDTH
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUSBAR_CLOCK_STROKE_SWITCH
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUSBAR_CLOCK_STROKE_WIDTH
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUSBAR_CLOCK_STYLE_CHANGED
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUSBAR_CLOCK_SWITCH
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUSBAR_CLOCK_TEXT_COLOR_CODE
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUSBAR_CLOCK_TEXT_COLOR_OPTION
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUS_ICONS_ACCENT
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUS_ICONS_END_COLOR
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUS_ICONS_GRADIENT_DIRECTION
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUS_ICONS_PADDING_BOTTOM
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUS_ICONS_PADDING_LEFT
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUS_ICONS_PADDING_RIGHT
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUS_ICONS_PADDING_TOP
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUS_ICONS_RADIUS_BOTTOM_LEFT
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUS_ICONS_RADIUS_BOTTOM_RIGHT
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUS_ICONS_RADIUS_TOP_LEFT
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUS_ICONS_RADIUS_TOP_RIGHT
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUS_ICONS_START_COLOR
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUS_ICONS_STROKE_ACCENT
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUS_ICONS_STROKE_COLOR
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUS_ICONS_STROKE_DASH
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUS_ICONS_STROKE_DASH_GAP
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUS_ICONS_STROKE_DASH_WIDTH
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUS_ICONS_STROKE_SWITCH
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUS_ICONS_STROKE_WIDTH
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUS_ICONS_STYLE_CHANGED
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUS_ICONS_SWITCH
-import com.drdisagree.iconify.common.Preferences.FIXED_STATUS_ICONS_SIDEMARGIN
-import com.drdisagree.iconify.common.Preferences.FIXED_STATUS_ICONS_SWITCH
-import com.drdisagree.iconify.common.Preferences.FIXED_STATUS_ICONS_TOPMARGIN
-import com.drdisagree.iconify.common.Preferences.HEADER_CLOCK_SWITCH
-import com.drdisagree.iconify.common.Preferences.HIDE_STATUS_ICONS_SWITCH
+import com.drdisagree.iconify.data.common.Const.SYSTEMUI_PACKAGE
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUSBAR_CLOCK_ACCENT
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUSBAR_CLOCK_CLICKABLE_SWITCH
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUSBAR_CLOCK_END_COLOR
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUSBAR_CLOCK_GRADIENT_DIRECTION
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUSBAR_CLOCK_PADDING_BOTTOM
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUSBAR_CLOCK_PADDING_LEFT
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUSBAR_CLOCK_PADDING_RIGHT
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUSBAR_CLOCK_PADDING_TOP
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUSBAR_CLOCK_RADIUS_BOTTOM_LEFT
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUSBAR_CLOCK_RADIUS_BOTTOM_RIGHT
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUSBAR_CLOCK_RADIUS_TOP_LEFT
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUSBAR_CLOCK_RADIUS_TOP_RIGHT
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUSBAR_CLOCK_START_COLOR
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUSBAR_CLOCK_STROKE_ACCENT
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUSBAR_CLOCK_STROKE_COLOR
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUSBAR_CLOCK_STROKE_DASH
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUSBAR_CLOCK_STROKE_DASH_GAP
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUSBAR_CLOCK_STROKE_DASH_WIDTH
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUSBAR_CLOCK_STROKE_SWITCH
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUSBAR_CLOCK_STROKE_WIDTH
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUSBAR_CLOCK_STYLE_CHANGED
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUSBAR_CLOCK_SWITCH
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUSBAR_CLOCK_TEXT_COLOR_CODE
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUSBAR_CLOCK_TEXT_COLOR_OPTION
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUS_ICONS_ACCENT
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUS_ICONS_END_COLOR
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUS_ICONS_GRADIENT_DIRECTION
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUS_ICONS_PADDING_BOTTOM
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUS_ICONS_PADDING_LEFT
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUS_ICONS_PADDING_RIGHT
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUS_ICONS_PADDING_TOP
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUS_ICONS_RADIUS_BOTTOM_LEFT
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUS_ICONS_RADIUS_BOTTOM_RIGHT
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUS_ICONS_RADIUS_TOP_LEFT
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUS_ICONS_RADIUS_TOP_RIGHT
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUS_ICONS_START_COLOR
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUS_ICONS_STROKE_ACCENT
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUS_ICONS_STROKE_COLOR
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUS_ICONS_STROKE_DASH
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUS_ICONS_STROKE_DASH_GAP
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUS_ICONS_STROKE_DASH_WIDTH
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUS_ICONS_STROKE_SWITCH
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUS_ICONS_STROKE_WIDTH
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUS_ICONS_STYLE_CHANGED
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUS_ICONS_SWITCH
+import com.drdisagree.iconify.data.common.Preferences.FIXED_STATUS_ICONS_SIDEMARGIN
+import com.drdisagree.iconify.data.common.Preferences.FIXED_STATUS_ICONS_SWITCH
+import com.drdisagree.iconify.data.common.Preferences.FIXED_STATUS_ICONS_TOPMARGIN
+import com.drdisagree.iconify.data.common.Preferences.HEADER_CLOCK_SWITCH
+import com.drdisagree.iconify.data.common.Preferences.HIDE_STATUS_ICONS_SWITCH
 import com.drdisagree.iconify.xposed.HookRes.Companion.resParams
 import com.drdisagree.iconify.xposed.ModPack
-import com.drdisagree.iconify.xposed.modules.utils.Helpers.findClassInArray
-import com.drdisagree.iconify.xposed.modules.utils.StatusBarClock
-import com.drdisagree.iconify.xposed.modules.utils.StatusBarClock.setClockGravity
-import com.drdisagree.iconify.xposed.modules.utils.ViewHelper.toPx
-import com.drdisagree.iconify.xposed.modules.views.ChipDrawable
-import com.drdisagree.iconify.xposed.modules.views.ChipDrawable.GradientDirection.Companion.toIndex
+import com.drdisagree.iconify.xposed.modules.extras.utils.MyConstraintSet.Companion.applyTo
+import com.drdisagree.iconify.xposed.modules.extras.utils.MyConstraintSet.Companion.clone
+import com.drdisagree.iconify.xposed.modules.extras.utils.MyConstraintSet.Companion.connect
+import com.drdisagree.iconify.xposed.modules.extras.utils.MyConstraintSet.Companion.constraintSetInstance
+import com.drdisagree.iconify.xposed.modules.extras.utils.StatusBarClock
+import com.drdisagree.iconify.xposed.modules.extras.utils.StatusBarClock.setClockGravity
+import com.drdisagree.iconify.xposed.modules.extras.utils.ViewHelper.toPx
+import com.drdisagree.iconify.xposed.modules.extras.utils.toolkit.XposedHook.Companion.findClass
+import com.drdisagree.iconify.xposed.modules.extras.utils.toolkit.callMethod
+import com.drdisagree.iconify.xposed.modules.extras.utils.toolkit.callStaticMethod
+import com.drdisagree.iconify.xposed.modules.extras.utils.toolkit.getField
+import com.drdisagree.iconify.xposed.modules.extras.utils.toolkit.getStaticField
+import com.drdisagree.iconify.xposed.modules.extras.utils.toolkit.hookLayout
+import com.drdisagree.iconify.xposed.modules.extras.utils.toolkit.hookMethod
+import com.drdisagree.iconify.xposed.modules.extras.utils.toolkit.log
+import com.drdisagree.iconify.xposed.modules.extras.views.ChipDrawable
+import com.drdisagree.iconify.xposed.modules.extras.views.ChipDrawable.GradientDirection.Companion.toIndex
+import com.drdisagree.iconify.xposed.modules.statusbar.StatusbarMisc.Companion.setClockChipClickable
 import com.drdisagree.iconify.xposed.utils.XPrefs.Xprefs
-import com.drdisagree.iconify.xposed.utils.XPrefs.XprefsIsInitialized
-import de.robv.android.xposed.XC_MethodHook
-import de.robv.android.xposed.XposedBridge.hookAllMethods
-import de.robv.android.xposed.XposedBridge.log
-import de.robv.android.xposed.XposedHelpers.callMethod
-import de.robv.android.xposed.XposedHelpers.callStaticMethod
-import de.robv.android.xposed.XposedHelpers.findAndHookMethod
-import de.robv.android.xposed.XposedHelpers.findClass
-import de.robv.android.xposed.XposedHelpers.findClassIfExists
-import de.robv.android.xposed.XposedHelpers.getObjectField
-import de.robv.android.xposed.XposedHelpers.getStaticObjectField
-import de.robv.android.xposed.callbacks.XC_InitPackageResources.InitPackageResourcesParam
-import de.robv.android.xposed.callbacks.XC_LayoutInflated
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam
 
 @SuppressLint("DiscouragedApi")
-class BackgroundChip(context: Context?) : ModPack(context!!) {
+class BackgroundChip(context: Context) : ModPack(context) {
 
     private val mQsStatusIconsContainer = LinearLayout(mContext)
     private var mShowSBClockBg = false
@@ -111,7 +112,6 @@ class BackgroundChip(context: Context?) : ModPack(context!!) {
     private var mRightClockView: View? = null
     private var dependencyClass: Class<*>? = null
     private var darkIconDispatcherClass: Class<*>? = null
-    private var mLoadPackageParam: LoadPackageParam? = null
     private var accentFillEnabled: Boolean = true
     private var startColor: Int = Color.RED
     private var endColor: Int = Color.BLUE
@@ -125,7 +125,6 @@ class BackgroundChip(context: Context?) : ModPack(context!!) {
     private var dashedBorderEnabled: Boolean = false
     private var strokeDashWidth: Int = 4
     private var strokeDashGap: Int = 4
-    private var cornerRadii: FloatArray = floatArrayOf(28f, 28f, 28f, 28f, 28f, 28f, 28f, 28f)
     private var accentFillEnabled2: Boolean = true
     private var startColor2: Int = Color.RED
     private var endColor2: Int = Color.BLUE
@@ -142,8 +141,6 @@ class BackgroundChip(context: Context?) : ModPack(context!!) {
     private var cornerRadii2: FloatArray = floatArrayOf(28f, 28f, 28f, 28f, 28f, 28f, 28f, 28f)
 
     override fun updatePrefs(vararg key: String) {
-        if (!XprefsIsInitialized) return
-
         Xprefs.apply {
             // Status bar clock chip
             mShowSBClockBg = getBoolean(CHIP_STATUSBAR_CLOCK_SWITCH, false)
@@ -152,13 +149,12 @@ class BackgroundChip(context: Context?) : ModPack(context!!) {
             accentFillEnabled = getBoolean(CHIP_STATUSBAR_CLOCK_ACCENT, true)
             startColor = getInt(CHIP_STATUSBAR_CLOCK_START_COLOR, Color.RED)
             endColor = getInt(CHIP_STATUSBAR_CLOCK_END_COLOR, Color.BLUE)
-            gradientDirection =
-                ChipDrawable.GradientDirection.fromIndex(
-                    getInt(
-                        CHIP_STATUSBAR_CLOCK_GRADIENT_DIRECTION,
-                        ChipDrawable.GradientDirection.LEFT_RIGHT.toIndex()
-                    )
+            gradientDirection = ChipDrawable.GradientDirection.fromIndex(
+                getInt(
+                    CHIP_STATUSBAR_CLOCK_GRADIENT_DIRECTION,
+                    ChipDrawable.GradientDirection.LEFT_RIGHT.toIndex()
                 )
+            )
             padding = intArrayOf(
                 getInt(CHIP_STATUSBAR_CLOCK_PADDING_LEFT, 8),
                 getInt(CHIP_STATUSBAR_CLOCK_PADDING_TOP, 4),
@@ -227,28 +223,32 @@ class BackgroundChip(context: Context?) : ModPack(context!!) {
             sideMarginStatusIcons = getSliderInt(FIXED_STATUS_ICONS_SIDEMARGIN, 0)
         }
 
-        if (key.isNotEmpty()) {
-            if (key[0] == CHIP_STATUSBAR_CLOCK_SWITCH ||
-                key[0] == CHIP_STATUSBAR_CLOCK_STYLE_CHANGED
-            ) {
-                updateStatusBarClock(true)
-            }
+        when (key.firstOrNull()) {
+            in setOf(
+                CHIP_STATUSBAR_CLOCK_SWITCH,
+                CHIP_STATUSBAR_CLOCK_STYLE_CHANGED,
+                CHIP_STATUSBAR_CLOCK_CLICKABLE_SWITCH
+            ) -> updateStatusBarClock(true)
 
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                if (key[0] == CHIP_STATUS_ICONS_SWITCH ||
-                    key[0] == CHIP_STATUS_ICONS_STYLE_CHANGED ||
-                    key[0] == HEADER_CLOCK_SWITCH ||
-                    key[0] == HIDE_STATUS_ICONS_SWITCH ||
-                    key[0] == FIXED_STATUS_ICONS_SWITCH
-                ) {
+            in setOf(
+                CHIP_STATUS_ICONS_SWITCH,
+                CHIP_STATUS_ICONS_STYLE_CHANGED,
+                HEADER_CLOCK_SWITCH,
+                HIDE_STATUS_ICONS_SWITCH,
+                FIXED_STATUS_ICONS_SWITCH
+            ) -> {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
                     setQSStatusIconsBgA12()
                 }
+            }
 
-                if (key[0] == CHIP_STATUS_ICONS_SWITCH ||
-                    key[0] == CHIP_STATUS_ICONS_STYLE_CHANGED ||
-                    key[0] == FIXED_STATUS_ICONS_TOPMARGIN ||
-                    key[0] == FIXED_STATUS_ICONS_SIDEMARGIN
-                ) {
+            in setOf(
+                CHIP_STATUS_ICONS_SWITCH,
+                CHIP_STATUS_ICONS_STYLE_CHANGED,
+                FIXED_STATUS_ICONS_TOPMARGIN,
+                FIXED_STATUS_ICONS_SIDEMARGIN
+            ) -> {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
                     updateStatusIcons()
                 }
             }
@@ -256,100 +256,90 @@ class BackgroundChip(context: Context?) : ModPack(context!!) {
     }
 
     override fun handleLoadPackage(loadPackageParam: LoadPackageParam) {
-        mLoadPackageParam = loadPackageParam
-        statusBarClockChip(loadPackageParam)
+        statusBarClockChip()
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            statusIconsChip(loadPackageParam)
+            statusIconsChip()
         }
     }
 
-    private fun statusBarClockChip(loadPackageParam: LoadPackageParam) {
-        val collapsedStatusBarFragment = findClassInArray(
-            loadPackageParam.classLoader,
+    private fun statusBarClockChip() {
+        val collapsedStatusBarFragment = findClass(
             "$SYSTEMUI_PACKAGE.statusbar.phone.CollapsedStatusBarFragment",
             "$SYSTEMUI_PACKAGE.statusbar.phone.fragment.CollapsedStatusBarFragment"
-
         )
-        dependencyClass = findClass(
-            "$SYSTEMUI_PACKAGE.Dependency",
-            loadPackageParam.classLoader
-        )
-        darkIconDispatcherClass = findClass(
-            "$SYSTEMUI_PACKAGE.plugins.DarkIconDispatcher",
-            loadPackageParam.classLoader
-        )
+        val shadeHeaderControllerClass =
+            findClass("$SYSTEMUI_PACKAGE.shade.ShadeHeaderController")
+        dependencyClass = findClass("$SYSTEMUI_PACKAGE.Dependency")
+        darkIconDispatcherClass = findClass("$SYSTEMUI_PACKAGE.plugins.DarkIconDispatcher")
 
-        findAndHookMethod(
-            collapsedStatusBarFragment,
-            "onViewCreated",
-            View::class.java,
-            Bundle::class.java,
-            object : XC_MethodHook() {
-                override fun afterHookedMethod(param: MethodHookParam) {
-                    mClockView = StatusBarClock.getLeftClockView(mContext, param)
-                    mCenterClockView = StatusBarClock.getCenterClockView(mContext, param)
-                    mRightClockView = StatusBarClock.getRightClockView(mContext, param)
+        collapsedStatusBarFragment
+            .hookMethod("onViewCreated")
+            .parameters(View::class.java, Bundle::class.java)
+            .runAfter { param ->
+                mClockView = StatusBarClock.getLeftClockView(mContext, param)
+                mCenterClockView = StatusBarClock.getCenterClockView(mContext, param)
+                mRightClockView = StatusBarClock.getRightClockView(mContext, param)
 
-                    (getObjectField(
-                        param.thisObject,
-                        "mStatusBar"
-                    ) as ViewGroup).addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
-                        updateStatusBarClock(false)
-                    }
+                (param.thisObject.getField(
+                    "mStatusBar"
+                ) as ViewGroup).addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
+                    updateStatusBarClock(false)
+                }
 
-                    updateStatusBarClock(true)
+                updateStatusBarClock(true)
 
-                    if (mShowSBClockBg) {
-                        try {
-                            val mStatusBar = getObjectField(
-                                param.thisObject,
-                                "mStatusBar"
-                            ) as FrameLayout
+                if (mShowSBClockBg) {
+                    try {
+                        val mStatusBar = param.thisObject.getField("mStatusBar") as FrameLayout
 
-                            val statusBarStartSideContent =
-                                mStatusBar.findViewById<FrameLayout>(
-                                    mContext.resources.getIdentifier(
-                                        "status_bar_start_side_content",
-                                        "id",
-                                        mContext.packageName
-                                    )
+                        val statusBarStartSideContent =
+                            mStatusBar.findViewById<FrameLayout>(
+                                mContext.resources.getIdentifier(
+                                    "status_bar_start_side_content",
+                                    "id",
+                                    mContext.packageName
                                 )
+                            )
 
-                            statusBarStartSideContent.post {
-                                statusBarStartSideContent.layoutParams.height =
-                                    FrameLayout.LayoutParams.MATCH_PARENT
-                                statusBarStartSideContent.requestLayout()
-                            }
-
-                            val statusBarStartSideExceptHeadsUp =
-                                mStatusBar.findViewById<LinearLayout>(
-                                    mContext.resources.getIdentifier(
-                                        "status_bar_start_side_except_heads_up",
-                                        "id",
-                                        mContext.packageName
-                                    )
-                                )
-
-                            statusBarStartSideExceptHeadsUp.post {
-                                (statusBarStartSideExceptHeadsUp.layoutParams as FrameLayout.LayoutParams).gravity =
-                                    Gravity.START or Gravity.CENTER
-                            }
-
-                            statusBarStartSideExceptHeadsUp.gravity =
-                                Gravity.START or Gravity.CENTER
-                            statusBarStartSideExceptHeadsUp.requestLayout()
-                        } catch (throwable: Throwable) {
-                            log(TAG + throwable)
+                        statusBarStartSideContent.post {
+                            statusBarStartSideContent.layoutParams.height =
+                                FrameLayout.LayoutParams.MATCH_PARENT
+                            statusBarStartSideContent.requestLayout()
                         }
+
+                        val statusBarStartSideExceptHeadsUp =
+                            mStatusBar.findViewById<LinearLayout>(
+                                mContext.resources.getIdentifier(
+                                    "status_bar_start_side_except_heads_up",
+                                    "id",
+                                    mContext.packageName
+                                )
+                            )
+
+                        statusBarStartSideExceptHeadsUp.post {
+                            (statusBarStartSideExceptHeadsUp.layoutParams as FrameLayout.LayoutParams).gravity =
+                                Gravity.START or Gravity.CENTER
+                        }
+
+                        statusBarStartSideExceptHeadsUp.gravity =
+                            Gravity.START or Gravity.CENTER
+                        statusBarStartSideExceptHeadsUp.requestLayout()
+                    } catch (throwable: Throwable) {
+                        log(this@BackgroundChip, throwable)
                     }
                 }
-            })
+            }
+
+        shadeHeaderControllerClass
+            .hookMethod("updateQQSPaddings")
+            .suppressError()
+            .runAfter { updateStatusBarClock(true) }
     }
 
-    private fun statusIconsChip(loadPackageParam: LoadPackageParam) {
+    private fun statusIconsChip() {
         setQSStatusIconsBgA12()
-        setQSStatusIconsBgA13Plus(loadPackageParam)
+        setQSStatusIconsBgA13Plus()
     }
 
     @SuppressLint("RtlHardcoded")
@@ -421,54 +411,45 @@ class BackgroundChip(context: Context?) : ModPack(context!!) {
                 (mQsStatusIconsContainer.layoutParams as LinearLayout.LayoutParams).marginEnd =
                     mContext.toPx(sideMarginStatusIcons)
             }
-        } else if (mLoadPackageParam != null && header != null && constraintLayoutId != -1) {
+        } else if (header != null && constraintLayoutId != -1) {
             try {
-                val constraintSetClass = findClass(
-                    "androidx.constraintlayout.widget.ConstraintSet",
-                    mLoadPackageParam!!.classLoader
-                )
-                val mConstraintSet = constraintSetClass.getDeclaredConstructor().newInstance()
+                constraintSetInstance?.apply {
+                    clone(header!!)
+                    connect(
+                        constraintLayoutId,
+                        ConstraintSet.TOP,
+                        ConstraintSet.PARENT_ID,
+                        ConstraintSet.TOP,
+                        0
+                    )
+                    connect(
+                        constraintLayoutId,
+                        ConstraintSet.END,
+                        ConstraintSet.PARENT_ID,
+                        ConstraintSet.END,
+                        0
+                    )
+                    applyTo(header!!)
+                }
 
-                callMethod(mConstraintSet, "clone", header)
+                mQsStatusIconsContainer
+                    .callMethod("getLayoutParams")
+                    .callMethod(
+                        "setMargins",
+                        0,
+                        mContext.toPx(topMarginStatusIcons),
+                        0,
+                        0
+                    )
 
-                callMethod(
-                    mConstraintSet,
-                    "connect",
-                    constraintLayoutId,
-                    ConstraintSet.TOP,
-                    ConstraintSet.PARENT_ID,
-                    ConstraintSet.TOP,
-                    0
-                )
-
-                callMethod(
-                    mConstraintSet,
-                    "connect",
-                    constraintLayoutId,
-                    ConstraintSet.END,
-                    ConstraintSet.PARENT_ID,
-                    ConstraintSet.END,
-                    0
-                )
-
-                callMethod(mConstraintSet, "applyTo", header)
-
-                callMethod(
-                    callMethod(mQsStatusIconsContainer, "getLayoutParams"),
-                    "setMargins",
-                    0,
-                    mContext.toPx(topMarginStatusIcons),
-                    0,
-                    0
-                )
-
-                callMethod(
-                    callMethod(mQsStatusIconsContainer, "getLayoutParams"),
+                mQsStatusIconsContainer
+                    .callMethod("getLayoutParams")
+                    .callMethod(
                     "setMarginEnd",
                     mContext.toPx(sideMarginStatusIcons)
                 )
             } catch (throwable: Throwable) {
-                log(TAG + throwable)
+                log(this@BackgroundChip, throwable)
             }
         }
 
@@ -543,96 +524,108 @@ class BackgroundChip(context: Context?) : ModPack(context!!) {
 
         when (statusBarClockColorOption) {
             0 -> {
-                (clockView as TextView).paint.setXfermode(null)
+                (clockView as TextView).paint.xfermode = null
                 try {
-                    callMethod(
-                        callStaticMethod(dependencyClass, "get", darkIconDispatcherClass),
-                        "addDarkReceiver",
-                        clockView
-                    )
-                } catch (ignored: Throwable) {
-                    callMethod(
-                        callMethod(
-                            getStaticObjectField(
-                                dependencyClass,
-                                "sDependency"
-                            ),
-                            "getDependencyInner",
-                            darkIconDispatcherClass
-                        ),
-                        "addDarkReceiver",
-                        clockView
-                    )
+                    dependencyClass
+                        .callStaticMethod("get", darkIconDispatcherClass)
+                        .callMethod("addDarkReceiver", clockView)
+                } catch (_: Throwable) {
+                    dependencyClass
+                        .getStaticField("sDependency")
+                        .callMethod("getDependencyInner", darkIconDispatcherClass)
+                        .callMethod("addDarkReceiver", clockView)
                 }
             }
 
             1 -> {
-                (clockView as TextView).paint.setXfermode(PorterDuffXfermode(PorterDuff.Mode.DST_OUT))
+                (clockView as TextView).paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_OUT)
             }
 
             2 -> {
-                (clockView as TextView).paint.setXfermode(null)
+                (clockView as TextView).paint.xfermode = null
                 try {
-                    callMethod(
-                        callStaticMethod(dependencyClass, "get", darkIconDispatcherClass),
-                        "removeDarkReceiver",
-                        clockView
-                    )
-                } catch (ignored: Throwable) {
-                    callMethod(
-                        callMethod(
-                            getStaticObjectField(
-                                dependencyClass,
-                                "sDependency"
-                            ),
-                            "getDependencyInner",
-                            darkIconDispatcherClass
-                        ),
-                        "removeDarkReceiver",
-                        clockView
-                    )
+                    dependencyClass
+                        .callStaticMethod("get", darkIconDispatcherClass)
+                        .callMethod("removeDarkReceiver", clockView)
+                } catch (_: Throwable) {
+                    dependencyClass
+                        .getStaticField("sDependency")
+                        .callMethod("getDependencyInner", darkIconDispatcherClass)
+                        .callMethod("removeDarkReceiver", clockView)
                 }
                 clockView.setTextColor(statusBarClockColorCode)
             }
         }
 
         setClockGravity(clockView, gravity)
+        setClockChipClickable(mContext, clockView, cornerRadii)
     }
 
     private fun setQSStatusIconsBgA12() {
         if (Build.VERSION.SDK_INT >= 33) return
 
-        val resParam: InitPackageResourcesParam = resParams[SYSTEMUI_PACKAGE] ?: return
+        val xResources: XResources = resParams[SYSTEMUI_PACKAGE]?.res ?: return
 
-        resParam.res.hookLayout(
-            SYSTEMUI_PACKAGE,
-            "layout",
-            "quick_qs_status_icons",
-            object : XC_LayoutInflated() {
-                override fun handleLayoutInflated(liparam: LayoutInflatedParam) {
-                    if (!mShowQSStatusIconsBg || hideStatusIcons || fixedStatusIcons) return
+        xResources.hookLayout()
+            .packageName(SYSTEMUI_PACKAGE)
+            .resource("layout", "quick_qs_status_icons")
+            .suppressError()
+            .run { param ->
+                if (!mShowQSStatusIconsBg || hideStatusIcons || fixedStatusIcons) return@run
 
-                    try {
-                        val statusIcons =
-                            liparam.view.findViewById<LinearLayout>(
-                                liparam.res.getIdentifier(
-                                    "statusIcons",
-                                    "id",
-                                    mContext.packageName
-                                )
+                try {
+                    val statusIcons =
+                        param.view.findViewById<LinearLayout>(
+                            param.res.getIdentifier(
+                                "statusIcons",
+                                "id",
+                                mContext.packageName
                             )
+                        )
 
+                    val statusIconContainer = statusIcons.parent as LinearLayout
+                    statusIconContainer.post {
+                        (statusIconContainer.layoutParams as FrameLayout.LayoutParams).gravity =
+                            Gravity.CENTER_VERTICAL or Gravity.END
+                        statusIconContainer.layoutParams.height = TypedValue.applyDimension(
+                            TypedValue.COMPLEX_UNIT_DIP,
+                            28f,
+                            mContext.resources.displayMetrics
+                        ).toInt()
+                        statusIconContainer.requestLayout()
+                    }
+
+                    statusIconContainer.setPadding(
+                        mContext.toPx(padding2[0]),
+                        mContext.toPx(padding2[1]),
+                        mContext.toPx(padding2[2]),
+                        mContext.toPx(padding2[3])
+                    )
+
+                    setStatusIconsBackgroundChip(statusIconContainer)
+                } catch (throwable: Throwable) {
+                    log(this@BackgroundChip, throwable)
+                }
+            }
+
+        xResources.hookLayout()
+            .packageName(SYSTEMUI_PACKAGE)
+            .resource("layout", "quick_status_bar_header_date_privacy")
+            .suppressError()
+            .run { param ->
+                if (!mShowQSStatusIconsBg || hideStatusIcons || !fixedStatusIcons) return@run
+
+                try {
+                    val statusIcons =
+                        param.view.findViewById<LinearLayout>(
+                            param.res.getIdentifier(
+                                "statusIcons",
+                                "id",
+                                mContext.packageName
+                            )
+                        )
+                    if (statusIcons != null) {
                         val statusIconContainer = statusIcons.parent as LinearLayout
-                        statusIconContainer.post {
-                            (statusIconContainer.layoutParams as FrameLayout.LayoutParams).gravity =
-                                Gravity.CENTER_VERTICAL or Gravity.END
-                            statusIconContainer.layoutParams.height = TypedValue.applyDimension(
-                                TypedValue.COMPLEX_UNIT_DIP,
-                                28f,
-                                mContext.resources.displayMetrics
-                            ).toInt()
-                            statusIconContainer.requestLayout()
-                        }
 
                         statusIconContainer.setPadding(
                             mContext.toPx(padding2[0]),
@@ -642,57 +635,19 @@ class BackgroundChip(context: Context?) : ModPack(context!!) {
                         )
 
                         setStatusIconsBackgroundChip(statusIconContainer)
-                    } catch (throwable: Throwable) {
-                        log(TAG + throwable)
                     }
+                } catch (throwable: Throwable) {
+                    log(this@BackgroundChip, throwable)
                 }
-            })
-
-        resParam.res.hookLayout(
-            SYSTEMUI_PACKAGE,
-            "layout",
-            "quick_status_bar_header_date_privacy",
-            object : XC_LayoutInflated() {
-                override fun handleLayoutInflated(liparam: LayoutInflatedParam) {
-                    if (!mShowQSStatusIconsBg || hideStatusIcons || !fixedStatusIcons) return
-
-                    try {
-                        val statusIcons =
-                            liparam.view.findViewById<LinearLayout>(
-                                liparam.res.getIdentifier(
-                                    "statusIcons",
-                                    "id",
-                                    mContext.packageName
-                                )
-                            )
-                        if (statusIcons != null) {
-                            val statusIconContainer = statusIcons.parent as LinearLayout
-
-                            statusIconContainer.setPadding(
-                                mContext.toPx(padding2[0]),
-                                mContext.toPx(padding2[1]),
-                                mContext.toPx(padding2[2]),
-                                mContext.toPx(padding2[3])
-                            )
-
-                            setStatusIconsBackgroundChip(statusIconContainer)
-                        }
-                    } catch (throwable: Throwable) {
-                        log(TAG + throwable)
-                    }
-                }
-            })
+            }
     }
 
-    private fun setQSStatusIconsBgA13Plus(loadPackageParam: LoadPackageParam) {
+    private fun setQSStatusIconsBgA13Plus() {
         if (Build.VERSION.SDK_INT < 33) return
 
-        val quickStatusBarHeader = findClass(
-            "$SYSTEMUI_PACKAGE.qs.QuickStatusBarHeader",
-            loadPackageParam.classLoader
-        )
+        val quickStatusBarHeader = findClass("$SYSTEMUI_PACKAGE.qs.QuickStatusBarHeader")
         var correctClass = false
-        val fs = quickStatusBarHeader.declaredFields
+        val fs = quickStatusBarHeader!!.declaredFields
         for (f in fs) {
             if (f.name == "mIconContainer") {
                 correctClass = true
@@ -700,19 +655,15 @@ class BackgroundChip(context: Context?) : ModPack(context!!) {
         }
 
         if (correctClass) {
-            hookAllMethods(quickStatusBarHeader, "onFinishInflate", object : XC_MethodHook() {
-                override fun afterHookedMethod(param: MethodHookParam) {
-                    if (!mShowQSStatusIconsBg && !fixedStatusIcons || hideStatusIcons) return
+            quickStatusBarHeader
+                .hookMethod("onFinishInflate")
+                .runAfter { param ->
+                    if (!mShowQSStatusIconsBg && !fixedStatusIcons || hideStatusIcons) return@runAfter
 
                     val mQuickStatusBarHeader = param.thisObject as FrameLayout
-                    val mIconContainer = getObjectField(
-                        param.thisObject,
-                        "mIconContainer"
-                    ) as LinearLayout
-                    val mBatteryRemainingIcon = getObjectField(
-                        param.thisObject,
-                        "mBatteryRemainingIcon"
-                    ) as LinearLayout
+                    val mIconContainer = param.thisObject.getField("mIconContainer") as LinearLayout
+                    val mBatteryRemainingIcon =
+                        param.thisObject.getField("mBatteryRemainingIcon") as LinearLayout
                     var layoutParams = LinearLayout.LayoutParams(
                         ViewGroup.LayoutParams.WRAP_CONTENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT
@@ -768,39 +719,27 @@ class BackgroundChip(context: Context?) : ModPack(context!!) {
 
                     updateStatusIcons()
                 }
-            })
 
-            hookAllMethods(quickStatusBarHeader, "updateResources", object : XC_MethodHook() {
-                override fun afterHookedMethod(param: MethodHookParam) {
-                    if (!mShowQSStatusIconsBg && !fixedStatusIcons || hideStatusIcons) return
+            quickStatusBarHeader
+                .hookMethod("updateResources")
+                .runAfter {
+                    if (!mShowQSStatusIconsBg && !fixedStatusIcons || hideStatusIcons) return@runAfter
 
                     updateStatusIcons()
                 }
-            })
         } else {
-            var shadeHeaderControllerClass = findClassIfExists(
+            val shadeHeaderControllerClass = findClass(
                 "$SYSTEMUI_PACKAGE.shade.ShadeHeaderController",
-                loadPackageParam.classLoader
+                "$SYSTEMUI_PACKAGE.shade.LargeScreenShadeHeaderController"
             )
-            if (shadeHeaderControllerClass == null) {
-                shadeHeaderControllerClass = findClass(
-                    "$SYSTEMUI_PACKAGE.shade.LargeScreenShadeHeaderController",
-                    loadPackageParam.classLoader
-                )
-            }
 
-            hookAllMethods(shadeHeaderControllerClass, "onInit", object : XC_MethodHook() {
-                override fun afterHookedMethod(param: MethodHookParam) {
-                    if (!mShowQSStatusIconsBg && !fixedStatusIcons || hideStatusIcons) return
+            shadeHeaderControllerClass
+                .hookMethod("onInit")
+                .runAfter { param ->
+                    if (!mShowQSStatusIconsBg && !fixedStatusIcons || hideStatusIcons) return@runAfter
 
-                    val iconContainer = getObjectField(
-                        param.thisObject,
-                        "iconContainer"
-                    ) as LinearLayout
-                    val batteryIcon = getObjectField(
-                        param.thisObject,
-                        "batteryIcon"
-                    ) as LinearLayout
+                    val iconContainer = param.thisObject.getField("iconContainer") as LinearLayout
+                    val batteryIcon = param.thisObject.getField("batteryIcon") as LinearLayout
                     header = iconContainer.parent as ViewGroup
                     val constraintLayoutParams = ConstraintLayout.LayoutParams(
                         ConstraintLayout.LayoutParams.WRAP_CONTENT,
@@ -854,19 +793,18 @@ class BackgroundChip(context: Context?) : ModPack(context!!) {
 
                     updateStatusIcons()
                 }
-            })
 
-            hookAllMethods(shadeHeaderControllerClass, "updateResources", object : XC_MethodHook() {
-                override fun afterHookedMethod(param: MethodHookParam) {
-                    if (!mShowQSStatusIconsBg && !fixedStatusIcons || hideStatusIcons) return
+            shadeHeaderControllerClass
+                .hookMethod("updateResources")
+                .runAfter {
+                    if (!mShowQSStatusIconsBg && !fixedStatusIcons || hideStatusIcons) return@runAfter
 
                     updateStatusIcons()
                 }
-            })
         }
     }
 
     companion object {
-        private val TAG = "Iconify - ${BackgroundChip::class.java.simpleName}: "
+        var cornerRadii: FloatArray = floatArrayOf(28f, 28f, 28f, 28f, 28f, 28f, 28f, 28f)
     }
 }

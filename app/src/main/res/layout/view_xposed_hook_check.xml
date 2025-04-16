@@ -24,11 +24,12 @@
         android:layout_centerVertical="true"
         android:layout_marginHorizontal="18dp"
         android:layout_marginVertical="16dp"
-        android:layout_toStartOf="@id/info_icon"
+        android:layout_toStartOf="@id/btn_more"
         android:layout_toEndOf="@id/module_icon"
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/title"
             style="@style/TextAppearance.Material3.TitleMedium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -36,6 +37,7 @@
             android:textColor="?colorOnError" />
 
         <TextView
+            android:id="@+id/summary"
             style="@style/TextAppearance.Material3.BodyMedium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -45,16 +47,19 @@
 
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/info_icon"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_more"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_marginEnd="24dp"
-        android:background="@drawable/action_bar_item_background_material_error"
-        android:contentDescription="@string/icon"
-        android:src="@drawable/ic_info"
-        app:tint="?colorOnError" />
+        android:backgroundTint="?attr/colorErrorContainer"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="6dp"
+        android:text="@string/more"
+        android:textColor="?attr/colorOnErrorContainer" />
 
 </RelativeLayout>

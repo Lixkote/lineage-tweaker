@@ -21,28 +21,41 @@ import com.airbnb.lottie.RenderMode
 import com.airbnb.lottie.SimpleColorFilter
 import com.airbnb.lottie.model.KeyPath
 import com.airbnb.lottie.value.LottieValueCallback
+import com.drdisagree.iconify.BaseSplashActivity.Companion.FORCE_OVERLAY_INSTALLATION
 import com.drdisagree.iconify.BuildConfig
 import com.drdisagree.iconify.R
-import com.drdisagree.iconify.common.Const.TRANSITION_DELAY
-import com.drdisagree.iconify.common.Dynamic.skippedInstallation
-import com.drdisagree.iconify.common.Preferences.FIRST_INSTALL
-import com.drdisagree.iconify.common.Preferences.UPDATE_DETECTED
-import com.drdisagree.iconify.common.Preferences.VER_CODE
-import com.drdisagree.iconify.common.Preferences.XPOSED_ONLY_MODE
-import com.drdisagree.iconify.common.Resources
-import com.drdisagree.iconify.config.RPrefs
-import com.drdisagree.iconify.config.RPrefs.clearPref
-import com.drdisagree.iconify.config.RPrefs.getBoolean
-import com.drdisagree.iconify.config.RPrefs.getInt
-import com.drdisagree.iconify.config.RPrefs.putBoolean
-import com.drdisagree.iconify.config.RPrefs.putInt
+import com.drdisagree.iconify.data.common.Const.TRANSITION_DELAY
+import com.drdisagree.iconify.data.common.Dynamic.DATA_DIR
+import com.drdisagree.iconify.data.common.Dynamic.skippedInstallation
+import com.drdisagree.iconify.data.common.Preferences.FIRST_INSTALL
+import com.drdisagree.iconify.data.common.Preferences.UPDATE_DETECTED
+import com.drdisagree.iconify.data.common.Preferences.VER_CODE
+import com.drdisagree.iconify.data.common.Preferences.XPOSED_ONLY_MODE
+import com.drdisagree.iconify.data.common.Resources
+import com.drdisagree.iconify.data.common.Resources.BACKUP_DIR
+import com.drdisagree.iconify.data.common.Resources.MODULE_DIR
+import com.drdisagree.iconify.data.common.Resources.SIGNED_DIR
+import com.drdisagree.iconify.data.common.Resources.TEMP_DIR
+import com.drdisagree.iconify.data.common.Resources.TEMP_MODULE_DIR
+import com.drdisagree.iconify.data.common.Resources.TEMP_MODULE_OVERLAY_DIR
+import com.drdisagree.iconify.data.common.Resources.TEMP_OVERLAY_DIR
+import com.drdisagree.iconify.data.common.Resources.UNSIGNED_DIR
+import com.drdisagree.iconify.data.common.Resources.UNSIGNED_UNALIGNED_DIR
+import com.drdisagree.iconify.data.config.RPrefs
+import com.drdisagree.iconify.data.config.RPrefs.clearPref
+import com.drdisagree.iconify.data.config.RPrefs.getBoolean
+import com.drdisagree.iconify.data.config.RPrefs.getInt
+import com.drdisagree.iconify.data.config.RPrefs.putBoolean
+import com.drdisagree.iconify.data.config.RPrefs.putInt
+import com.drdisagree.iconify.data.database.DynamicResourceDatabase
+import com.drdisagree.iconify.data.entity.OnboardingPage
+import com.drdisagree.iconify.data.repository.DynamicResourceRepository
 import com.drdisagree.iconify.databinding.ViewOnboardingPageBinding
 import com.drdisagree.iconify.ui.activities.MainActivity
 import com.drdisagree.iconify.ui.adapters.OnboardingAdapter
 import com.drdisagree.iconify.ui.core.Transform
 import com.drdisagree.iconify.ui.dialogs.ErrorDialog
 import com.drdisagree.iconify.ui.dialogs.InstallationDialog
-import com.drdisagree.iconify.ui.entity.OnboardingPage
 import com.drdisagree.iconify.ui.utils.Animatoo.animateSlideLeft
 import com.drdisagree.iconify.utils.FileUtils.copyAssets
 import com.drdisagree.iconify.utils.ModuleUtils.createModule
@@ -210,9 +223,23 @@ class OnboardingView : FrameLayout {
                 val moduleExists = moduleExists()
                 val overlayExists = overlayExists()
 
-                if (getInt(VER_CODE) != BuildConfig.VERSION_CODE || !moduleExists || !overlayExists) {
+                if (FORCE_OVERLAY_INSTALLATION ||
+                    getInt(VER_CODE) != BuildConfig.VERSION_CODE ||
+                    !moduleExists ||
+                    !overlayExists
+                ) {
                     if (!moduleExists || !overlayExists) {
+                        // Clear shared preferences
                         RPrefs.clearAllPrefs()
+
+                        // Clear dynamic resource database
+                        CoroutineScope(Dispatchers.IO).launch {
+                            DynamicResourceRepository(
+                                DynamicResourceDatabase.getInstance().dynamicResourceDao()
+                            ).apply {
+                                deleteResources(getAllResources())
+                            }
+                        }
                     }
 
                     handleInstallation()
@@ -269,7 +296,17 @@ class OnboardingView : FrameLayout {
                 }, (if (clickedButton) 10 else 1000).toLong())
             } else {
                 if (!moduleExists()) {
+                    // Clear shared preferences
                     RPrefs.clearAllPrefs()
+
+                    // Clear dynamic resource database
+                    CoroutineScope(Dispatchers.IO).launch {
+                        DynamicResourceRepository(
+                            DynamicResourceDatabase.getInstance().dynamicResourceDao()
+                        ).apply {
+                            deleteResources(getAllResources())
+                        }
+                    }
 
                     handleInstallation()
                 } else {
@@ -362,7 +399,7 @@ class OnboardingView : FrameLayout {
         try {
             // Clean data directory
             updateProgressBar(message = "I: Cleaning iconify data directory")
-            Shell.cmd("rm -rf " + Resources.DATA_DIR + "/Overlays").exec()
+            Shell.cmd("rm -rf $DATA_DIR/Overlays").exec()
 
             updateProgressBar(message = "I: Extracting overlays from assets")
             if (skippedInstallation) {
@@ -376,10 +413,10 @@ class OnboardingView : FrameLayout {
 
             // Create temp directory
             updateProgressBar(message = "I: Creating temporary directories")
-            Shell.cmd("mkdir -p " + Resources.TEMP_OVERLAY_DIR).exec()
-            Shell.cmd("mkdir -p " + Resources.UNSIGNED_UNALIGNED_DIR).exec()
-            Shell.cmd("mkdir -p " + Resources.UNSIGNED_DIR).exec()
-            Shell.cmd("mkdir -p " + Resources.SIGNED_DIR).exec()
+            Shell.cmd("mkdir -p $TEMP_OVERLAY_DIR").exec()
+            Shell.cmd("mkdir -p $UNSIGNED_UNALIGNED_DIR").exec()
+            Shell.cmd("mkdir -p $UNSIGNED_DIR").exec()
+            Shell.cmd("mkdir -p $SIGNED_DIR").exec()
         } catch (e: IOException) {
             hasErroredOut = true
             Log.e(TAG, e.toString())
@@ -392,7 +429,7 @@ class OnboardingView : FrameLayout {
             delay(100)
         } else {
             // Create AndroidManifest.xml and build Overlay using AAPT
-            dir = File(Resources.DATA_DIR + "/Overlays")
+            dir = File("$DATA_DIR/Overlays")
 
             if (dir.listFiles() == null) hasErroredOut = true
 
@@ -408,7 +445,7 @@ class OnboardingView : FrameLayout {
                                 if (createManifest(
                                         overlayName,
                                         pkg.toString()
-                                            .replace(Resources.DATA_DIR + "/Overlays/", ""),
+                                            .replace("$DATA_DIR/Overlays/", ""),
                                         overlay.absolutePath
                                     )
                                 ) {
@@ -516,17 +553,15 @@ class OnboardingView : FrameLayout {
 
         // Move all generated overlays to system dir and flash as module
         if (!hasErroredOut) {
-            Shell.cmd(
-                "cp -a " + Resources.SIGNED_DIR + "/. " + Resources.TEMP_MODULE_OVERLAY_DIR
-            ).exec()
+            Shell.cmd("cp -a $SIGNED_DIR/. $TEMP_MODULE_OVERLAY_DIR").exec()
 
             restoreFiles()
 
             try {
                 hasErroredOut = flashModule(
                     createModule(
-                        Resources.TEMP_MODULE_DIR,
-                        Resources.TEMP_DIR + "/Iconify.zip"
+                        TEMP_MODULE_DIR,
+                        "$TEMP_DIR/Iconify.zip"
                     )
                 )
             } catch (e: Exception) {
@@ -539,8 +574,8 @@ class OnboardingView : FrameLayout {
         updateProgressBar(message = "I: Cleaning temporary directories")
 
         // Clean temp directory
-        Shell.cmd("rm -rf " + Resources.TEMP_DIR).exec()
-        Shell.cmd("rm -rf " + Resources.DATA_DIR + "/Overlays").exec()
+        Shell.cmd("rm -rf $TEMP_DIR").exec()
+        Shell.cmd("rm -rf $DATA_DIR/Overlays").exec()
         if (!hasErroredOut) {
             updateProgressBar(message = "I: Installation process finished")
             delay(100)
@@ -637,10 +672,10 @@ class OnboardingView : FrameLayout {
     private fun onCancelled() {
         clearPref(XPOSED_ONLY_MODE)
 
-        Shell.cmd("rm -rf " + Resources.DATA_DIR).exec()
-        Shell.cmd("rm -rf " + Resources.TEMP_DIR).exec()
-        Shell.cmd("rm -rf " + Resources.BACKUP_DIR).exec()
-        Shell.cmd("rm -rf " + Resources.MODULE_DIR).exec()
+        Shell.cmd("rm -rf $DATA_DIR").exec()
+        Shell.cmd("rm -rf $TEMP_DIR").exec()
+        Shell.cmd("rm -rf $BACKUP_DIR").exec()
+        Shell.cmd("rm -rf $MODULE_DIR").exec()
     }
 
     @get:ColorInt

@@ -10,7 +10,7 @@ import com.drdisagree.iconify.databinding.FragmentBrightnessBarPixelBinding
 import com.drdisagree.iconify.ui.adapters.BrightnessBarAdapter
 import com.drdisagree.iconify.ui.base.BaseFragment
 import com.drdisagree.iconify.ui.dialogs.LoadingDialog
-import com.drdisagree.iconify.ui.models.BrightnessBarModel
+import com.drdisagree.iconify.data.models.BrightnessBarModel
 import com.drdisagree.iconify.ui.utils.ViewHelper.setHeader
 
 class BrightnessBarPixel : BaseFragment() {

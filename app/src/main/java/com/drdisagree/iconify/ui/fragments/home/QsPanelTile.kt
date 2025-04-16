@@ -15,8 +15,8 @@ import com.drdisagree.iconify.ui.adapters.QsShapeAdapter
 import com.drdisagree.iconify.ui.adapters.SectionTitleAdapter
 import com.drdisagree.iconify.ui.base.BaseFragment
 import com.drdisagree.iconify.ui.dialogs.LoadingDialog
-import com.drdisagree.iconify.ui.models.MenuModel
-import com.drdisagree.iconify.ui.models.QsShapeModel
+import com.drdisagree.iconify.data.models.MenuModel
+import com.drdisagree.iconify.data.models.QsShapeModel
 import com.drdisagree.iconify.ui.utils.ViewHelper.setHeader
 
 class QsPanelTile : BaseFragment() {

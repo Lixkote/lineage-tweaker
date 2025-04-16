@@ -4,3 +4,4 @@
 -dontwarn sun.security.provider.**
 -dontwarn com.jaredrummler.android.colorpicker.**
 -dontwarn javax.annotation.Nullable
+-dontwarn javax.lang.model.element.Modifier

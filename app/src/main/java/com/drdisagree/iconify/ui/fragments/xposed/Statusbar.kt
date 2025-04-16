@@ -1,9 +1,14 @@
 package com.drdisagree.iconify.ui.fragments.xposed
 
 import com.drdisagree.iconify.R
-import com.drdisagree.iconify.common.Preferences.COLORED_STATUSBAR_ICON
-import com.drdisagree.iconify.common.Preferences.HIDE_LOCKSCREEN_CARRIER
-import com.drdisagree.iconify.common.Preferences.HIDE_LOCKSCREEN_STATUSBAR
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUSBAR_CLOCK_CLICKABLE_SWITCH
+import com.drdisagree.iconify.data.common.Preferences.COLORED_STATUSBAR_ICON
+import com.drdisagree.iconify.data.common.Preferences.DUAL_STATUSBAR
+import com.drdisagree.iconify.data.common.Preferences.NOTIFICATION_ICONS_LIMIT
+import com.drdisagree.iconify.data.common.Preferences.SHOW_4G_INSTEAD_OF_LTE
+import com.drdisagree.iconify.data.common.Preferences.STATUSBAR_CLOCK_POSITION
+import com.drdisagree.iconify.data.common.Preferences.STATUSBAR_SWAP_CELLULAR_NETWORK_TYPE
+import com.drdisagree.iconify.data.common.Preferences.STATUSBAR_SWAP_WIFI_CELLULAR
 import com.drdisagree.iconify.ui.activities.MainActivity
 import com.drdisagree.iconify.ui.base.ControlledPreferenceFragmentCompat
 
@@ -25,9 +30,14 @@ class Statusbar : ControlledPreferenceFragmentCompat() {
         super.updateScreen(key)
 
         when (key) {
+            DUAL_STATUSBAR,
             COLORED_STATUSBAR_ICON,
-            HIDE_LOCKSCREEN_CARRIER,
-            HIDE_LOCKSCREEN_STATUSBAR -> {
+            STATUSBAR_SWAP_WIFI_CELLULAR,
+            STATUSBAR_SWAP_CELLULAR_NETWORK_TYPE,
+            STATUSBAR_CLOCK_POSITION,
+            SHOW_4G_INSTEAD_OF_LTE,
+            NOTIFICATION_ICONS_LIMIT,
+            CHIP_STATUSBAR_CLOCK_CLICKABLE_SWITCH -> {
                 MainActivity.showOrHidePendingActionButton(
                     activityBinding = (requireActivity() as MainActivity).binding,
                     requiresSystemUiRestart = true

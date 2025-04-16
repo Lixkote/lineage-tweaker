@@ -1,6 +1,5 @@
 package com.drdisagree.iconify.xposed
 
-import android.annotation.SuppressLint
 import android.app.Instrumentation
 import android.content.ComponentName
 import android.content.Context
@@ -12,29 +11,31 @@ import android.os.UserManager
 import com.drdisagree.iconify.BuildConfig
 import com.drdisagree.iconify.IRootProviderProxy
 import com.drdisagree.iconify.R
-import com.drdisagree.iconify.common.Const.FRAMEWORK_PACKAGE
+import com.drdisagree.iconify.data.common.Const.FRAMEWORK_PACKAGE
+import com.drdisagree.iconify.xposed.modules.extras.utils.toolkit.ResourceHookManager
+import com.drdisagree.iconify.xposed.modules.extras.utils.toolkit.XposedHook.Companion.findClass
+import com.drdisagree.iconify.xposed.modules.extras.utils.toolkit.hookMethod
+import com.drdisagree.iconify.xposed.modules.extras.utils.toolkit.log
 import com.drdisagree.iconify.xposed.utils.BootLoopProtector
 import com.drdisagree.iconify.xposed.utils.SystemUtils
 import com.drdisagree.iconify.xposed.utils.XPrefs
 import com.drdisagree.iconify.xposed.utils.XPrefs.Xprefs
-import de.robv.android.xposed.XC_MethodHook
-import de.robv.android.xposed.XposedBridge.hookAllMethods
-import de.robv.android.xposed.XposedBridge.log
-import de.robv.android.xposed.XposedHelpers.findAndHookMethod
-import de.robv.android.xposed.XposedHelpers.findClass
+import com.drdisagree.iconify.xposed.utils.XPrefs.XprefsIsInitialized
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.lang.ref.WeakReference
+import java.lang.reflect.InvocationTargetException
 import java.util.LinkedList
 import java.util.Queue
 import java.util.concurrent.CompletableFuture
 
 class HookEntry : ServiceConnection {
 
-    private var mContext: Context? = null
+    private lateinit var mContext: Context
 
     init {
         instance = this
@@ -49,62 +50,60 @@ class HookEntry : ServiceConnection {
 
         when (loadPackageParam.packageName) {
             FRAMEWORK_PACKAGE -> {
-                val phoneWindowManagerClass = findClass(
-                    "com.android.server.policy.PhoneWindowManager",
-                    loadPackageParam.classLoader
-                )
+                val phoneWindowManagerClass =
+                    findClass("com.android.server.policy.PhoneWindowManager")
 
-                hookAllMethods(phoneWindowManagerClass, "init", object : XC_MethodHook() {
-                    override fun beforeHookedMethod(param: MethodHookParam) {
+                phoneWindowManagerClass
+                    .hookMethod("init")
+                    .runBefore { param ->
                         try {
-                            if (mContext == null) {
+                            if (!::mContext.isInitialized) {
                                 mContext = param.args[0] as Context
 
-                                HookRes.modRes = mContext!!.createPackageContext(
+                                HookRes.modRes = mContext.createPackageContext(
                                     BuildConfig.APPLICATION_ID,
                                     Context.CONTEXT_IGNORE_SECURITY
                                 ).resources
 
-                                XPrefs.init(mContext!!)
+                                XPrefs.init(mContext)
+                                ResourceHookManager.init(mContext)
 
                                 CompletableFuture.runAsync { waitForXprefsLoad(loadPackageParam) }
                             }
                         } catch (throwable: Throwable) {
-                            log(TAG + throwable)
+                            log(this@HookEntry, throwable)
                         }
                     }
-                })
             }
 
             else -> {
                 if (!isChildProcess) {
-                    findAndHookMethod(
-                        Instrumentation::class.java,
-                        "newApplication",
-                        ClassLoader::class.java,
-                        String::class.java,
-                        Context::class.java,
-                        object : XC_MethodHook() {
-                            override fun afterHookedMethod(param: MethodHookParam) {
-                                try {
-                                    if (mContext == null) {
-                                        mContext = param.args[2] as Context
+                    Instrumentation::class.java
+                        .hookMethod("newApplication")
+                        .parameters(
+                            ClassLoader::class.java,
+                            String::class.java,
+                            Context::class.java
+                        )
+                        .runAfter { param ->
+                            try {
+                                if (!::mContext.isInitialized) {
+                                    mContext = param.args[2] as Context
 
-                                        HookRes.modRes = mContext!!.createPackageContext(
-                                            BuildConfig.APPLICATION_ID,
-                                            Context.CONTEXT_IGNORE_SECURITY
-                                        ).resources
+                                    HookRes.modRes = mContext.createPackageContext(
+                                        BuildConfig.APPLICATION_ID,
+                                        Context.CONTEXT_IGNORE_SECURITY
+                                    ).resources
 
-                                        XPrefs.init(mContext!!)
+                                    XPrefs.init(mContext)
+                                    ResourceHookManager.init(mContext)
 
-                                        waitForXprefsLoad(loadPackageParam)
-                                    }
-                                } catch (throwable: Throwable) {
-                                    log(TAG + throwable)
+                                    waitForXprefsLoad(loadPackageParam)
                                 }
+                            } catch (throwable: Throwable) {
+                                log(this@HookEntry, throwable)
                             }
                         }
-                    )
                 }
             }
         }
@@ -112,11 +111,11 @@ class HookEntry : ServiceConnection {
 
     private fun onXPrefsReady(loadPackageParam: LoadPackageParam) {
         if (!isChildProcess && BootLoopProtector.isBootLooped(loadPackageParam.packageName)) {
-            log("Possible bootloop in ${loadPackageParam.packageName} ; Iconify will not load for now...")
+            log("Possible crash in ${loadPackageParam.packageName} ; Iconify will not load for now...")
             return
         }
 
-        SystemUtils(mContext!!)
+        SystemUtils(mContext)
 
         loadModPacks(loadPackageParam)
     }
@@ -132,18 +131,25 @@ class HookEntry : ServiceConnection {
 
         for (mod in EntryList.getEntries(loadPackageParam.packageName)) {
             try {
-                val instance = mod.getConstructor(Context::class.java).newInstance(mContext)
+                val modInstance = mod.getConstructor(Context::class.java).newInstance(mContext)
 
-                try {
-                    instance.updatePrefs()
-                } catch (ignored: Throwable) {
+                if (XprefsIsInitialized) {
+                    try {
+                        modInstance.updatePrefs()
+                    } catch (throwable: Throwable) {
+                        log(this@HookEntry, "Failed to update prefs in ${mod.name}")
+                        log(this@HookEntry, throwable)
+                    }
                 }
 
-                instance.handleLoadPackage(loadPackageParam)
-                runningMods.add(instance)
+                modInstance.handleLoadPackage(loadPackageParam)
+                runningMods.add(modInstance)
+            } catch (invocationTargetException: InvocationTargetException) {
+                log(this@HookEntry, "Start Error Dump - Occurred in ${mod.name}")
+                log(this@HookEntry, invocationTargetException.cause)
             } catch (throwable: Throwable) {
-                log("Start Error Dump - Occurred in ${mod.name}")
-                log(TAG + throwable)
+                log(this@HookEntry, "Start Error Dump - Occurred in ${mod.name}")
+                log(this@HookEntry, throwable)
             }
         }
     }
@@ -159,13 +165,14 @@ class HookEntry : ServiceConnection {
         }
 
         log("Iconify Version: ${BuildConfig.VERSION_NAME}")
+        log("Hooked ${loadPackageParam.packageName}")
 
         onXPrefsReady(loadPackageParam)
     }
 
     private fun forceConnectRootService() {
         CoroutineScope(Dispatchers.Main).launch {
-            val mUserManager = mContext!!.getSystemService(Context.USER_SERVICE) as UserManager?
+            val mUserManager = mContext.getSystemService(Context.USER_SERVICE) as UserManager?
 
             withContext(Dispatchers.IO) {
                 while (mUserManager == null || !mUserManager.isUserUnlocked) {
@@ -189,21 +196,20 @@ class HookEntry : ServiceConnection {
                 component = ComponentName(
                     BuildConfig.APPLICATION_ID,
                     "${
-                        BuildConfig.APPLICATION_ID.replace(
-                            ".debug",
-                            ""
-                        )
+                        BuildConfig.APPLICATION_ID
+                            .replace(".debug", "")
+                            .replace(".foss", "")
                     }.services.RootProviderProxy"
                 )
             }
 
-            mContext!!.bindService(
+            mContext.bindService(
                 intent,
                 instance!!,
                 Context.BIND_AUTO_CREATE or Context.BIND_ADJUST_WITH_ACTIVITY
             )
         } catch (throwable: Throwable) {
-            log(TAG + throwable)
+            log(this@HookEntry, throwable)
         }
     }
 
@@ -231,14 +237,18 @@ class HookEntry : ServiceConnection {
     }
 
     companion object {
-        private val TAG = "Iconify - ${HookEntry::class.java.simpleName}: "
+        private var _instance: WeakReference<HookEntry>? = null
+        private var instance: HookEntry?
+            get() = _instance?.get()
+            set(value) {
+                _instance = value?.let { WeakReference(it) }
+            }
 
-        @SuppressLint("StaticFieldLeak")
-        var instance: HookEntry? = null
         val runningMods = ArrayList<ModPack>()
         var isChildProcess = false
-        var rootProxyIPC: IRootProviderProxy? = null
-        val proxyQueue: Queue<ProxyRunnable> = LinkedList()
+
+        private var rootProxyIPC: IRootProviderProxy? = null
+        private val proxyQueue: Queue<ProxyRunnable> = LinkedList()
 
         fun enqueueProxyCommand(runnable: ProxyRunnable) {
             rootProxyIPC?.let {

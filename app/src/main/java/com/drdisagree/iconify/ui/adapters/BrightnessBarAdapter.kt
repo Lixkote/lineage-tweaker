@@ -16,12 +16,11 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.drdisagree.iconify.Iconify
 import com.drdisagree.iconify.Iconify.Companion.appContext
 import com.drdisagree.iconify.R
-import com.drdisagree.iconify.config.RPrefs.getBoolean
+import com.drdisagree.iconify.data.config.RPrefs.getBoolean
 import com.drdisagree.iconify.ui.dialogs.LoadingDialog
-import com.drdisagree.iconify.ui.models.BrightnessBarModel
+import com.drdisagree.iconify.data.models.BrightnessBarModel
 import com.drdisagree.iconify.utils.overlay.manager.BrightnessBarManager
 import com.drdisagree.iconify.utils.overlay.manager.BrightnessBarPixelManager
 

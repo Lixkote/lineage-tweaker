@@ -1,19 +1,17 @@
 package com.drdisagree.iconify.ui.fragments.tweaks
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.drdisagree.iconify.R
-import com.drdisagree.iconify.common.Const.SYSTEMUI_PACKAGE
-import com.drdisagree.iconify.common.Preferences.LAND_QSTILE_EXPANDED_HEIGHT
-import com.drdisagree.iconify.common.Preferences.LAND_QSTILE_NONEXPANDED_HEIGHT
-import com.drdisagree.iconify.common.Preferences.PORT_QSTILE_EXPANDED_HEIGHT
-import com.drdisagree.iconify.common.Preferences.PORT_QSTILE_NONEXPANDED_HEIGHT
-import com.drdisagree.iconify.config.RPrefs
-import com.drdisagree.iconify.config.RPrefs.clearPrefs
+import com.drdisagree.iconify.data.common.Const.SYSTEMUI_PACKAGE
+import com.drdisagree.iconify.data.common.Preferences.LAND_QSTILE_EXPANDED_HEIGHT
+import com.drdisagree.iconify.data.common.Preferences.LAND_QSTILE_NONEXPANDED_HEIGHT
+import com.drdisagree.iconify.data.common.Preferences.PORT_QSTILE_EXPANDED_HEIGHT
+import com.drdisagree.iconify.data.common.Preferences.PORT_QSTILE_NONEXPANDED_HEIGHT
+import com.drdisagree.iconify.data.config.RPrefs
+import com.drdisagree.iconify.data.config.RPrefs.clearPrefs
 import com.drdisagree.iconify.databinding.FragmentQsTileSizeBinding
 import com.drdisagree.iconify.ui.base.BaseFragment
 import com.drdisagree.iconify.ui.dialogs.LoadingDialog
@@ -24,6 +22,10 @@ import com.drdisagree.iconify.utils.overlay.manager.resource.ResourceEntry
 import com.drdisagree.iconify.utils.overlay.manager.resource.ResourceManager.buildOverlayWithResource
 import com.drdisagree.iconify.utils.overlay.manager.resource.ResourceManager.removeResourceFromOverlay
 import com.google.android.material.slider.Slider
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.concurrent.atomic.AtomicBoolean
 
 class QsTileSize : BaseFragment() {
@@ -139,7 +141,6 @@ class QsTileSize : BaseFragment() {
                     "qs_quick_tile_size",
                     portNonExpandedHeight[0].toString() + "dp"
                 )
-                qsTileNonExpandedPort.setPortrait(true)
 
                 val qsTileExpandedPort = ResourceEntry(
                     SYSTEMUI_PACKAGE,
@@ -147,25 +148,28 @@ class QsTileSize : BaseFragment() {
                     "qs_tile_height",
                     portExpandedHeight[0].toString() + "dp"
                 )
-                qsTileExpandedPort.setPortrait(true)
 
                 val qsTileNonExpandedLand = ResourceEntry(
                     SYSTEMUI_PACKAGE,
                     "dimen",
                     "qs_quick_tile_size",
                     landNonExpandedHeight[0].toString() + "dp"
-                )
-                qsTileNonExpandedLand.setLandscape(true)
+                ).apply {
+                    isPortrait = false
+                    isLandscape = true
+                }
 
                 val qsTileExpandedLand = ResourceEntry(
                     SYSTEMUI_PACKAGE,
                     "dimen",
                     "qs_tile_height",
                     landExpandedHeight[0].toString() + "dp"
-                )
-                qsTileExpandedLand.setLandscape(true)
+                ).apply {
+                    isPortrait = false
+                    isLandscape = true
+                }
 
-                Handler(Looper.getMainLooper()).post {
+                CoroutineScope(Dispatchers.IO).launch {
                     val hasErroredOut = AtomicBoolean(
                         buildOverlayWithResource(
                             qsTileNonExpandedPort,
@@ -182,14 +186,15 @@ class QsTileSize : BaseFragment() {
                         RPrefs.putInt(LAND_QSTILE_EXPANDED_HEIGHT, landExpandedHeight[0])
                     }
 
-                    Handler(Looper.getMainLooper()).postDelayed({
+                    CoroutineScope(Dispatchers.Main).launch {
+                        delay(2000)
                         // Hide loading dialog
                         loadingDialog!!.hide()
 
                         if (!hasErroredOut.get()) {
                             binding.qsTileHeightReset.visibility = View.VISIBLE
                         }
-                    }, 2000)
+                    }
                 }
             }
         }
@@ -205,30 +210,32 @@ class QsTileSize : BaseFragment() {
                     "dimen",
                     "qs_quick_tile_size"
                 )
-                qsTileNonExpandedPort.setPortrait(true)
 
                 val qsTileExpandedPort = ResourceEntry(
                     SYSTEMUI_PACKAGE,
                     "dimen",
                     "qs_tile_height"
                 )
-                qsTileExpandedPort.setPortrait(true)
 
                 val qsTileNonExpandedLand = ResourceEntry(
                     SYSTEMUI_PACKAGE,
                     "dimen",
                     "qs_quick_tile_size"
-                )
-                qsTileNonExpandedLand.setLandscape(true)
+                ).apply {
+                    isPortrait = false
+                    isLandscape = true
+                }
 
                 val qsTileExpandedLand = ResourceEntry(
                     SYSTEMUI_PACKAGE,
                     "dimen",
                     "qs_tile_height"
-                )
-                qsTileExpandedLand.setLandscape(true)
+                ).apply {
+                    isPortrait = false
+                    isLandscape = true
+                }
 
-                Handler(Looper.getMainLooper()).post {
+                CoroutineScope(Dispatchers.IO).launch {
                     val hasErroredOut = AtomicBoolean(
                         removeResourceFromOverlay(
                             qsTileNonExpandedPort,
@@ -257,14 +264,15 @@ class QsTileSize : BaseFragment() {
                         binding.landExpandedHeight.resetSlider()
                     }
 
-                    Handler(Looper.getMainLooper()).postDelayed({
+                    CoroutineScope(Dispatchers.Main).launch {
+                        delay(2000)
                         // Hide loading dialog
                         loadingDialog!!.hide()
 
                         if (!hasErroredOut.get()) {
                             binding.qsTileHeightReset.visibility = View.GONE
                         }
-                    }, 2000)
+                    }
                 }
             }
         }

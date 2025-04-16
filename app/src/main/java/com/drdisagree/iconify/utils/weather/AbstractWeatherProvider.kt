@@ -69,7 +69,7 @@ abstract class AbstractWeatherProvider(protected var mContext: Context) {
 
     abstract fun getCustomWeather(lat: String?, lon: String?, metric: Boolean): WeatherInfo?
 
-    abstract fun getLocationWeather(location: Location?, metric: Boolean): WeatherInfo?
+    abstract fun getLocationWeather(location: Location, metric: Boolean): WeatherInfo?
 
     abstract fun shouldRetry(): Boolean
 
@@ -80,6 +80,7 @@ abstract class AbstractWeatherProvider(protected var mContext: Context) {
         )
     }
 
+    @Suppress("DEPRECATION")
     private fun getCoordinatesLocalityWithGoogle(coordinate: String): String? {
         val latitude =
             coordinate.substring(coordinate.indexOf("=") + 1, coordinate.indexOf("&")).toDouble()
@@ -98,7 +99,7 @@ abstract class AbstractWeatherProvider(protected var mContext: Context) {
         return null
     }
 
-    protected fun getCoordinatesLocality(coordinate: String): String? {
+    private fun getCoordinatesLocality(coordinate: String): String? {
         val cityGoogle = getCoordinatesLocalityWithGoogle(coordinate)
         if (!TextUtils.isEmpty(cityGoogle)) {
             return cityGoogle
@@ -108,7 +109,7 @@ abstract class AbstractWeatherProvider(protected var mContext: Context) {
         val longitude = coordinate.substring(coordinate.lastIndexOf("=") + 1).toDouble()
 
         val lang = Locale.getDefault().language.replaceFirst("_".toRegex(), "-")
-        val url = String.format(URL_LOCALITY, latitude, longitude, lang)
+        val url = String.format(Locale.getDefault(), URL_LOCALITY, latitude, longitude, lang)
         val response = retrieve(url, arrayOf())
         log(TAG, "URL = $url returning a response of $response")
 

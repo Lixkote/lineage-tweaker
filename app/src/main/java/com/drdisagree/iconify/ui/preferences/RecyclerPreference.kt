@@ -9,7 +9,7 @@ import androidx.preference.PreferenceViewHolder
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.drdisagree.iconify.R
-import com.drdisagree.iconify.config.RPrefs
+import com.drdisagree.iconify.data.config.RPrefs
 import com.drdisagree.iconify.ui.utils.CarouselLayoutManager
 
 class RecyclerPreference : Preference {

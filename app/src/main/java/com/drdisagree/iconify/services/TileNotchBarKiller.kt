@@ -3,13 +3,16 @@ package com.drdisagree.iconify.services
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 import com.drdisagree.iconify.R
-import com.drdisagree.iconify.common.Const.FRAMEWORK_PACKAGE
-import com.drdisagree.iconify.common.Preferences.NOTCH_BAR_KILLER_SWITCH
-import com.drdisagree.iconify.config.RPrefs.getBoolean
-import com.drdisagree.iconify.config.RPrefs.putBoolean
+import com.drdisagree.iconify.data.common.Const.FRAMEWORK_PACKAGE
+import com.drdisagree.iconify.data.common.Preferences.NOTCH_BAR_KILLER_SWITCH
+import com.drdisagree.iconify.data.config.RPrefs.getBoolean
+import com.drdisagree.iconify.data.config.RPrefs.putBoolean
 import com.drdisagree.iconify.utils.SystemUtils
 import com.drdisagree.iconify.utils.overlay.manager.resource.ResourceEntry
 import com.drdisagree.iconify.utils.overlay.manager.resource.ResourceManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class TileNotchBarKiller : TileService() {
 
@@ -46,47 +49,39 @@ class TileNotchBarKiller : TileService() {
             )
         tile.updateTile()
 
-        if (isNotchBarKillerEnabled) {
-            ResourceManager.buildOverlayWithResource(
-                applicationContext,
-                ResourceEntry(
-                    FRAMEWORK_PACKAGE,
-                    "bool",
-                    "config_fillMainBuiltInDisplayCutout",
-                    "true"
-                ),
-                ResourceEntry(
-                    FRAMEWORK_PACKAGE,
-                    "string",
-                    "config_mainBuiltInDisplayCutout",
-                    "M 0,0 L 0, 0 C 0,0 0,0 0,0"
-                ),
-                ResourceEntry(
-                    FRAMEWORK_PACKAGE,
-                    "string",
-                    "config_mainBuiltInDisplayCutoutRectApproximation",
-                    "@string/config_mainBuiltInDisplayCutout"
-                )
+        val resources = listOf(
+            ResourceEntry(
+                FRAMEWORK_PACKAGE,
+                "bool",
+                "config_fillMainBuiltInDisplayCutout",
+                "false"
+            ),
+            ResourceEntry(
+                FRAMEWORK_PACKAGE,
+                "bool",
+                "config_maskMainBuiltInDisplayCutout",
+                "true"
+            ),
+            ResourceEntry(
+                FRAMEWORK_PACKAGE,
+                "string",
+                "config_mainBuiltInDisplayCutout",
+                "M 0,0 L 0, 0 C 0,0 0,0 0,0"
+            ),
+            ResourceEntry(
+                FRAMEWORK_PACKAGE,
+                "string",
+                "config_mainBuiltInDisplayCutoutRectApproximation",
+                "@string/config_mainBuiltInDisplayCutout"
             )
-        } else {
-            ResourceManager.removeResourceFromOverlay(
-                applicationContext,
-                ResourceEntry(
-                    FRAMEWORK_PACKAGE,
-                    "bool",
-                    "config_fillMainBuiltInDisplayCutout"
-                ),
-                ResourceEntry(
-                    FRAMEWORK_PACKAGE,
-                    "string",
-                    "config_mainBuiltInDisplayCutout"
-                ),
-                ResourceEntry(
-                    FRAMEWORK_PACKAGE,
-                    "string",
-                    "config_mainBuiltInDisplayCutoutRectApproximation"
-                )
-            )
+        )
+
+        CoroutineScope(Dispatchers.IO).launch {
+            if (isNotchBarKillerEnabled) {
+                ResourceManager.buildOverlayWithResource(*resources.toTypedArray())
+            } else {
+                ResourceManager.removeResourceFromOverlay(*resources.toTypedArray())
+            }
         }
     }
 }

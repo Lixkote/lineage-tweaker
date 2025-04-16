@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
@@ -16,11 +17,11 @@ import com.topjohnwu.superuser.Shell
 
 object AppUtils {
 
-    fun isAppInstalled(packageName: String?): Boolean {
+    fun isAppInstalled(packageName: String): Boolean {
         val pm = appContext.packageManager
 
         try {
-            pm.getPackageInfo(packageName!!, PackageManager.GET_ACTIVITIES)
+            pm.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES)
             return pm.getApplicationInfo(packageName, 0).enabled
         } catch (ignored: PackageManager.NameNotFoundException) {
         }
@@ -33,11 +34,11 @@ object AppUtils {
             .exec().out[0].contains("installed")
     }
 
-    fun getAppUid(packageName: String?): Int {
+    fun getAppUid(packageName: String): Int {
         val pm = appContext.packageManager
 
         try {
-            pm.getPackageInfo(packageName!!, PackageManager.GET_ACTIVITIES)
+            pm.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES)
             return pm.getApplicationInfo(packageName, 0).uid
         } catch (ignored: PackageManager.NameNotFoundException) {
         }
@@ -46,33 +47,31 @@ object AppUtils {
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
-    fun getAppIcon(packageName: String?): Drawable? {
+    fun getAppIcon(packageName: String): Drawable? {
         var appIcon = ContextCompat.getDrawable(appContext, R.drawable.ic_android)
 
         try {
-            appIcon = appContext.packageManager.getApplicationIcon(packageName!!)
+            appIcon = appContext.packageManager.getApplicationIcon(packageName)
         } catch (ignored: PackageManager.NameNotFoundException) {
         }
 
         return appIcon
     }
 
-    fun getAppName(packageName: String?): String {
+    fun getAppName(packageName: String): String {
         val pm = appContext.applicationContext.packageManager
         var ai: ApplicationInfo? = null
 
         try {
-            ai = pm.getApplicationInfo(packageName!!, 0)
+            ai = pm.getApplicationInfo(packageName, 0)
         } catch (ignored: PackageManager.NameNotFoundException) {
         }
 
         return (if (ai == null) "Unavailable" else pm.getApplicationLabel(ai)) as String
     }
 
-    fun launchApp(activity: Activity, packageName: String?) {
-        val launchIntent = appContext.packageManager.getLaunchIntentForPackage(
-            packageName!!
-        )
+    fun launchApp(activity: Activity, packageName: String) {
+        val launchIntent = appContext.packageManager.getLaunchIntentForPackage(packageName)
 
         if (launchIntent != null) {
             activity.startActivity(launchIntent)
@@ -80,6 +79,32 @@ object AppUtils {
             Toast.makeText(
                 appContext,
                 appContext.resources.getString(R.string.app_not_found),
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    fun launchAppThrowError(activity: Activity, packageName: String) {
+        val launchIntent = appContext.packageManager.getLaunchIntentForPackage(packageName)
+
+        if (launchIntent != null) {
+            activity.startActivity(launchIntent)
+        } else {
+            throw Exception("App not found $packageName")
+        }
+    }
+
+    fun openUrl(activity: Activity, url: String) {
+        try {
+            activity.startActivity(
+                Intent(Intent.ACTION_VIEW).apply {
+                    data = Uri.parse(url)
+                }
+            )
+        } catch (ignored: Exception) {
+            Toast.makeText(
+                appContext,
+                appContext.resources.getString(R.string.toast_error),
                 Toast.LENGTH_SHORT
             ).show()
         }

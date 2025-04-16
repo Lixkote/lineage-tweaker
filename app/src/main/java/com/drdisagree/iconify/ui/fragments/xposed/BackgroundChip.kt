@@ -1,9 +1,9 @@
 package com.drdisagree.iconify.ui.fragments.xposed
 
 import com.drdisagree.iconify.R
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUSBAR_CLOCK_SWITCH
-import com.drdisagree.iconify.common.Preferences.CHIP_STATUS_ICONS_SWITCH
-import com.drdisagree.iconify.config.RPrefs.getBoolean
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUSBAR_CLOCK_SWITCH
+import com.drdisagree.iconify.data.common.Preferences.CHIP_STATUS_ICONS_SWITCH
+import com.drdisagree.iconify.data.config.RPrefs.getBoolean
 import com.drdisagree.iconify.ui.activities.MainActivity
 import com.drdisagree.iconify.ui.base.ControlledPreferenceFragmentCompat
 

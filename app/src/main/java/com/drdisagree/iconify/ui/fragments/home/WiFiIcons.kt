@@ -11,7 +11,7 @@ import com.drdisagree.iconify.databinding.FragmentIconPackBinding
 import com.drdisagree.iconify.ui.adapters.IconPackAdapter
 import com.drdisagree.iconify.ui.base.BaseFragment
 import com.drdisagree.iconify.ui.dialogs.LoadingDialog
-import com.drdisagree.iconify.ui.models.IconPackModel
+import com.drdisagree.iconify.data.models.IconPackModel
 import com.drdisagree.iconify.ui.utils.ViewHelper.setHeader
 import com.drdisagree.iconify.utils.overlay.manager.SignalIconManager
 import java.util.Locale

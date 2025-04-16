@@ -16,6 +16,11 @@ object RootUtils {
     val isApatchInstalled: Boolean
         get() = Shell.cmd("apd --help").exec().isSuccess
 
+    val isSusfsBinaryAvailable: Boolean
+        get() = !isMagiskInstalled &&
+                isKSUInstalled &&
+                fileExists("/data/adb/ksu/bin/ksu_susfs")
+
     fun moduleExists(moduleId: String): Boolean {
         return folderExists("/data/adb/modules/$moduleId")
     }

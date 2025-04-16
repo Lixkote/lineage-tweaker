@@ -22,13 +22,14 @@ import java.util.Locale
 class YandexProvider(context: Context?) : AbstractWeatherProvider(context!!) {
 
     override fun getCustomWeather(lat: String?, lon: String?, metric: Boolean): WeatherInfo? {
-        val coordinates = String.format(Locale.US, PART_COORDINATES, lat!!.toFloat(), lon!!.toFloat())
+        val coordinates =
+            String.format(Locale.US, PART_COORDINATES, lat!!.toFloat(), lon!!.toFloat())
         return getAllWeather(coordinates, metric)
     }
 
-    override fun getLocationWeather(location: Location?, metric: Boolean): WeatherInfo? {
+    override fun getLocationWeather(location: Location, metric: Boolean): WeatherInfo? {
         val coordinates =
-            String.format(Locale.US, PART_COORDINATES, location!!.latitude, location.longitude)
+            String.format(Locale.US, PART_COORDINATES, location.latitude, location.longitude)
         return getAllWeather(coordinates, metric)
     }
 
@@ -142,10 +143,10 @@ class YandexProvider(context: Context?) : AbstractWeatherProvider(context!!) {
         }
         // clients assume there are 5  entries - so fill with dummy if needed
         if (result.size < 5) {
-            for (i in result.size..4) {
+            for (j in result.size..4) {
                 Log.w(
                     TAG,
-                    "Missing forecast for day $i creating dummy"
+                    "Missing forecast for day $j creating dummy"
                 )
                 val item: WeatherInfo.DayForecast = WeatherInfo.DayForecast( /* low */
                     0F,  /* high */
@@ -160,7 +161,7 @@ class YandexProvider(context: Context?) : AbstractWeatherProvider(context!!) {
         }
 
         for (item in result) {
-            Log.d(TAG, "Day forecast: " + item.toString())
+            Log.d(TAG, "Day forecast: $item")
         }
 
         return result

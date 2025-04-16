@@ -1,7 +1,7 @@
 package com.drdisagree.iconify.utils.overlay.manager
 
-import com.drdisagree.iconify.common.Dynamic.TOTAL_BRIGHTNESSBARSPIXEL
-import com.drdisagree.iconify.config.RPrefs.putBoolean
+import com.drdisagree.iconify.data.common.Dynamic.TOTAL_BRIGHTNESSBARSPIXEL
+import com.drdisagree.iconify.data.config.RPrefs.putBoolean
 import com.drdisagree.iconify.utils.overlay.OverlayUtils.disableOverlay
 import com.drdisagree.iconify.utils.overlay.OverlayUtils.enableOverlayExclusiveInCategory
 import com.drdisagree.iconify.utils.overlay.OverlayUtils.enableOverlays

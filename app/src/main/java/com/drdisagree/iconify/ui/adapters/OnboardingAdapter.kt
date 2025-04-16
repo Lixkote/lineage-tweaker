@@ -7,7 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.drdisagree.iconify.databinding.ViewOnboardingPageItemBinding
 import com.drdisagree.iconify.ui.adapters.OnboardingAdapter.PagerViewHolder
-import com.drdisagree.iconify.ui.entity.OnboardingPage
+import com.drdisagree.iconify.data.entity.OnboardingPage
 
 class OnboardingAdapter : RecyclerView.Adapter<PagerViewHolder>() {
 

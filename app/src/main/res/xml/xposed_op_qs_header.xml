@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:search="http://schemas.android.com/apk/com.drdisagree.iconify.ui.preferences.preferencesearch">
 
-    <com.drdisagree.iconify.ui.preferences.SwitchPreference
+    <com.drdisagree.iconify.ui.preferences.MasterSwitchPreference
         android:key="xposed_opqsheader"
-        android:summary="@string/oneplus_qs_header_desc"
-        android:title="@string/oneplus_qs_header_title"
-        app:iconSpaceReserved="false" />
+        android:title="@string/oneplus_qs_header_title" />
 
     <com.drdisagree.iconify.ui.preferences.SwitchPreference
         android:dependency="xposed_opqsheader"
@@ -16,23 +15,24 @@
         app:iconSpaceReserved="false" />
 
     <com.drdisagree.iconify.ui.preferences.SwitchPreference
+        android:defaultValue="true"
         android:dependency="xposed_opqsheader"
-        android:key="xposed_opqsheaderhidestockmedia"
-        android:summary="@string/oneplus_qs_header_hide_stock_media_player_desc"
-        android:title="@string/oneplus_qs_header_hide_stock_media_player_title"
+        android:key="xposed_opqsheadershowartwork"
+        android:summary="@string/oneplus_qs_header_show_artwork_desc"
+        android:title="@string/oneplus_qs_header_show_artwork_title"
         app:iconSpaceReserved="false" />
 
     <com.drdisagree.iconify.ui.preferences.SliderPreference
         android:dependency="xposed_opqsheader"
         android:key="xposed_opqsheaderblurlevel"
         android:title="@string/oneplus_qs_header_blur_level"
-        app:defaultValue="10"
+        app:defaultValue="40"
         app:iconSpaceReserved="false"
-        app:maxVal="25"
+        app:maxVal="100"
         app:minVal="0"
         app:showResetButton="true"
         app:tickInterval="1"
-        app:valueFormat="px" />
+        app:valueFormat="%" />
 
     <com.drdisagree.iconify.ui.preferences.SliderPreference
         android:dependency="xposed_opqsheader"
@@ -57,5 +57,22 @@
         app:showResetButton="true"
         app:tickInterval="1"
         app:valueFormat="dp" />
+
+    <com.drdisagree.iconify.ui.preferences.SliderPreference
+        android:dependency="xposed_opqsheader"
+        android:key="xposed_opqsheadergapexpanded"
+        android:title="@string/oneplus_qs_header_gap"
+        app:defaultValue="0"
+        app:iconSpaceReserved="false"
+        app:maxVal="40"
+        app:minVal="-40"
+        app:showResetButton="true"
+        app:tickInterval="1"
+        app:valueFormat="dp" />
+
+    <com.drdisagree.iconify.ui.preferences.FooterPreference
+        android:key="op_qs_footer_info"
+        android:title="@string/custom_tiles_footer_info"
+        search:ignore="true" />
 
 </PreferenceScreen>

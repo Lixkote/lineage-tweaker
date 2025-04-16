@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
 import com.drdisagree.iconify.R
-import com.drdisagree.iconify.config.RPrefs
+import com.drdisagree.iconify.data.config.RPrefs
 import com.drdisagree.iconify.databinding.FragmentMediaPlayerBinding
 import com.drdisagree.iconify.ui.base.BaseFragment
 import com.drdisagree.iconify.ui.utils.ViewHelper.setHeader

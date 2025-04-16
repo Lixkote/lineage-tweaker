@@ -3,11 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:search="http://schemas.android.com/apk/com.drdisagree.iconify.ui.preferences.preferencesearch">
 
-    <com.drdisagree.iconify.ui.preferences.SwitchPreference
+    <com.drdisagree.iconify.ui.preferences.MasterSwitchPreference
         android:key="xposed_headerclock"
-        android:summary="@string/custom_header_clock_desc"
-        android:title="@string/custom_header_clock_title"
-        app:iconSpaceReserved="false" />
+        android:title="@string/custom_header_clock_title" />
 
     <com.drdisagree.iconify.ui.preferences.RecyclerPreference
         android:dependency="xposed_headerclock"

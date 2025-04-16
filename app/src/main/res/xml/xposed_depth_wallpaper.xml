@@ -3,28 +3,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:search="http://schemas.android.com/apk/com.drdisagree.iconify.ui.preferences.preferencesearch">
 
-    <com.drdisagree.iconify.ui.preferences.SwitchPreference
+    <com.drdisagree.iconify.ui.preferences.MasterSwitchPreference
         android:key="xposed_depthwallpaper"
-        android:summary="@string/enable_depth_wallpaper_desc"
-        android:title="@string/enable_depth_wallpaper_title"
-        app:iconSpaceReserved="false" />
+        android:title="@string/enable_depth_wallpaper_title" />
 
     <com.drdisagree.iconify.ui.preferences.ListPreference
-        android:dependency="xposed_depthwallpaper"
         android:defaultValue="0"
+        android:dependency="xposed_depthwallpaper"
         android:entries="@array/depth_wallpaper_mode_entries"
         android:entryValues="@array/depth_wallpaper_mode_values"
         android:key="xposed_depthwallpaper_aimode"
-        app:useSimpleSummaryProvider="true"
         android:title="@string/depth_wallpaper_ai_mode"
-        app:iconSpaceReserved="false" />
+        app:iconSpaceReserved="false"
+        app:useSimpleSummaryProvider="true" />
 
     <com.drdisagree.iconify.ui.preferences.PreferenceMenu
         android:dependency="xposed_depthwallpaper"
         android:key="xposed_depthwallpaper_aistatus"
         android:title="@string/depth_wallpaper_ai_status"
-        app:showArrow="false"
-        app:iconSpaceReserved="false" />
+        app:iconSpaceReserved="false"
+        app:showArrow="false" />
 
     <com.drdisagree.iconify.ui.preferences.SwitchPreference
         android:dependency="xposed_depthwallpaper"
@@ -112,5 +110,10 @@
         android:summary="@string/unzoom_depth_wallpaper_desc"
         android:title="@string/unzoom_depth_wallpaper_title"
         app:iconSpaceReserved="false" />
+
+    <com.drdisagree.iconify.ui.preferences.FooterPreference
+        android:key="header_image_footer_info"
+        android:title="@string/hig_res_image_footer_info"
+        search:ignore="true" />
 
 </PreferenceScreen>

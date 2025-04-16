@@ -20,14 +20,14 @@ import com.drdisagree.iconify.BuildConfig
 import com.drdisagree.iconify.Iconify.Companion.appContext
 import com.drdisagree.iconify.Iconify.Companion.appContextLocale
 import com.drdisagree.iconify.R
-import com.drdisagree.iconify.common.Preferences.PREF_KEY_UPDATE_STATUS
-import com.drdisagree.iconify.common.Preferences.WEATHER_CUSTOM_LOCATION
-import com.drdisagree.iconify.common.Preferences.WEATHER_ICON_PACK
-import com.drdisagree.iconify.common.Preferences.WEATHER_OWM_KEY
-import com.drdisagree.iconify.common.Preferences.WEATHER_PROVIDER
-import com.drdisagree.iconify.common.Preferences.WEATHER_YANDEX_KEY
-import com.drdisagree.iconify.config.RPrefs
-import com.drdisagree.iconify.config.RPrefs.getBoolean
+import com.drdisagree.iconify.data.common.Preferences.PREF_KEY_UPDATE_STATUS
+import com.drdisagree.iconify.data.common.Preferences.WEATHER_CUSTOM_LOCATION
+import com.drdisagree.iconify.data.common.Preferences.WEATHER_ICON_PACK
+import com.drdisagree.iconify.data.common.Preferences.WEATHER_OWM_KEY
+import com.drdisagree.iconify.data.common.Preferences.WEATHER_PROVIDER
+import com.drdisagree.iconify.data.common.Preferences.WEATHER_YANDEX_KEY
+import com.drdisagree.iconify.data.config.RPrefs
+import com.drdisagree.iconify.data.config.RPrefs.getBoolean
 import com.drdisagree.iconify.services.WeatherScheduler
 import com.drdisagree.iconify.ui.fragments.xposed.LocationBrowse.Companion.DATA_LOCATION_KEY
 import com.drdisagree.iconify.ui.fragments.xposed.LocationBrowse.Companion.DATA_LOCATION_NAME
@@ -358,9 +358,9 @@ abstract class WeatherPreferenceFragment : ControlledPreferenceFragmentCompat(),
 
     private fun queryAndUpdateWeather() {
         mWeatherClient!!.queryWeather()
-        if (mWeatherClient?.weatherInfo != null) {
+        mWeatherClient?.mCachedInfo?.let {
             requireActivity().runOnUiThread {
-                mUpdateStatus?.setSummary(mWeatherClient!!.weatherInfo!!.lastUpdateTime)
+                mUpdateStatus?.setSummary(it.lastUpdateTime)
             }
         }
     }

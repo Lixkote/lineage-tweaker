@@ -19,7 +19,7 @@
         android:visibility="gone"
         app:tint="?attr/colorPrimary" />
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
@@ -41,7 +41,6 @@
             style="@style/TextAppearance.Material3.BodyMedium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@android:id/title"
             android:textAlignment="viewStart"
             android:textColor="@color/text_color_secondary" />
 
@@ -49,21 +48,37 @@
             android:id="@android:id/widget_frame"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@android:id/summary"
             android:orientation="vertical" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@android:id/widget_frame"
             android:layout_marginTop="8dp"
             android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/minus_button"
+                style="?attr/materialIconButtonFilledTonalStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:visibility="gone"
+                app:icon="@drawable/ic_minus" />
 
             <com.google.android.material.slider.RangeSlider
                 android:id="@+id/slider"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/plus_button"
+                style="?attr/materialIconButtonFilledTonalStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:visibility="gone"
+                app:icon="@drawable/ic_plus" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/reset_button"
@@ -75,5 +90,5 @@
                 app:icon="@drawable/ic_reset" />
 
         </LinearLayout>
-    </RelativeLayout>
+    </LinearLayout>
 </RelativeLayout>

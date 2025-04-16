@@ -4,17 +4,17 @@ import android.os.Bundle
 import android.text.TextUtils
 import androidx.preference.Preference
 import com.drdisagree.iconify.R
-import com.drdisagree.iconify.common.Preferences.EXTRA_WIDGET_1_KEY
-import com.drdisagree.iconify.common.Preferences.EXTRA_WIDGET_2_KEY
-import com.drdisagree.iconify.common.Preferences.EXTRA_WIDGET_3_KEY
-import com.drdisagree.iconify.common.Preferences.EXTRA_WIDGET_4_KEY
-import com.drdisagree.iconify.common.Preferences.LOCKSCREEN_WIDGETS
-import com.drdisagree.iconify.common.Preferences.LOCKSCREEN_WIDGETS_DEVICE_WIDGET
-import com.drdisagree.iconify.common.Preferences.LOCKSCREEN_WIDGETS_ENABLED
-import com.drdisagree.iconify.common.Preferences.LOCKSCREEN_WIDGETS_EXTRAS
-import com.drdisagree.iconify.common.Preferences.MAIN_WIDGET_1_KEY
-import com.drdisagree.iconify.common.Preferences.MAIN_WIDGET_2_KEY
-import com.drdisagree.iconify.config.RPrefs
+import com.drdisagree.iconify.data.common.Preferences.EXTRA_WIDGET_1_KEY
+import com.drdisagree.iconify.data.common.Preferences.EXTRA_WIDGET_2_KEY
+import com.drdisagree.iconify.data.common.Preferences.EXTRA_WIDGET_3_KEY
+import com.drdisagree.iconify.data.common.Preferences.EXTRA_WIDGET_4_KEY
+import com.drdisagree.iconify.data.common.Preferences.LOCKSCREEN_WIDGETS
+import com.drdisagree.iconify.data.common.Preferences.LOCKSCREEN_WIDGETS_DEVICE_WIDGET
+import com.drdisagree.iconify.data.common.Preferences.LOCKSCREEN_WIDGETS_ENABLED
+import com.drdisagree.iconify.data.common.Preferences.LOCKSCREEN_WIDGETS_EXTRAS
+import com.drdisagree.iconify.data.common.Preferences.MAIN_WIDGET_1_KEY
+import com.drdisagree.iconify.data.common.Preferences.MAIN_WIDGET_2_KEY
+import com.drdisagree.iconify.data.config.RPrefs
 import com.drdisagree.iconify.services.WeatherScheduler
 import com.drdisagree.iconify.ui.activities.MainActivity
 import com.drdisagree.iconify.ui.base.ControlledPreferenceFragmentCompat
@@ -83,8 +83,8 @@ class LockscreenWidget : ControlledPreferenceFragmentCompat() {
         val weatherEnabled =
             mainWidgets.contains("weather") || extraWidgets.contains("weather")
 
-        if (weatherEnabled && wasWeatherEnabled && mWeatherClient.weatherInfo != null) {
-            if (System.currentTimeMillis() - mWeatherClient.weatherInfo!!.timeStamp > 3600000) {
+        if (weatherEnabled && wasWeatherEnabled && mWeatherClient.mCachedInfo != null) {
+            if (System.currentTimeMillis() - mWeatherClient.mCachedInfo!!.timeStamp > 3600000) {
                 WeatherScheduler.scheduleUpdateNow(requireContext())
             }
         } else if (weatherEnabled) {

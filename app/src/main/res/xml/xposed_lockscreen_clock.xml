@@ -19,6 +19,37 @@
         search:ignore="true" />
 
     <com.drdisagree.iconify.ui.preferences.SwitchPreference
+        android:key="xposed_lockscreenclockimage"
+        android:summary="@string/lockscreen_clock_image_desc"
+        android:title="@string/lockscreen_clock_image_title"
+        app:iconSpaceReserved="false" />
+
+    <com.drdisagree.iconify.ui.preferences.FilePickerPreference
+        android:dependency="xposed_lockscreenclockimage"
+        android:key="xposed_lockscreenclockimagepicker1"
+        android:summary="@string/file_picker_desc"
+        android:title="@string/btn_pick_image"
+        app:buttonText="@string/btn_pick_image"
+        app:iconSpaceReserved="false"
+        search:ignore="true" />
+
+    <com.drdisagree.iconify.ui.preferences.FilePickerPreference
+        android:dependency="xposed_lockscreenclockimage"
+        android:key="xposed_lockscreenclockimagepicker2"
+        android:summary="@string/file_picker_desc"
+        android:title="@string/btn_pick_image"
+        app:buttonText="@string/btn_pick_image"
+        app:iconSpaceReserved="false"
+        search:ignore="true" />
+
+    <com.drdisagree.iconify.ui.preferences.SwitchPreference
+        android:defaultValue="true"
+        android:key="xposed_lockscreenclockmovenotificationicons"
+        android:summary="@string/lockscreen_clock_move_notification_icon_desc"
+        android:title="@string/lockscreen_clock_move_notification_icon_title"
+        app:iconSpaceReserved="false" />
+
+    <com.drdisagree.iconify.ui.preferences.SwitchPreference
         android:key="xposed_lockscreenclockcolor"
         android:summary="@string/lsclock_custom_color_desc"
         android:title="@string/lsclock_custom_color_title"

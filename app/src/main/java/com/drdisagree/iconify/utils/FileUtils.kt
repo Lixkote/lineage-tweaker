@@ -7,22 +7,23 @@ import android.net.Uri
 import android.provider.OpenableColumns
 import androidx.activity.result.ActivityResultLauncher
 import com.drdisagree.iconify.Iconify.Companion.appContext
-import com.drdisagree.iconify.common.Resources
+import com.drdisagree.iconify.data.common.Dynamic.DATA_DIR
+import com.drdisagree.iconify.data.common.XposedConst.XPOSED_RESOURCE_TEMP_DIR
 import com.drdisagree.iconify.utils.SystemUtils.hasStoragePermission
 import com.drdisagree.iconify.utils.SystemUtils.requestStoragePermission
 import com.topjohnwu.superuser.Shell
+import java.io.BufferedReader
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStream
+import java.io.InputStreamReader
 import java.io.OutputStream
 import java.nio.file.Files
 import java.nio.file.Paths
 import kotlin.math.min
 
 object FileUtils {
-
-    val DATA_DIR = appContext.filesDir.toString()
 
     @Throws(IOException::class)
     fun copyAssets(assetFolder: String) {
@@ -38,6 +39,10 @@ object FileUtils {
     private fun createDir(dirName: String) {
         val newFolder = File("$DATA_DIR/$dirName/")
         newFolder.mkdirs()
+
+        if (!newFolder.exists()) {
+            Shell.cmd("mkdir -p $DATA_DIR/$dirName").exec()
+        }
     }
 
     @Throws(IOException::class)
@@ -55,7 +60,7 @@ object FileUtils {
             try {
                 val inputStream = context.assets.open(inFileName)
                 copyAndClose(inputStream, Files.newOutputStream(Paths.get(outFileName)))
-            } catch (e: IOException) {
+            } catch (_: IOException) {
                 File(outFileName).mkdir()
                 copyFileOrDirectory(context, inFileName, outFileName)
             }
@@ -65,7 +70,7 @@ object FileUtils {
     private fun closeQuietly(autoCloseable: AutoCloseable?) {
         try {
             autoCloseable?.close()
-        } catch (ignored: Exception) {
+        } catch (_: Exception) {
         }
     }
 
@@ -102,7 +107,7 @@ object FileUtils {
         }
     }
 
-    @SuppressLint("Recycle")
+    @SuppressLint("Recycle", "UnsanitizedFilenameFromContentProvider")
     private fun getRealPathFromURI(uri: Uri?): String? {
         val file: File
         try {
@@ -146,7 +151,7 @@ object FileUtils {
 
     fun moveToIconifyHiddenDir(source: String, destination: String): Boolean {
         return Shell.cmd(
-            "mkdir -p " + Resources.XPOSED_RESOURCE_TEMP_DIR,
+            "mkdir -p " + XPOSED_RESOURCE_TEMP_DIR.absolutePath,
             "rm -f \"$destination\"",
             "mv -f \"$source\" \"$destination\""
         ).exec().isSuccess
@@ -160,26 +165,16 @@ object FileUtils {
         if (!hasStoragePermission()) {
             requestStoragePermission(context)
         } else {
-            var fileType = "*/*"
-
-            if (type.isNullOrEmpty() || type == "all") {
-                fileType = "*/*"
-            } else if (type == "image") {
-                fileType = "image/*"
-            } else if (type == "font") {
-                fileType = "font/*"
-            } else if (type == "video") {
-                fileType = "video/*"
-            } else if (type == "audio") {
-                fileType = "audio/*"
-            } else if (type == "pdf") {
-                fileType = "application/pdf"
-            } else if (type == "text") {
-                fileType = "text/*"
-            } else if (type == "zip") {
-                fileType = "application/zip"
-            } else if (type == "apk") {
-                fileType = "application/vnd.android.package-archive"
+            val fileType = when (type) {
+                "image" -> "image/*"
+                "font" -> "font/*"
+                "video" -> "video/*"
+                "audio" -> "audio/*"
+                "pdf" -> "application/pdf"
+                "text" -> "text/*"
+                "zip" -> "application/zip"
+                "apk" -> "application/vnd.android.package-archive"
+                else -> "*/*"
             }
 
             launchFilePicker(launcher, fileType)
@@ -187,9 +182,23 @@ object FileUtils {
     }
 
     fun launchFilePicker(launcher: ActivityResultLauncher<Intent?>, type: String?) {
-        val chooseFile = Intent(Intent.ACTION_GET_CONTENT)
-        chooseFile.addCategory(Intent.CATEGORY_OPENABLE)
-        chooseFile.setType(type)
-        launcher.launch(chooseFile)
+        launcher.launch(
+            Intent(Intent.ACTION_GET_CONTENT).apply {
+                addCategory(Intent.CATEGORY_OPENABLE)
+                setType(type)
+            }
+        )
+    }
+
+    fun readJsonFileFromAssets(fileName: String): String {
+        val stringBuilder = StringBuilder()
+        val inputStream = appContext.assets.open(fileName)
+        val bufferedReader = BufferedReader(InputStreamReader(inputStream))
+        var line: String?
+        while (bufferedReader.readLine().also { line = it } != null) {
+            stringBuilder.append(line)
+        }
+        bufferedReader.close()
+        return stringBuilder.toString()
     }
 }

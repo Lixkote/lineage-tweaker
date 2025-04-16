@@ -1,12 +1,14 @@
 package com.drdisagree.iconify.utils.overlay
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.util.Log
+import androidx.core.content.ContextCompat
 import com.drdisagree.iconify.Iconify.Companion.appContext
-import com.drdisagree.iconify.common.Resources
-import com.drdisagree.iconify.config.RPrefs
+import com.drdisagree.iconify.data.common.Resources
+import com.drdisagree.iconify.data.config.RPrefs
 import com.topjohnwu.superuser.Shell
 import java.util.Objects
 
@@ -174,12 +176,13 @@ object OverlayUtils {
         }
     }
 
+    @SuppressLint("DiscouragedApi")
     fun getDrawableFromOverlay(context: Context, pkg: String?, drawableName: String?): Drawable? {
         try {
             val pm = context.packageManager
             val res = pm.getResourcesForApplication(pkg!!)
             val resId = res.getIdentifier(drawableName, "drawable", pkg)
-            return if (resId != 0X0) res.getDrawable(resId)
+            return if (resId != 0X0) ContextCompat.getDrawable(context, resId)
             else null
         } catch (e: PackageManager.NameNotFoundException) {
             Log.d("OverlayUtil", "getDrawableFromOverlay: Package Not Found " + e.message)
@@ -187,6 +190,7 @@ object OverlayUtils {
         }
     }
 
+    @SuppressLint("DiscouragedApi")
     fun getStringFromOverlay(context: Context, pkg: String, stringName: String): String? {
         return try {
             val pm = context.packageManager
@@ -199,7 +203,7 @@ object OverlayUtils {
         }
     }
 
-    fun checkEnabledOverlay(componentName: String) : String {
+    fun checkEnabledOverlay(componentName: String): String {
         val component =
             Shell.cmd("cmd overlay list | grep \".x..IconifyComponent$componentName\"")
                 .exec().out

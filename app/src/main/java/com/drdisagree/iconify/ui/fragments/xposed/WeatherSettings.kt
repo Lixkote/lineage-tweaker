@@ -2,9 +2,9 @@ package com.drdisagree.iconify.ui.fragments.xposed
 
 import com.drdisagree.iconify.Iconify.Companion.appContextLocale
 import com.drdisagree.iconify.R
-import com.drdisagree.iconify.common.Preferences.WEATHER_OWM_KEY
-import com.drdisagree.iconify.common.Preferences.WEATHER_PROVIDER
-import com.drdisagree.iconify.config.RPrefs
+import com.drdisagree.iconify.data.common.Preferences.WEATHER_OWM_KEY
+import com.drdisagree.iconify.data.common.Preferences.WEATHER_PROVIDER
+import com.drdisagree.iconify.data.config.RPrefs
 import com.drdisagree.iconify.ui.base.WeatherPreferenceFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 

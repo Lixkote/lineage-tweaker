@@ -6,7 +6,7 @@ import android.content.res.TypedArray
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import com.drdisagree.iconify.xposed.HookRes
-import com.drdisagree.iconify.xposed.modules.utils.SettingsLibUtils
+import com.drdisagree.iconify.xposed.modules.extras.utils.SettingsLibUtils
 
 abstract class BatteryDrawable : Drawable() {
 
@@ -79,7 +79,7 @@ abstract class BatteryDrawable : Drawable() {
 
     fun getResources(context: Context): Resources {
         return try {
-            HookRes.modRes ?: context.resources
+            HookRes.modRes
         } catch (ignored: Throwable) {
             context.resources
         }

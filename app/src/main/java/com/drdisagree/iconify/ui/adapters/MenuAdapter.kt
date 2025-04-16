@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.drdisagree.iconify.ui.activities.MainActivity.Companion.replaceFragment
-import com.drdisagree.iconify.ui.models.MenuModel
+import com.drdisagree.iconify.data.models.MenuModel
 import com.drdisagree.iconify.ui.widgets.MenuWidget
 
 class MenuAdapter(

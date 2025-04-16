@@ -378,6 +378,7 @@ open class LandscapeBatteryMIUIPill(private val context: Context, frameColor: In
         scheduleSelf(invalidateRunnable, 0)
     }
 
+    @Suppress("DEPRECATION")
     private fun updateSize() {
         val b = bounds
         if (b.isEmpty) {
@@ -402,6 +403,7 @@ open class LandscapeBatteryMIUIPill(private val context: Context, frameColor: In
         fillColorStrokeProtection.strokeWidth = scaledStrokeWidth
     }
 
+    @Suppress("DEPRECATION")
     @SuppressLint("RestrictedApi")
     private fun loadPaths() {
         val pathString =

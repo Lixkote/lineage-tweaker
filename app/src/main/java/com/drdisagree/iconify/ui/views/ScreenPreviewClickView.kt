@@ -21,6 +21,7 @@ class ScreenPreviewClickView(
     private var downX = 0f
     private var downY = 0f
     private var onPreviewClicked: (() -> Unit)? = null
+
     // isStart true means the start side; otherwise the end side
     private var onSideClicked: ((isStart: Boolean) -> Unit)? = null
 
@@ -58,6 +59,7 @@ class ScreenPreviewClickView(
     }
 
     companion object {
+        @Suppress("deprecation")
         private fun isClick(event: MotionEvent, downX: Float, downY: Float): Boolean {
             return when {
                 // It's not a click if the event is not an UP action (though it may become one

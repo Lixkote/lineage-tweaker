@@ -94,6 +94,7 @@
     <string name="activity_desc_xposed_menu">LSPosed обов\'язковий для цих параметрів</string>
     <string name="activity_title_extras">Додатково</string>
     <string name="activity_desc_extras">Додаткові твіки та налаштування</string>
+    <string name="activity_title_dual_statusbar">Dual Statusbar</string>
     <!-- Settings -->
     <string name="settings_section_title_general">Загальні</string>
     <string name="settings_app_language">Мова</string>
@@ -127,6 +128,8 @@
     <string name="settings_show_home_page_card_desc">Показувати красиву картку на головній.</string>
     <string name="settings_vibrate_ui_card_title">Вібровідгук</string>
     <string name="settings_vibrate_ui_page_card_desc">Покращуйте зворотний зв\'язок за допомогою інтерактивного відклику.</string>
+    <string name="settings_slider_controller_title">Slider Controller</string>
+    <string name="settings_slider_controller_desc">Enable to display plus and minus buttons with sliders.</string>
     <string name="settings_clear_app_cache_title">Очистити кеш застосунку</string>
     <string name="settings_clear_app_cache_desc">Очищення кешу, створеного через використання власних шрифтів, зображень або gif-файлів.</string>
     <string name="activity_title_experimental">Експериментальні</string>
@@ -296,12 +299,17 @@
     <string name="section_title_qs_text_color">Колір тексту панелі швидких налаштувань</string>
     <string name="qs_text_color_normal">Звичайний</string>
     <string name="qs_text_color_pixel">Pixel</string>
+    <string name="custom_qs_tile_text_color_title">Custom Text Color</string>
+    <string name="custom_qs_tile_text_color_desc">Enable custom QS tile text color</string>
+    <string name="custom_qs_tile_text_color_list_title">Text Color Options</string>
     <string name="label_always_white_title">Завжди білий</string>
     <string name="label_always_white_desc">Білий заголовок і підзаголовок</string>
     <string name="label_always_white_v2_title">Завжди білий v2</string>
     <string name="label_always_white_v2_desc">Білий заголовок і акцент для підзаголовка</string>
     <string name="label_follow_system_title">Як у системі</string>
     <string name="label_follow_system_desc">Системний заголовок і підзаголовок</string>
+    <string name="label_follow_system_inverse_title">Follow System Inverse</string>
+    <!--<string name="label_follow_system_inverse_desc">Title system, subtitle system</string>-->
     <string name="label_follow_system_v2_title">Як у системі v2</string>
     <string name="label_follow_system_v2_desc">Системний заголовок і акцент для підзаголовка</string>
     <string name="label_fix_text_color_title">Виправити колір тексту</string>
@@ -316,6 +324,7 @@
     <!-- QS Panel Margin -->
     <string name="qqs_panel_top_margin_title">Верхній відступ панелі швидких налаштувань</string>
     <string name="qs_panel_top_margin_title">Верхнє поле швидких налаштувань</string>
+    <string name="qs_panel_top_margin_info">Rotate device to see changes. If that doesn\'t work, restart SystemUI.</string>
     <!-- Statusbar -->
     <string name="section_title_spacing">Інтервал</string>
     <string name="sb_left_padding">Лівий відступ</string>
@@ -369,19 +378,16 @@
     <string name="vp_thick_background_desc">Зробити доріжку гучності товстою</string>
     <string name="vp_no_background_title">Без фону</string>
     <string name="vp_no_background_desc">Прибрати доріжку повзунка гучності</string>
-    <string name="section_title_custom_magisk_module">Свій модуль Magisk</string>
+    <string name="read_carefully">Уважно прочитайте!</string>
+    <!-- Volume Panel Style -->
     <string name="volume_style">Стиль гучності</string>
-    <string name="volume_module_desc">Створює флеш-модуль Magisk для цього стилю</string>
+    <string name="volume_style_default">Default</string>
     <string name="volume_style_gradient">Градієнт</string>
     <string name="volume_style_doublelayer">Подвійний шар</string>
     <string name="volume_style_shadedlayer">Затінений шар</string>
     <string name="volume_style_neumorph">Нейморфний</string>
     <string name="volume_style_outline">Контурний</string>
     <string name="volume_style_neumorphoutline">Нейморфний контур</string>
-    <string name="btn_create_module">Створити модуль</string>
-    <string name="toast_module_created">Модуль успішно створено</string>
-    <string name="read_carefully">Уважно прочитайте!</string>
-    <string name="volume_module_installation_guide">Цей параметр створить модуль Magisk у теці «Завантаження».Прошийте модуль з назвою IconifyCompanion.zip у Magisk. Завжди видаляйте попередній модуль Iconify Companion (якщо він встановлений) і перезавантажуйтеся перед прошивкою нового.\n\n<b>Примітка:</b>\n• Видаліть модуль перед оновленням прошивки.\n• Перезавантажте модуль, якщо ви змінили або оновили прошивку.\n• Не прошивайте модуль, який не був створений для вашої прошивки.</string>
     <!-- Media Player -->
     <string name="cont_desc_media_player">Передперегляд медіаплеєра</string>
     <string name="media_player_preview_music_title">Назва пісні</string>
@@ -405,20 +411,24 @@
     <string name="section_title_privacy_chip">Індикатор приватності</string>
     <string name="accent_privacy_chip_title">Акцентований індикатор приватності</string>
     <string name="accent_privacy_chip_desc">Зробити колір індикатора приватності як в акценту</string>
-    <string name="section_title_media_player">Медіаплеєр</string>
     <string name="disable_progress_wave_title">Вимкнути хвилю прогресу</string>
     <string name="disable_progress_wave_desc">Вимкнути анімацію хвилі прогресу</string>
     <!-- Xposed Menu -->
     <string name="lsposed_warn">Перш ніж увімкнути Iconify з модулями LSPosed, натисніть і утримуйте кнопку Iconify, а потім натисніть «Re-optimize». Після цього увімкніть Iconify і перезапустіть SystemUI. Це необхідно для більш плавної роботи.</string>
+    <string name="lsposed_bootloop_warn">One of the features you enabled is not compatible with your ROM. Please disable it and restart your SystemUI.</string>
     <string name="xposed_only_desc">Наразі ви перебуваєте у режимі «Тільки Xposed». Для цього потрібно, щоб в застосунку LSPosed була ввімкнений Iconify. Також переконайтеся, що модуль Iconify показується в Magisk manager. Щоб отримати доступ до всіх функцій, очистіть дані застосунку Iconify та пройдіть процес встановлення!</string>
     <string name="xposed_module_disabled_title">Модуль не активовано</string>
     <string name="xposed_module_disabled_desc">Системна служба не працює</string>
+    <string name="xposed_module_bootlooped_title">Bootloop Detected</string>
+    <string name="xposed_module_bootlooped_desc">Module has been disabled</string>
     <string name="activity_title_transparency_blur">Прозорість та розмиття</string>
     <string name="activity_desc_transparency_blur">Увімкнути розмивання та прозорість швидких налаштувань</string>
     <string name="activity_title_themes">Теми</string>
     <string name="activity_desc_themes">Персоналізувати з темами</string>
     <string name="activity_title_quick_settings">Швидкі налаштування</string>
     <string name="activity_desc_quick_settings">Твіки панелі швидких налаштувань</string>
+    <string name="activity_title_lockscreen">Lockscreen</string>
+    <string name="activity_desc_lockscreen">Customize lockscreen appearance</string>
     <string name="activity_title_battery_style">Стиль батареї</string>
     <string name="activity_desc_battery_style">Налаштування вигляду значка батареї</string>
     <string name="activity_title_op_qs_header">Швидкі налаштуванння в стилі Oneplus</string>
@@ -441,6 +451,9 @@
     <string name="activity_title_xposed_others">Інше</string>
     <string name="activity_desc_xposed_others">Різні твіки xposed</string>
     <string name="activity_title_xposed_weather_settings">Налаштування погоди</string>
+    <string name="activity_title_xposed_launcher">Launcher</string>
+    <string name="activity_desc_xposed_launcher">Launcher related modifications</string>
+    <string name="activity_title_lockscreen_album_art">Media Album Art</string>
     <!-- Oneplus QS Header -->
     <string name="oneplus_qs_header_title">Швидкі налаштуванння в стилі Oneplus</string>
     <string name="oneplus_qs_header_desc">Увімкнути медіаплеєр та плитки в стилі OxygenS у швидких налаштуванях</string>
@@ -448,10 +461,13 @@
     <string name="oneplus_qs_header_vibrate_desc">Додати тактильний відгук на плитки</string>
     <string name="oneplus_qs_header_hide_stock_media_player_title">Приховати стандартний медіаплеєр</string>
     <string name="oneplus_qs_header_hide_stock_media_player_desc">Видалити стандартний медіаплеєр з панелі швидких налаштувань</string>
+    <string name="oneplus_qs_header_show_artwork_title">Show Artwork</string>
+    <string name="oneplus_qs_header_show_artwork_desc">Show album art of the playing media</string>
     <string name="oneplus_qs_header_blur_level">Рівень розмиття</string>
     <string name="oneplus_qs_header_fade_level">Рівень затемнення</string>
     <string name="oneplus_qs_header_top_margin">Верхнє поле</string>
     <string name="oneplus_qs_header_expansion_y">Величина розширення</string>
+    <string name="oneplus_qs_header_gap">Expanded Gap</string>
     <!-- Lockscreen Widgets -->
     <string name="lockscreen_widgets_title">Віджети на екрані блокування</string>
     <string name="lockscreen_widgets_enabled_title">Увімкнути віджети на екрані блокування</string>
@@ -482,7 +498,11 @@
     <string name="mini_widget_icon_active">Значок мінівіджета: активний колір</string>
     <string name="mini_widget_icon_inactive">Значок мінівіджета: неактивний колір</string>
     <string name="weather_settings">Налаштування погоди</string>
+    <string name="lockscreen_widgets_roundness">Widgets Roundness</string>
     <string name="lockscreen_widgets_scale">Масштаб віджетів</string>
+    <string name="lockscreen_device_widget_style_title">Device Widget Style</string>
+    <string name="lockscreen_device_widget_style_classic">Bar with Two Arcs</string>
+    <string name="lockscreen_device_widget_style_arcs">Four Arcs</string>
     <!-- LS Widgets Actions -->
     <string name="camera">Камера</string>
     <string name="clock_timer">Годинник / Таймер</string>
@@ -547,10 +567,26 @@
     <string name="hide_qs_tile_label_title">Приховати підпис плиток швидких налаштувань</string>
     <string name="hide_qs_tile_label_desc">Використовувати тільки вертикальні плитки</string>
     <string name="qs_tile_label_scaling_title">Масштабування розміру тексту</string>
+    <string name="section_title_notifications">Notification</string>
+    <string name="colored_qs_notification_title">Colored Notification Icon</string>
+    <string name="colored_qs_notification_desc">Show app icon as notification icon</string>
+    <string name="section_headsup_title">Heads Up</string>
+    <string name="notification_headsup_blur_title">Heads Up Blur</string>
+    <string name="notification_headsup_blur_intensity_title">Heads Up Blur Intensity</string>
+    <string name="notification_headsup_blur_transparency_title">Heads Up Transparency</string>
+    <string name="notification_headsup_blur_desc">Show blur on heads up notification</string>
     <string name="section_title_qs_margin">Відступи швидких налаштувань</string>
+    <string name="section_title_media_player">Медіаплеєр</string>
+    <string name="compact_media_player_title">Compact Media Player</string>
+    <string name="compact_media_player_desc">Make media player compact</string>
+    <string name="media_player_artwork_blur_title">Blur Artwork</string>
+    <string name="media_player_artwork_blur_desc">Blur media player album art</string>
+    <string name="media_player_artwork_blur_radius_title">Artwork Blur Intensity</string>
     <string name="section_title_qs_elements">Елементи швидких налаштувань</string>
     <string name="hide_qs_on_lockscreen_title">Приховати швидкі налаштування на екрані блокування</string>
     <string name="hide_qs_on_lockscreen_desc">Вимкнути швидкі налаштування на заблокованому екрані</string>
+    <string name="hide_qs_on_lockscreen_a15_title">Disable QS on Lockscreen</string>
+    <string name="hide_qs_on_lockscreen_a15_desc">Disable quick settings tiles on secured lockscreen</string>
     <string name="hide_qs_silent_text_title">Приховати напис «Без звуку» в сповіщеннях</string>
     <string name="hide_qs_silent_text_desc">Приховати беззвучний текст, що показується в заголовку беззвучних сповіщень</string>
     <string name="hide_qs_footer_buttons_title">Приховати кнопки нижнього колонтитула</string>
@@ -685,8 +721,12 @@
     <string name="lockscreen_clock_auto_hide_clock_title">Автоприховування годинника</string>
     <string name="lockscreen_clock_auto_hide_clock_desc">Приховує годинник при вхідному сповіщенні</string>
     <string name="custom_lockscreen_clock_style_title">Стиль годинника</string>
+    <string name="lockscreen_clock_move_notification_icon_title">AOD Icons Below Clock</string>
+    <string name="lockscreen_clock_move_notification_icon_desc">Move AOD icons below custom clock, might be buggy on older ROMs</string>
     <string name="lockscreen_clock_font_title">Шрифт будильника</string>
     <string name="lockscreen_clock_font_desc">Використовувати власний шрифт для годинника на екрані блокування</string>
+    <string name="lockscreen_clock_image_title">Custom Image</string>
+    <string name="lockscreen_clock_image_desc">Use custom image for lockscreen clock</string>
     <string name="lsclock_custom_color_title">Свій колір годинника</string>
     <string name="lsclock_custom_color_desc">Власні кольори замість системних</string>
     <string name="lsclock_color_picker_title">Вибір кольорів для годинника</string>
@@ -714,12 +754,12 @@
     <!-- Xposed Depth Wallpaper -->
     <string name="enable_depth_wallpaper_title">Увімкнути шпалери з ефектом глибини</string>
     <string name="enable_depth_wallpaper_desc">Показати шпалери з ефектом глибини як в iOS\n%s</string>
-    <string name="depth_wallpaper_ai_mode">AI Mode</string>
+    <string name="depth_wallpaper_ai_mode">Режим ШІ</string>
     <string name="depth_wallpaper_ai_mlkit">MLKit (Google)</string>
-    <string name="depth_wallpaper_ai_plugin">Plugin</string>
-    <string name="depth_wallpaper_ai_status">AI Status</string>
-    <string name="depth_wallpaper_ai_status_plugin_not_installed">AI Plugin not installed.\nTap to download</string>
-    <string name="depth_wallpaper_ai_status_plugin_installed">AI Plugin installed.\nTap to open</string>
+    <string name="depth_wallpaper_ai_plugin">Плагін</string>
+    <string name="depth_wallpaper_ai_status">Стан ШІ</string>
+    <string name="depth_wallpaper_ai_status_plugin_not_installed">Плагін ШІ не встановлено.\nНатисніть для завантаження</string>
+    <string name="depth_wallpaper_ai_status_plugin_installed">Плагін ШІ встановлено.\nНатисніть, щоби відкрити</string>
     <string name="enable_custom_depth_wallpaper_title">Власні зображення</string>
     <string name="enable_custom_depth_wallpaper_desc">Встановити власні зображення як шпалери з ефектом глибини</string>
     <string name="depth_wallpaper_on_aod_title">Показати на AOD</string>
@@ -749,6 +789,8 @@
     <string name="sb_clock_background_chip_desc">Показувати тло за годинником в рядку стану</string>
     <string name="sb_clock_customize_chip_title">Налаштувати тло годинника</string>
     <string name="sb_clock_customize_chip_desc">Власні кольори, округлість, штрихи тощо.</string>
+    <string name="statusbar_clock_clickable_title">Clickable Clock</string>
+    <string name="statusbar_clock_clickable_desc">Click to open clock app</string>
     <string name="section_title_text">Текст</string>
     <string name="statusbar_clock_text_title">Колір тексту годинника</string>
     <string name="sbclock_color_follow_system">Як у системі</string>
@@ -798,6 +840,85 @@
     <string name="hide_ls_carrier_desc">Приховує назву оператора на екрані блокування</string>
     <string name="hide_ls_statusbar_title">Приховати рядок стану</string>
     <string name="hide_ls_statusbar_desc">Приховує рядок стану на екрані блокування</string>
+    <string name="sb_swap_wifi_cellular_title">Swap Wifi and Cellular</string>
+    <string name="sb_swap_wifi_cellular_desc">Swap wifi and cellular icons</string>
+    <string name="sb_swap_cellular_network_type_title">Swap Cellular and Network Type</string>
+    <string name="sb_swap_cellular_network_type_desc">Swap cellular and network type (3G 4G LTE etc.) icons</string>
+    <string name="sb_clock_position_title">Clock Position</string>
+    <string name="section_title_clock">Clock</string>
+    <string name="sb_clock_position_left">Left (Default)</string>
+    <string name="sb_clock_position_center">Center</string>
+    <string name="sb_clock_position_right">Right</string>
+    <string name="ongoing_action_chip_title">Ongoing Action Chip</string>
+    <string name="ongoing_action_chip_desc">Show progress indicator in status bar for ongoing actions like downloads</string>
+    <string name="sb_show_4g_icon_title">4G Icon</string>
+    <string name="sb_show_4g_icon_desc">Display 4G icon in statusbar instead of LTE</string>
+    <string name="sb_max_notification_icons_title">Notification Icons Limit</string>
+    <string name="dual_status_bar_title">Dual Statusbar</string>
+    <string name="dual_status_bar_desc">Display statusbar elements in two rows</string>
+    <string name="status_bar_logo_title">Logo</string>
+    <string name="status_bar_logo_desc">Display a custom logo on the status bar</string>
+    <string name="status_bar_logo_enable_title">Enable Logo</string>
+    <string name="status_bar_logo_position_title">Logo Position</string>
+    <string name="status_bar_logo_position_left">Left side</string>
+    <string name="status_bar_logo_position_right">Right side</string>
+    <string name="status_bar_logo_style_title">Logo Style</string>
+    <string name="status_bar_logo_size_title">Logo Size</string>
+    <string name="status_bar_logo_style_android">Android</string>
+    <string name="status_bar_logo_style_adidas">Adidas</string>
+    <string name="status_bar_logo_style_alien">Alien</string>
+    <string name="status_bar_logo_style_apple">Apple</string>
+    <string name="status_bar_logo_style_avengers">Avengers</string>
+    <string name="status_bar_logo_style_batman">Batman</string>
+    <string name="status_bar_logo_style_batman_tdk">Batman The Dark Knight</string>
+    <string name="status_bar_logo_style_beats">Beats</string>
+    <string name="status_bar_logo_style_biohazard">Biohazard</string>
+    <string name="status_bar_logo_style_blackberry">BlackBerry</string>
+    <string name="status_bar_logo_style_cannabis">Cannabis</string>
+    <string name="status_bar_logo_style_emoticon_cool">Emoticon cool</string>
+    <string name="status_bar_logo_style_emoticon_devil">Emoticon devil</string>
+    <string name="status_bar_logo_style_fire">Fire</string>
+    <string name="status_bar_logo_style_heart">Heart</string>
+    <string name="status_bar_logo_style_nike">Nike</string>
+    <string name="status_bar_logo_style_pacman">Pac-man</string>
+    <string name="status_bar_logo_style_puma">Puma</string>
+    <string name="status_bar_logo_style_rog">ROG</string>
+    <string name="status_bar_logo_style_spiderman">Spider-Man</string>
+    <string name="status_bar_logo_style_superman">Superman</string>
+    <string name="status_bar_logo_style_windows">Windows</string>
+    <string name="status_bar_logo_style_xbox">Xbox</string>
+    <string name="status_bar_logo_style_ghost">Ghost</string>
+    <string name="status_bar_logo_style_ninja">Ninja</string>
+    <string name="status_bar_logo_style_robot">Robot</string>
+    <string name="status_bar_logo_style_ironman">Iron Man</string>
+    <string name="status_bar_logo_style_captain_america">Captain America</string>
+    <string name="status_bar_logo_style_flash">Flash</string>
+    <string name="status_bar_logo_style_tux">Tux</string>
+    <string name="status_bar_logo_style_ubuntu">Ubuntu</string>
+    <string name="status_bar_logo_style_mint">Linux Mint</string>
+    <string name="status_bar_logo_style_amogus">Amogus</string>
+    <string name="status_bar_logo_style_custom">Custom Image</string>
+    <string name="status_bar_logo_tint_title">Follow Statusbar Tint</string>
+    <string name="status_bar_logo_tint_desc">Switch to a light/dark background to update tint</string>
+    <!-- Xposed Dual Statusbar -->
+    <string name="dsb_title">Dual Row Statusbar</string>
+    <string name="dsb_portrait_only_title">Portrait Only</string>
+    <string name="dsb_single_line_start_side_title">Single-Line Start Side</string>
+    <string name="dsb_single_line_start_side_desc">Show one row on start side of statusbar</string>
+    <string name="dsb_single_line_end_side_title">Single-Line End Side</string>
+    <string name="dsb_single_line_end_side_desc">Show one row on end side of statusbar</string>
+    <string name="dsb_swap_start_side_title">Swap Start Side</string>
+    <string name="dsb_swap_start_side_desc">Swap the position of clock and notification icons</string>
+    <string name="dsb_swap_end_side_title">Swap End Side</string>
+    <string name="dsb_swap_end_side_desc">Swap the position of battery and status icons</string>
+    <string name="dsb_statusbar_height_title">Statusbar Height</string>
+    <string name="dsb_start_padding_title">Start Padding</string>
+    <string name="dsb_end_padding_title">End Padding</string>
+    <string name="dsb_top_padding_title">Top Padding</string>
+    <string name="dsb_start_top_margin_title">Start Top Margin</string>
+    <string name="dsb_start_bottom_margin_title">Start Bottom Margin</string>
+    <string name="dsb_end_top_margin_title">End Top Margin</string>
+    <string name="dsb_end_bottom_margin_title">End Bottom Margin</string>
     <!-- Xposed Others -->
     <string name="qs_header">Заголовок швидких налаштувань</string>
     <string name="hide_carrier_group_title">Приховати групу Sim-карт</string>
@@ -809,6 +930,9 @@
     <string name="hide_ls_lock_icon_desc">Приховує значок блокування на екрані блокування</string>
     <string name="fixed_status_icons_title">Фіксовані значки рядка стану</string>
     <string name="fixed_status_icons_desc">Встановлює значки рядка стану у фіксоване положення\nМоже бути баг на деяких прошивках</string>
+    <string name="ls_wallpaper_blur_title">Wallpaper Blur</string>
+    <string name="ls_wallpaper_blur_desc">Apply blur effect on lockscreen</string>
+    <string name="ls_wallpaper_blur_radius_title">Wallpaper Blur Intensity</string>
     <!-- Changelog -->
     <string name="activity_title_changelog">Журнал змін</string>
     <string name="no_internet_connection">Не вдалося з\'єднатися із сервером!\nМожливо проблема з вашим інтернет-з\'єднанням або сервер зараз не працює. Будь ласка, спробуйте пізніше.</string>
@@ -821,6 +945,7 @@
     <string name="view_changelog">Переглянути журнал змін</string>
     <string name="hide_changelog">Приховати журнал змін</string>
     <string name="already_up_to_date">У вас остання версія.</string>
+    <string name="auto_update_disabled">Auto update is disabled for debug build.</string>
     <string name="current_version">Поточна версія:</string>
     <string name="latest_version">Остання версія:</string>
     <string name="update_checking_failed">Не вдалося перевірити оновлення!</string>
@@ -850,6 +975,7 @@
     <string name="section_title_contributors">Учасники</string>
     <string name="info_contributor_desc">За свій внесок на GitHub.</string>
     <string name="info_contributor_desc_2">За допомогу в Telegram.</string>
+    <string name="total_contributions">Всього внесків: %d</string>
     <string name="section_title_translators">Перекладачі</string>
     <string name="af_translation">Африканський переклад.</string>
     <string name="ar_translation">Арабський переклад.</string>
@@ -888,7 +1014,11 @@
     <string name="unzoom_depth_wallpaper_title">Не збільшувати шпалери з ефектом глибини</string>
     <string name="unzoom_depth_wallpaper_desc">Прибрати ефект збільшення на шпалерах з ефектом глибини</string>
     <string name="hide_data_disabled_icon_title">Сховати вимкнений значок даних</string>
-    <string name="hide_data_disabled_icon_desc">Сховати вимкнений індикатор даних</string>
+    <string name="hide_data_disabled_icon_desc">Toggle mobile data off and on to see the effect</string>
+    <string name="colorize_notification_view_title">Colorize Notification View</string>
+    <string name="colorize_notification_view_desc">Make notification view same color as app icon</string>
+    <string name="colorize_notification_alternative_color_generation_title">Alternative Color Generation</string>
+    <string name="colorize_notification_alternative_color_generation_desc">Use monet score and quantizer to extract color</string>
     <!-- Bottom Navigation -->
     <string name="navbar_home">Головна</string>
     <string name="navbar_tweaks">Твіки</string>
@@ -933,6 +1063,8 @@
     <string name="btn_positive">Так</string>
     <string name="btn_negative">Ні</string>
     <!-- Toast -->
+    <string name="toast_frame_always_white_title">White Background</string>
+    <string name="toast_frame_always_white_desc">Keep toast background white even in dark mode</string>
     <string name="toast_applied">Застосовано</string>
     <string name="toast_disabled">Вимкнено</string>
     <string name="toast_reset">Скинути</string>
@@ -1061,6 +1193,10 @@
     <string name="accent_tertiary">Третинний акцент</string>
     <string name="text_color_primary">Основне колір тексту</string>
     <string name="text_color_inverse">Інвертувати колір тексту</string>
+    <string name="learn_more">Learn more</string>
+    <string name="custom_tiles_footer_info">To ensure custom tiles work properly, first use the default internet and bluetooth tiles once before using the custom ones.</string>
+    <string name="hig_res_image_footer_info">Avoid using high-resolution images, as they may cause your SystemUI to crash.</string>
+    <string name="more">More</string>
     <!-- Weather -->
     <!-- Omni Jaws Strings -->
     <string name="units_title">Одиниці вимірювання</string>
@@ -1132,7 +1268,7 @@
     <string name="weather_provider_owm_key_message">Введіть свій ключ API OpenWeatherMap, щоб отримати дані про погоду.</string>
     <string name="yandex_api_key">API ключ Яндекса</string>
     <string name="weather_provider_yandex_key_title">Потрібен API ключ Яндекса</string>
-    <string name="weather_provider_yandex_key_message">Please enter your Yandex API key to fetch weather data.</string>
+    <string name="weather_provider_yandex_key_message">Уведіть свій API ключ Яндекса, щоб отримати дані про погоду.</string>
     <string name="weather_show_location">Показувати розташування</string>
     <string name="weather_show_location_summary">Показувати розташування перед значком</string>
     <string name="weather_show_condition">Показувати стан</string>
@@ -1168,6 +1304,48 @@
     <string name="lockscreen_weather_selection_str_gradient">Градієнт</string>
     <string name="lockscreen_weather_selection_str_border_accent">Темний з акцентованими гранями</string>
     <string name="lockscreen_weather_selection_str_border_gradient">Темний з градієнтними гранями</string>
+    <string name="lockscreen_weather_font_title">Weather Font</string>
+    <string name="lockscreen_weather_font_desc">Use custom font for weather text</string>
+    <!-- Media art -->
+    <string name="media_art_title">Show Media Album Art</string>
+    <string name="media_art_summary">Display media album art when available</string>
+    <string name="media_art_blur_level_title">Blur Level</string>
+    <!-- Album art filter -->
+    <string name="albumart_filter_title">Media Album Art Filter</string>
+    <string name="albumart_filter_none">None</string>
+    <string name="albumart_filter_grayscale">Grayscale</string>
+    <string name="albumart_filter_tint">Accent Tinted</string>
+    <string name="albumart_filter_blur">Blur</string>
+    <string name="albumart_filter_grayblur">Grayscale and Blurred</string>
+    <!-- Launcher mods -->
+    <string name="section_title_icons">Icons</string>
+    <string name="section_title_home_screen">Home Screen</string>
+    <string name="section_title_app_drawer">App Drawer</string>
+    <string name="section_title_recents">Recents</string>
+    <string name="force_themed_icons_title">Force Themed Icons</string>
+    <string name="force_themed_icons_desc">Generate monochromatic icons if not provided by the app</string>
+    <string name="launcher_icon_size_title">Icon Size</string>
+    <string name="launcher_text_size_title">Text Size</string>
+    <string name="app_drawer_themed_icons_title">App Drawer Themed Icons</string>
+    <string name="app_drawer_themed_icons_desc">Enable themed icons on app drawer</string>
+    <string name="double_tap_to_sleep_title">Double Tap to Sleep</string>
+    <string name="double_tap_to_sleep_desc">Double tap on home screen empty space to turn off the screen</string>
+    <string name="desktop_icon_labels_title">Icon Labels on Desktop</string>
+    <string name="hide_launcher_statusbar_title">Hide Statusbar</string>
+    <string name="hide_launcher_statusbar_desc">Expand quick settings panel once if status bar is not hidden</string>
+    <string name="hide_launcher_top_shadow_title">Hide Top Shadow</string>
+    <string name="hide_launcher_top_shadow_desc">Remove top shadow from home screen</string>
+    <string name="app_drawer_icon_labels_title">Icon Labels in App Drawer</string>
+    <string name="disable_recents_live_tile_title">Disable Recents Live Tile</string>
+    <string name="disable_recents_live_tile_desc">Disable live tile if recents screen is buggy</string>
+    <string name="hide_at_a_glance_title">Hide At A Glance</string>
+    <string name="hide_at_a_glance_desc">Hide at a glance from home screen</string>
+    <string name="hide_desktop_search_bar_title">Hide Desktop Search Bar</string>
+    <string name="hide_desktop_search_bar_desc">Hide search bar from desktop dock</string>
+    <string name="dock_spacing_title">Dock Spacing</string>
+    <string name="app_drawer_background_opacity_title">App Drawer Background Opacity</string>
+    <string name="recents_background_opacity_title">Recents Background Opacity</string>
+    <string name="launcher_mod_footer_info">Currently, only Pixel Launcher and Launcher3 are supported.</string>
     <!-- Alert Dialogs -->
     <string name="systemui_restart_required_title">Потрібен перезапуск SystemUI</string>
     <string name="systemui_restart_required_desc">Для застосування змін потрібно перезапустити SystemUI.</string>

@@ -41,6 +41,7 @@ class ForecastDayAdapter(weatherClient: OmniJawsClient) :
         return mList.size
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun updateList(list: List<OmniJawsClient.DayForecast>?) {
         mList.clear()
         mList.addAll(list!!)
@@ -48,18 +49,17 @@ class ForecastDayAdapter(weatherClient: OmniJawsClient) :
     }
 
     class ViewHolder internal constructor(
-        binding: ViewListForecastDayItemBinding,
+        private val binding: ViewListForecastDayItemBinding,
         weatherClient: OmniJawsClient
     ) :
         RecyclerView.ViewHolder(binding.getRoot()) {
-        private val binding: ViewListForecastDayItemBinding = binding
         private val mWeatherClient: OmniJawsClient = weatherClient
 
         @SuppressLint("SetTextI18n")
         fun bind(forecast: OmniJawsClient.DayForecast) {
-            binding.forecastTime.setText(formatDate(forecast.date!!))
+            binding.forecastTime.text = formatDate(forecast.date!!)
             binding.forecastIcon.setImageDrawable(mWeatherClient.getWeatherConditionImage(forecast.conditionCode))
-            binding.forecastTemperature.setText((forecast.low + "° / " + forecast.high).toString() + "°")
+            binding.forecastTemperature.text = (forecast.low + "° / " + forecast.high) + "°"
         }
 
         private fun formatDate(inputDate: String): String? {
@@ -69,13 +69,15 @@ class ForecastDayAdapter(weatherClient: OmniJawsClient) :
             try {
                 val date = inputFormat.parse(inputDate)
                 val inputCalendar = Calendar.getInstance()
-                inputCalendar.time = date
+                if (date != null) {
+                    inputCalendar.time = date
+                }
 
                 val today = Calendar.getInstance()
                 val tomorrow = Calendar.getInstance()
                 tomorrow.add(Calendar.DAY_OF_YEAR, 1)
 
-                val formattedDate = dayMonthFormat.format(date)
+                val formattedDate = date?.let { dayMonthFormat.format(it) }
 
                 if (isSameDay(inputCalendar, today)) {
                     return formattedDate + " " + appContextLocale.getString(R.string.omnijaws_today)
@@ -83,7 +85,7 @@ class ForecastDayAdapter(weatherClient: OmniJawsClient) :
                     return formattedDate + " " + appContextLocale.getString(R.string.omnijaws_tomorrow)
                 } else {
                     val dayOfWeekFormat = SimpleDateFormat("EEE", Locale.getDefault())
-                    val dayOfWeek = dayOfWeekFormat.format(date)
+                    val dayOfWeek = date?.let { dayOfWeekFormat.format(it) }
                     return "$formattedDate $dayOfWeek"
                 }
             } catch (e: Exception) {

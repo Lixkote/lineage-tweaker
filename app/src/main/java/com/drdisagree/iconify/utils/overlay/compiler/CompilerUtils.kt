@@ -3,7 +3,7 @@ package com.drdisagree.iconify.utils.overlay.compiler
 import android.os.Build
 import android.util.Log
 import com.drdisagree.iconify.BuildConfig
-import com.drdisagree.iconify.common.References
+import com.drdisagree.iconify.data.common.References
 import java.io.File
 import java.io.StringWriter
 import java.util.Locale
@@ -124,49 +124,17 @@ object CompilerUtils {
             mPackageName = removeAllDigits(mPackageName)
 
             category += when (mPackageName) {
-                "AMAC", "AMGC" -> {
-                    "stock_monet_colors"
-                }
-
-                "BBN", "BBP" -> {
-                    "brightness_bar_style"
-                }
-
-                "MPA", "MPB", "MPS" -> {
-                    "media_player_style"
-                }
-
-                "NFN", "NFP" -> {
-                    "notification_style"
-                }
-
-                "QSNT", "QSPT" -> {
-                    "qs_tile_text_style"
-                }
-
-                "QSSN", "QSSP" -> {
-                    "qs_shape_style"
-                }
-
-                "IPAS" -> {
-                    "icon_pack_android_style"
-                }
-
-                "IPSUI" -> {
-                    "icon_pack_sysui_style"
-                }
-
-                "WIFI" -> {
-                    "icon_pack_wifi_icons"
-                }
-
-                "SGIC" -> {
-                    "icon_pack_signal_icons"
-                }
-
-                else -> {
-                    "iconify_component_" + mPackageName.lowercase(Locale.getDefault())
-                }
+                "AMAC", "AMGC" -> "stock_monet_colors"
+                "BBN", "BBP" -> "brightness_bar_style"
+                "MPA", "MPB", "MPS" -> "media_player_style"
+                "NFN", "NFP" -> "notification_style"
+                "QSNT", "QSPT", "QSNPT" -> "qs_tile_text_style"
+                "QSSN", "QSSP" -> "qs_shape_style"
+                "IPAS" -> "icon_pack_android_style"
+                "IPSUI" -> "icon_pack_sysui_style"
+                "WIFI" -> "icon_pack_wifi_icons"
+                "SGIC" -> "icon_pack_signal_icons"
+                else -> "iconify_component_" + mPackageName.lowercase(Locale.getDefault())
             }
         }
 

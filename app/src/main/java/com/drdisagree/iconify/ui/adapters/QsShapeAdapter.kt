@@ -21,14 +21,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.drdisagree.iconify.Iconify.Companion.appContext
 import com.drdisagree.iconify.R
-import com.drdisagree.iconify.config.RPrefs.getBoolean
+import com.drdisagree.iconify.data.config.RPrefs.getBoolean
 import com.drdisagree.iconify.ui.dialogs.LoadingDialog
-import com.drdisagree.iconify.ui.models.QsShapeModel
+import com.drdisagree.iconify.data.models.QsShapeModel
 import com.drdisagree.iconify.ui.utils.ViewBindingHelpers.setDrawable
 import com.drdisagree.iconify.utils.SystemUtils
 import com.drdisagree.iconify.utils.overlay.manager.QsShapeManager
 import com.drdisagree.iconify.utils.overlay.manager.QsShapePixelManager
-import com.drdisagree.iconify.xposed.modules.utils.ViewHelper.toPx
+import com.drdisagree.iconify.xposed.modules.extras.utils.ViewHelper.toPx
 
 class QsShapeAdapter(
     var context: Context,
@@ -59,29 +59,33 @@ class QsShapeAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.styleName.text = itemList[position].name
 
-        setDrawable(
-            holder.qsTile1,
-            ResourcesCompat.getDrawable(context.resources, itemList[position].enabledDrawable, null)
+        holder.qsTile1.setDrawable(
+            ResourcesCompat.getDrawable(
+                context.resources,
+                itemList[position].enabledDrawable,
+                null
+            )
         )
-        setDrawable(
-            holder.qsTile2,
+        holder.qsTile2.setDrawable(
             ResourcesCompat.getDrawable(
                 context.resources,
                 itemList[position].disabledDrawable,
                 null
             )
         )
-        setDrawable(
-            holder.qsTile3,
+        holder.qsTile3.setDrawable(
             ResourcesCompat.getDrawable(
                 context.resources,
                 itemList[position].disabledDrawable,
                 null
             )
         )
-        setDrawable(
-            holder.qsTile4,
-            ResourcesCompat.getDrawable(context.resources, itemList[position].enabledDrawable, null)
+        holder.qsTile4.setDrawable(
+            ResourcesCompat.getDrawable(
+                context.resources,
+                itemList[position].enabledDrawable,
+                null
+            )
         )
 
         val textColor: Int = if (variant == "QSSN") {
@@ -357,42 +361,22 @@ class QsShapeAdapter(
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        var container: LinearLayout
-        var orientation: LinearLayout
-        var styleName: TextView
-        var btnEnable: Button
-        var btnDisable: Button
-        var qsTile1: LinearLayout
-        var qsTile2: LinearLayout
-        var qsTile3: LinearLayout
-        var qsTile4: LinearLayout
-        var qsIcon1: ImageView
-        var qsIcon2: ImageView
-        var qsIcon3: ImageView
-        var qsIcon4: ImageView
-        var qsText1: TextView
-        var qsText2: TextView
-        var qsText3: TextView
-        var qsText4: TextView
-
-        init {
-            container = itemView.findViewById(R.id.qsshape_child)
-            styleName = itemView.findViewById(R.id.list_title_qsshape)
-            btnEnable = itemView.findViewById(R.id.enable_qsshape)
-            btnDisable = itemView.findViewById(R.id.disable_qsshape)
-            qsTile1 = itemView.findViewById(R.id.qs_tile1)
-            qsTile2 = itemView.findViewById(R.id.qs_tile2)
-            qsTile3 = itemView.findViewById(R.id.qs_tile3)
-            qsTile4 = itemView.findViewById(R.id.qs_tile4)
-            qsIcon1 = itemView.findViewById(R.id.qs_icon1)
-            qsIcon2 = itemView.findViewById(R.id.qs_icon2)
-            qsIcon3 = itemView.findViewById(R.id.qs_icon3)
-            qsIcon4 = itemView.findViewById(R.id.qs_icon4)
-            qsText1 = itemView.findViewById(R.id.qs_text1)
-            qsText2 = itemView.findViewById(R.id.qs_text2)
-            qsText3 = itemView.findViewById(R.id.qs_text3)
-            qsText4 = itemView.findViewById(R.id.qs_text4)
-            orientation = itemView.findViewById(R.id.qs_tile_orientation)
-        }
+        var container: LinearLayout = itemView.findViewById(R.id.qsshape_child)
+        var orientation: LinearLayout = itemView.findViewById(R.id.qs_tile_orientation)
+        var styleName: TextView = itemView.findViewById(R.id.list_title_qsshape)
+        var btnEnable: Button = itemView.findViewById(R.id.enable_qsshape)
+        var btnDisable: Button = itemView.findViewById(R.id.disable_qsshape)
+        var qsTile1: LinearLayout = itemView.findViewById(R.id.qs_tile1)
+        var qsTile2: LinearLayout = itemView.findViewById(R.id.qs_tile2)
+        var qsTile3: LinearLayout = itemView.findViewById(R.id.qs_tile3)
+        var qsTile4: LinearLayout = itemView.findViewById(R.id.qs_tile4)
+        var qsIcon1: ImageView = itemView.findViewById(R.id.qs_icon1)
+        var qsIcon2: ImageView = itemView.findViewById(R.id.qs_icon2)
+        var qsIcon3: ImageView = itemView.findViewById(R.id.qs_icon3)
+        var qsIcon4: ImageView = itemView.findViewById(R.id.qs_icon4)
+        var qsText1: TextView = itemView.findViewById(R.id.qs_text1)
+        var qsText2: TextView = itemView.findViewById(R.id.qs_text2)
+        var qsText3: TextView = itemView.findViewById(R.id.qs_text3)
+        var qsText4: TextView = itemView.findViewById(R.id.qs_text4)
     }
 }

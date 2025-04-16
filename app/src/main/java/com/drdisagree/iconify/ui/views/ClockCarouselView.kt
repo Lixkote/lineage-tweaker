@@ -14,7 +14,7 @@ import androidx.constraintlayout.helper.widget.Carousel
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.view.doOnPreDraw
 import com.drdisagree.iconify.R
-import com.drdisagree.iconify.ui.models.ClockCarouselItemModel
+import com.drdisagree.iconify.data.models.ClockCarouselItemModel
 import com.drdisagree.iconify.ui.widgets.ClockHostView
 import kotlin.math.max
 

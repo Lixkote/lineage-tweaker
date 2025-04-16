@@ -1,0 +1,13 @@
+Iconify v7.0.0 has arrived! It has the following new changes:
+
+Feature Changes:
+• Compatibility with Android 15 QPR1
+• Added one new battery style (thanks to @FlowVik)
+• Added colored notification icon
+• Added colorize notifications based on app icon
+• Updated translations (thanks to all the contributors on Crowdin)
+• Numerous other features, improvements and bug fixes
+
+Note: Clean install recommended.
+
+Full changelog at https://github.com/Mahmud0808/Iconify/releases/tag/v7.0.0

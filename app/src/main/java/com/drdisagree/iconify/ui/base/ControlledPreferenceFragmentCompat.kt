@@ -28,12 +28,12 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceScreen
 import androidx.recyclerview.widget.RecyclerView
 import com.drdisagree.iconify.R
-import com.drdisagree.iconify.common.Dynamic
-import com.drdisagree.iconify.common.Resources.SHARED_XPREFERENCES
-import com.drdisagree.iconify.common.Resources.searchConfiguration
-import com.drdisagree.iconify.common.Resources.searchableFragments
-import com.drdisagree.iconify.config.PrefsHelper
-import com.drdisagree.iconify.config.RPrefs
+import com.drdisagree.iconify.data.common.Dynamic
+import com.drdisagree.iconify.data.common.Resources.SHARED_XPREFERENCES
+import com.drdisagree.iconify.data.common.Resources.searchConfiguration
+import com.drdisagree.iconify.data.common.Resources.searchableFragments
+import com.drdisagree.iconify.data.config.PrefsHelper
+import com.drdisagree.iconify.data.config.RPrefs
 import com.drdisagree.iconify.ui.activities.MainActivity
 import com.drdisagree.iconify.ui.activities.MainActivity.Companion.popCurrentFragment
 import com.drdisagree.iconify.ui.activities.MainActivity.Companion.replaceFragment
@@ -41,6 +41,7 @@ import com.drdisagree.iconify.ui.dialogs.LoadingDialog
 import com.drdisagree.iconify.ui.fragments.settings.Changelog
 import com.drdisagree.iconify.ui.fragments.settings.Experimental
 import com.drdisagree.iconify.ui.fragments.xposed.LockscreenClockParent
+import com.drdisagree.iconify.ui.fragments.xposed.VolumePanelParent
 import com.drdisagree.iconify.ui.preferences.preferencesearch.SearchPreferenceResult
 import com.drdisagree.iconify.utils.SystemUtils.restartSystemUI
 import com.drdisagree.iconify.utils.helper.ImportExport.exportSettings
@@ -79,8 +80,7 @@ abstract class ControlledPreferenceFragmentCompat : PreferenceFragmentCompat() {
     ) { result: ActivityResult ->
         handleExportResult(
             result = result,
-            context = requireContext(),
-            contentResolver = requireContext().contentResolver
+            context = requireContext()
         )
     }
 
@@ -90,7 +90,7 @@ abstract class ControlledPreferenceFragmentCompat : PreferenceFragmentCompat() {
         handleImportResult(
             result = result,
             fragment = this,
-            loadingDialog = loadingDialog!!
+            loadingDialog = loadingDialog
         )
     }
 
@@ -219,18 +219,34 @@ abstract class ControlledPreferenceFragmentCompat : PreferenceFragmentCompat() {
                 if (searchableFragment.xml == result.resourceFile) {
                     replaceFragment(parentFragmentManager, searchableFragment.fragment)
                     val fragment = searchableFragment.fragment
-                    var resultFragment: ControlledPreferenceFragmentCompat? = null
-                    if (fragment is LockscreenClockParent) {
-                        resultFragment = LockscreenClockParent.getPreferenceFragment()
-                        fragment.scrollToPreference()
-                    } else {
-                        resultFragment = fragment as ControlledPreferenceFragmentCompat
+                    val resultFragment: ControlledPreferenceFragmentCompat?
+
+                    when (fragment) {
+                        is LockscreenClockParent -> {
+                            resultFragment = LockscreenClockParent.getPreferenceFragment()
+                            fragment.scrollToPreference()
+                        }
+
+                        is VolumePanelParent -> {
+                            resultFragment = VolumePanelParent.getPreferenceFragment()
+                            fragment.scrollToPreference()
+                        }
+
+                        else -> {
+                            resultFragment = fragment as ControlledPreferenceFragmentCompat
+                        }
                     }
+
                     SearchPreferenceResult.highlight(resultFragment, result.key)
                     break
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateScreen(null)
     }
 
     override fun onDestroy() {

@@ -1,14 +1,11 @@
 package com.drdisagree.iconify.ui.fragments.xposed
 
 import com.drdisagree.iconify.R
-import com.drdisagree.iconify.common.Preferences.BLACK_QSPANEL
-import com.drdisagree.iconify.common.Preferences.FIX_NOTIFICATION_COLOR
-import com.drdisagree.iconify.common.Preferences.FIX_NOTIFICATION_FOOTER_BUTTON_COLOR
-import com.drdisagree.iconify.common.Preferences.FIX_QS_TILE_COLOR
-import com.drdisagree.iconify.common.Preferences.FLUID_NOTIF_TRANSPARENCY
-import com.drdisagree.iconify.common.Preferences.FLUID_POWERMENU_TRANSPARENCY
-import com.drdisagree.iconify.common.Preferences.FLUID_QSPANEL
-import com.drdisagree.iconify.common.Preferences.LIGHT_QSPANEL
+import com.drdisagree.iconify.data.common.Preferences.BLACK_QSPANEL
+import com.drdisagree.iconify.data.common.Preferences.FLUID_NOTIF_TRANSPARENCY
+import com.drdisagree.iconify.data.common.Preferences.FLUID_POWERMENU_TRANSPARENCY
+import com.drdisagree.iconify.data.common.Preferences.FLUID_QSPANEL
+import com.drdisagree.iconify.data.common.Preferences.LIGHT_QSPANEL
 import com.drdisagree.iconify.ui.activities.MainActivity
 import com.drdisagree.iconify.ui.base.ControlledPreferenceFragmentCompat
 
@@ -34,10 +31,7 @@ class Themes : ControlledPreferenceFragmentCompat() {
             BLACK_QSPANEL,
             FLUID_QSPANEL,
             FLUID_NOTIF_TRANSPARENCY,
-            FLUID_POWERMENU_TRANSPARENCY,
-            FIX_QS_TILE_COLOR,
-            FIX_NOTIFICATION_COLOR,
-            FIX_NOTIFICATION_FOOTER_BUTTON_COLOR -> {
+            FLUID_POWERMENU_TRANSPARENCY -> {
                 MainActivity.showOrHidePendingActionButton(
                     activityBinding = (requireActivity() as MainActivity).binding,
                     requiresSystemUiRestart = true

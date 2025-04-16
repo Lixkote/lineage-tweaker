@@ -18,15 +18,14 @@ import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import com.drdisagree.iconify.R
-import com.drdisagree.iconify.common.Dynamic
-import com.drdisagree.iconify.common.Resources.searchConfiguration
-import com.drdisagree.iconify.common.Resources.searchableFragments
+import com.drdisagree.iconify.data.common.Dynamic
+import com.drdisagree.iconify.data.common.Resources.searchConfiguration
+import com.drdisagree.iconify.data.common.Resources.searchableFragments
 import com.drdisagree.iconify.ui.activities.MainActivity
 import com.drdisagree.iconify.ui.activities.MainActivity.Companion.replaceFragment
 import com.drdisagree.iconify.ui.dialogs.LoadingDialog
 import com.drdisagree.iconify.ui.fragments.settings.Changelog
 import com.drdisagree.iconify.ui.fragments.settings.Experimental
-import com.drdisagree.iconify.ui.fragments.xposed.LockscreenClockParent
 import com.drdisagree.iconify.ui.preferences.preferencesearch.SearchPreferenceResult
 import com.drdisagree.iconify.utils.SystemUtils.restartSystemUI
 import com.drdisagree.iconify.utils.helper.ImportExport.exportSettings
@@ -44,8 +43,7 @@ abstract class BaseFragment : Fragment() {
     ) { result: ActivityResult ->
         handleExportResult(
             result = result,
-            context = requireContext(),
-            contentResolver = requireContext().contentResolver
+            context = requireContext()
         )
     }
 
@@ -55,7 +53,7 @@ abstract class BaseFragment : Fragment() {
         handleImportResult(
             result = result,
             fragment = this,
-            loadingDialog = loadingDialog!!
+            loadingDialog = loadingDialog
         )
     }
 

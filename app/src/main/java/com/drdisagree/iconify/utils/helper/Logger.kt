@@ -3,8 +3,8 @@ package com.drdisagree.iconify.utils.helper
 import android.os.Build
 import android.util.Log
 import com.drdisagree.iconify.BuildConfig
-import com.drdisagree.iconify.common.Resources.DOCUMENTS_DIR
-import com.drdisagree.iconify.common.Resources.LOG_DIR
+import com.drdisagree.iconify.data.common.Resources.DOCUMENTS_DIR
+import com.drdisagree.iconify.data.common.Resources.LOG_DIR
 import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter
@@ -20,10 +20,39 @@ object Logger {
 
     private val TAG = Logger::class.java.getSimpleName()
 
-    fun writeLog(tag: String?, header: String?, details: List<String?>) {
+    fun writeLog(
+        tag: String,
+        header: String,
+        command: String,
+        fileContents: List<String?>,
+        errorLog: List<String?>
+    ) {
         val log = deviceInfo
 
-        log.append("error: ").append(header).append('\n')
+        log.append("Title: ").append(header).append("\n\n")
+
+        log.append("Command:\n")
+        log.append(command).append("\n\n")
+
+        log.append("Resources:")
+        for (line in fileContents) {
+            log.append("\n\t").append(line)
+        }
+        log.append('\n')
+
+        log.append(tag).append(":\n")
+        for (line in errorLog) {
+            log.append('\t').append(line).append('\n')
+        }
+        log.append('\n')
+
+        writeLogToFile(log)
+    }
+
+    fun writeLog(tag: String, header: String, details: List<String?>) {
+        val log = deviceInfo
+
+        log.append("Title: ").append(header).append('\n')
         log.append('\n')
         log.append(tag).append(":\n")
 
@@ -34,10 +63,10 @@ object Logger {
         writeLogToFile(log)
     }
 
-    fun writeLog(tag: String?, header: String?, details: String?) {
+    fun writeLog(tag: String, header: String, details: String) {
         val log = deviceInfo
 
-        log.append("error: ").append(header).append('\n')
+        log.append("Title: ").append(header).append('\n')
         log.append('\n')
         log.append(tag).append(":\n")
         log.append(details).append('\n')
@@ -45,9 +74,9 @@ object Logger {
         writeLogToFile(log)
     }
 
-    fun writeLog(tag: String?, header: String?, exception: Exception) {
+    fun writeLog(tag: String, header: String, exception: Exception) {
         val log = deviceInfo
-        log.append("error: ").append(header).append('\n')
+        log.append("Title: ").append(header).append('\n')
         log.append('\n')
         log.append(tag).append(":\n")
 
